@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, AppDispatch } from './store';
 import { AuthModel } from "./authtypes";
-//import axios from "../../api/database";
+import axios from './api-ref';
 
 const initialState: AuthModel = { isAuthenticated: false };
 
@@ -25,35 +25,28 @@ const checkAuthTimeout = (expirationTime: number): AppThunk => async (dispatch: 
 };
 export const logout = (): AppThunk => async (dispatch: AppDispatch) => {
     dispatch(authSlice.actions.logout(false));
-    localStorage.removeItem('email');
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
-    localStorage.removeItem('expiration');
+    localStorage.removeItem('displayname');
+    localStorage.removeItem('expiresAt');
 }
-export const login = (email: string, password: string, isSignup: boolean): AppThunk => async (dispatch: AppDispatch) => {
+export const login = (email: string, password: string): AppThunk => async (dispatch: AppDispatch) => {
     const authData = {
         email: email,
-        password: password,
-        returnSecureToken: true
+        password: password
     };
-    let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBOXogDHobbjBd0bPs9SwbOJNizmAGG_1E';
-    if (!isSignup) {
-        url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBOXogDHobbjBd0bPs9SwbOJNizmAGG_1E';
-    }
-    // axios.post(url, authData)
-    //     .then(response => {
-    //         let expirationTime = Math.round(Date.now() / 1000) + 3600;
-    //         localStorage.setItem('email', email);
-    //         localStorage.setItem('token', response.data.idToken);
-    //         localStorage.setItem('expiration', expirationTime.toString());
-    //         localStorage.setItem('userId', response.data.localId);
-    //         dispatch(authSlice.actions.login(true));
-    //         checkAuthTimeout(response.data.expiresIn);
-    //     })
-    //     .catch(err => {
-    //         console.log(err);
-    //         //dispatch(authFail(err.response.data.error));
-    //     });
+    axios.post('auth/login', authData)
+        .then(response => {
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('userId', response.data.userId);
+            localStorage.setItem('displayname', response.data.displayname);
+            localStorage.setItem('expiresAt', response.data.expiresAt);
+            dispatch(authSlice.actions.login(true));
+            checkAuthTimeout(response.data.expiresAt);
+        })
+        .catch(err => {
+            console.log(err);
+        });
 }
 export const changeEmail = (newEmail: string): AppThunk => async (dispatch: AppDispatch) => {
     const authData = {

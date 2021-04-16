@@ -8,6 +8,9 @@ import {
 } from "@ionic/react";
 import { logoApple, logoFacebook, chatbubble } from "ionicons/icons";
 import "./Landing.scss";
+import {useSelector, useDispatch} from 'react-redux';
+import {RootState} from '../../redux/rootReducer';
+import { login } from "../../redux/authSlice";
 
 type Props = {
   history: any;
@@ -15,13 +18,15 @@ type Props = {
 
 const Landing: React.FC<Props> = ({ history }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+
 
   const goToExplore = () => {
     setIsLoading(true);
-
+    dispatch(login("user1@test.com","password1"));
     setTimeout(() => {
       setIsLoading(false);
-      history.push("/tabs/listings");
+      history.push("/listings");
     }, 1000); // dummy loader for Loggin In
   };
 
