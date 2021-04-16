@@ -11,4 +11,5 @@ export interface UserModel {
   lastActive: string;
   rating: number;
   joinDate: string;
+  favourites: string[];
 }

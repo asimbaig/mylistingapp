@@ -4,7 +4,24 @@ import { AuthModel } from "./authtypes";
 import { UserModel } from "./userType";
 import axios from "./api-ref";
 
-const initialState: AuthModel = { isAuthenticated: false, user: undefined };
+const initialState: AuthModel = {
+  isAuthenticated: false,
+  user: {
+    _id: "",
+    email: "",
+    displayname: "",
+    role: "",
+    profileImages: [],
+    listedItems: [],
+    address: "",
+    phone: "",
+    dob: "",
+    lastActive: "",
+    rating: 0,
+    joinDate: "",
+    favourites: [],
+  },
+};
 
 const authSlice = createSlice({
   name: "auth",
@@ -19,8 +36,23 @@ const authSlice = createSlice({
     setUser(state, action: PayloadAction<UserModel>) {
       state.user = action.payload;
     },
+    addFavourite(state, action: PayloadAction<string>) {
+      state.user?.favourites.push(action.payload);
+      //state.user = action.payload;
+    },
+    removeFavourite(state, action: PayloadAction<string>) {
+      var index = state.user?.favourites.findIndex(
+        (id) => id === action.payload
+      );
+      if (index && index > -1) {
+        state.user?.favourites.splice(index, 1);
+      }
+    },
   },
 });
+
+export const { addFavourite } = authSlice.actions;
+export const { removeFavourite } = authSlice.actions;
 
 const checkAuthTimeout = (expirationTime: number): AppThunk => async (
   dispatch: AppDispatch

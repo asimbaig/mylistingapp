@@ -80,7 +80,7 @@ const ProfileImageSlides: React.FC<Props> = ({
         onIonSlideReachEnd={handleReachEnd}
       >
         {images.map((item, index) => (
-          <IonSlide key={index}>
+          <IonSlide key={item + index}>
             <div
               className="slide-img background-img"
               style={{ backgroundImage: `url('${item}')` }}
@@ -91,7 +91,7 @@ const ProfileImageSlides: React.FC<Props> = ({
       <div className="custom-pagination">
         {images?.map((item, index) => (
           <div
-            key={item.id}
+            key={item}
             className={`pagination-bullet${
               activeIndex === index ? " pagination-bullet-active" : ""
             }`}

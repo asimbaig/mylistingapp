@@ -37,6 +37,7 @@ import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { Item } from "../../redux/itemType";
 import { loadItems, setSelectItem } from "../../redux/itemSlice";
+import { addFavourite, removeFavourite } from "../../redux/authSlice";
 
 type Props = {
   history: any;
@@ -47,6 +48,23 @@ const Listings: React.FC<Props> = ({ history }) => {
   const [segmentView, setSegmentView] = useState<string>("LIST");
   const dispatch = useDispatch();
   const listings = useSelector((state: RootState) => state.listings.items);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
+  const userFavourites = useSelector(
+    (state: RootState) => state.auth.user?.favourites
+  );
+
+  const isFavourite = (currentItemId: string) => {
+    if (userFavourites) {
+      var index = userFavourites.findIndex((fid) => fid === currentItemId);
+      if (index && index > -1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
 
   useEffect(() => {
     dispatch(loadItems());
@@ -135,27 +153,35 @@ const Listings: React.FC<Props> = ({ history }) => {
                         </IonCardContent>
                         <IonRow no-padding>
                           <IonCol>
-                            {
+                            {isFavourite(item._id) ? (
                               <IonButton
                                 expand="full"
                                 fill="clear"
                                 color="danger"
                                 size="small"
                                 onClick={() => {
-                                  // removeFavoriteItem();
+                                  dispatch(removeFavourite(item._id));
                                 }}
                               >
                                 <IonIcon slot="start" icon={star}></IonIcon>
                               </IonButton>
-                              // :
-                              // <IonButton expand="full" fill="clear" color="danger" size="small"
-                              //   onClick={(event) => {
-                              //     event.stopPropagation();
-                              //     addFavoriteItem();
-                              //   }}>
-                              //   <IonIcon slot="start" icon={starOutline}></IonIcon>
-                              // </IonButton>
-                            }
+                            ) : (
+                              <IonButton
+                                expand="full"
+                                fill="clear"
+                                color="danger"
+                                size="small"
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  dispatch(addFavourite(item._id));
+                                }}
+                              >
+                                <IonIcon
+                                  slot="start"
+                                  icon={starOutline}
+                                ></IonIcon>
+                              </IonButton>
+                            )}
                           </IonCol>
                           <IonCol>
                             <IonButton
