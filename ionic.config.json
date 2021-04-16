@@ -1,0 +1,7 @@
+{
+  "name": "tinder-react-5",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

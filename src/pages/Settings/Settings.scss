@@ -1,0 +1,48 @@
+.settings-page {
+  .cards-wrapper {
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  .grid-half {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .card-custom {
+    margin: 12px;
+    background-color: var(--ion-color-white);
+
+    &.card-custom-half {
+      margin: 6px;
+      margin-top: 0;
+    }
+  }
+
+  .plan-title {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+  }
+
+  .color-gold {
+    color: var(--color-button-gold);
+  }
+
+  .color-blue {
+    color: var(--color-button-star);
+  }
+
+  .color-purple {
+    color: var(--color-button-boost);
+  }
+
+  .padding-reduced {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .text-sm {
+    font-size: var(--font-size-sm);
+  }
+}

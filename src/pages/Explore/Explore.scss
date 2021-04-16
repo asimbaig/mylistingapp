@@ -1,0 +1,139 @@
+.explore-page {
+  &.explore-bg {
+    --background: linear-gradient(var(--ion-color-white), var(--ion-color-light));
+  }
+
+  .segment-fit {
+    width: 88px;
+    border-radius: 999em;
+
+    ion-segment-button {
+      min-width: 20px;
+      --padding-start: 12px;
+      --padding-end: 12px;
+      --border-radius: 999em;
+
+      &.segment-button-checked {
+        ion-icon {
+          color: var(--ion-color-gold);
+        }
+      }
+    }
+
+    ion-icon {
+      font-size: 22px;
+    }
+  }
+
+  .cards-container {
+    height: 100%;
+    padding: 8px 8px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .card-stack {
+    height: 100%;
+    position: relative;
+    z-index: 0;
+
+    &.rotate-right {
+      animation: rotateRight 250ms ease-in-out;
+    }
+
+    &.rotate-left {
+      animation: rotateLeft 250ms ease-in-out;
+    }
+
+    .card-item {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: var(--swipe-card-border-radius);
+      overflow: hidden;
+      box-shadow: var(--card-box-shadow);
+      will-change: transform;
+      background-color: var(--ion-color-light);
+
+      .stamp {
+        position: absolute;
+        top: 20px;
+        right: 10px;
+        z-index: 300;
+        font-size: 30px;
+        color: var(--ion-color-primary);
+        border: 4px solid var(--ion-color-primary);
+        border-radius: 4px;
+        padding: 0px 4px;
+        letter-spacing: 1px;
+        font-weight: 700;
+        text-transform: uppercase;
+        transform: rotate(15deg);
+        opacity: 0;
+        box-shadow: 0 2px 6px 0 rgba(112,125,134,0.14);
+        text-shadow: 0 2px 6px rgba(112,125,134,0.14);
+        will-change: opacity;
+
+        &.stamp-like {
+          right: initial;
+          left: 10px;
+          color: var(--ion-color-secondary);
+          border-color: var(--ion-color-secondary);
+          transform: rotate(-15deg);
+          letter-spacing: 3px;
+        }
+      }
+    }
+  }
+
+  .card-actions {
+    ion-button {
+      &.button-revert ion-icon {
+        color: var(--color-button-revert);
+      }
+      &.button-dislike ion-icon {
+        color: var(--color-button-dislike);
+      }
+      &.button-star ion-icon {
+        color: var(--color-button-star);
+      }
+      &.button-like ion-icon {
+        color: var(--color-button-like);
+      }
+      &.button-boost ion-icon {
+        color: var(--color-button-boost);
+      }
+    }
+  }
+
+  @media (max-width: 386px) {
+    .button-custom  {
+      &.button-icon {
+        width: 48px;
+        height: 48px;
+
+        &.button-lg {
+          width: 56px;
+          height: 56px;
+
+          ion-icon {
+            font-size: 32px;
+          }
+        }
+      }
+    }
+  }
+
+  @keyframes rotateRight {
+    from {transform: perspective(1000px) rotateY(4deg)}
+    to {transform: perspective(1000px) rotateY(0deg)}
+  }
+
+  @keyframes rotateLeft {
+    from {transform: perspective(1000px) rotateY(-4deg)}
+    to {transform: perspective(1000px) rotateY(0deg)}
+  }
+}
