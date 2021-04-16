@@ -55,6 +55,7 @@ import Me from "../src/pages/Me/Me";
 import Highlights from "../src/pages/Highlights/Highlights";
 import Matches from "../src/pages/Matches/Matches";
 import Listings from "../src/pages/Listings/Listings";
+import ListingDetails from "../src/pages/Listings/ListingDetails";
 
 // force the theme to iOS mode
 setupConfig({
@@ -79,6 +80,7 @@ const App: React.FC = () => {
           <IonRouterOutlet>
             {/* <Redirect exact path="/tabs" to="/tabs/listings" /> */}
             <Route path="/listings" component={Listings} exact />
+            <Route path="/listingdetails" component={ListingDetails} exact />
             <Route path="/explore" component={Explore} exact />
             <Route path="/me" component={Me} exact />
             <Route path="/highlights" component={Highlights} exact />

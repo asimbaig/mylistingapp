@@ -1,7 +1,7 @@
-import { combineReducers } from '@reduxjs/toolkit';
-import app from './appSlice';
-import auth from './authSlice';
-import items from './itemSlice';
+import { combineReducers } from "@reduxjs/toolkit";
+import app from "./appSlice";
+import auth from "./authSlice";
+import listings from "./itemSlice";
 // import tasks from '../pages/calendar/calendarSlice';
 // import global from '../pages/calendar/globalSlice';
 // import todos from '../features/todoList/todoSlice';
@@ -10,17 +10,17 @@ import items from './itemSlice';
 // import visibilityFilter from '../features/todoList/visibilityFilter/visibilityFilterSlice';
 
 const rootReducer = combineReducers({
-    app,
-    auth,
-    items
-//     tasks,
-//     todos,
-//     visibilityFilter,
-//     notes,
-//     global,
-//     photos
-})
+  app,
+  auth,
+  listings,
+  //     tasks,
+  //     todos,
+  //     visibilityFilter,
+  //     notes,
+  //     global,
+  //     photos
+});
 
-export type RootState = ReturnType<typeof rootReducer>
+export type RootState = ReturnType<typeof rootReducer>;
 
-export default rootReducer
+export default rootReducer;

@@ -18,6 +18,7 @@ import {
   IonCardContent,
   IonItem,
   IonNote,
+  IonLoading,
 } from "@ionic/react";
 import {
   heart,
@@ -34,17 +35,31 @@ import LabelMatched from "../../components/LabelMatched/LabelMatched";
 import "./Listings.scss";
 import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
-import { ItemModel } from "../../redux/itemType";
-import { loadItems} from "../../redux/itemSlice";
+import { Item } from "../../redux/itemType";
+import { loadItems, setSelectItem } from "../../redux/itemSlice";
 
-const Listings: React.FC = () => {
+type Props = {
+  history: any;
+};
+
+const Listings: React.FC<Props> = ({ history }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [segmentView, setSegmentView] = useState<string>("LIST");
   const dispatch = useDispatch();
-  const listings = useSelector((state: RootState) => state.items);
-  
+  const listings = useSelector((state: RootState) => state.listings.items);
+
   useEffect(() => {
     dispatch(loadItems());
-  }, [dispatch]);
+  }, []);
+
+  const onClickItem = (item: Item) => {
+    setIsLoading(true);
+    dispatch(setSelectItem(item));
+    setTimeout(() => {
+      setIsLoading(false);
+      history.push("/listingdetails");
+    }, 1000);
+  };
 
   const feedItems: any[] = [
     { url: "assets/img/avatars/hieu.png" },
@@ -79,6 +94,11 @@ const Listings: React.FC = () => {
       </IonHeader>
 
       <IonContent className="matches-page">
+        <IonLoading
+          isOpen={isLoading}
+          message={"Logging in..."}
+          duration={1000}
+        />
         <div className="safe-area-bottom">
           {segmentView === "LIST" && (
             <div>
@@ -88,24 +108,26 @@ const Listings: React.FC = () => {
                   className="search-bar"
                 ></IonSearchbar>
               </div>
-              {console.log(listings)}
               <IonGrid>
                 <IonRow>
-                  {listings.map((item: ItemModel, itemIndex: number) => (
+                  {listings.map((item: Item, itemIndex: number) => (
                     <IonCol key={itemIndex}>
                       <IonCard
                         style={{
                           width: "250px",
-                          height: "320px",
+                          height: "280px",
                           margin: "auto",
                         }}
                       >
-                        <img
-                          src={item.item_images[0]}
-                          alt=""
-                          style={{ width: "250px", height: "180px" }}
-                        />
-                        <IonCardContent>
+                        <IonCardContent
+                          onClick={() => onClickItem(item)}
+                          style={{ padding: "0", cursor: "pointer" }}
+                        >
+                          <img
+                            src={item.item_images[0]}
+                            alt=""
+                            style={{ width: "250px", height: "180px" }}
+                          />
                           <IonItem>
                             <IonLabel>{item.title}</IonLabel>
                             <IonNote>Expire: {item.enddate}</IonNote>

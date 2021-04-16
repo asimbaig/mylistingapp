@@ -1,3 +1,5 @@
+import { UserModel } from "./userType";
 export interface AuthModel {
-    isAuthenticated: boolean
+  isAuthenticated: boolean;
+  user?: UserModel;
 }

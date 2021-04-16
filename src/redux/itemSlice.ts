@@ -1,23 +1,26 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk, AppDispatch } from "./store";
-import { ItemModel } from "./itemType";
+import { Item, ItemModel } from "./itemType";
 // import axios from "../../api/database";
 import LISTINGS from "../../src/redux/listings.dummy";
 
-const initialState: ItemModel[] = [];
+const initialState: ItemModel = { items: [], selectedItem: undefined };
 
 const itemsSlice = createSlice({
-  name: 'items',
+  name: "listings",
   initialState,
   reducers: {
-    addItem(state, action: PayloadAction<ItemModel>) {
-      state.push(action.payload);
+    addItem(state, action: PayloadAction<Item>) {
+      state.items.push(action.payload);
     },
     removeTodo(state, action: PayloadAction<string>) {
-      var index = state.findIndex((item) => item._id === action.payload);
+      var index = state.items.findIndex((item) => item._id === action.payload);
       if (index > -1) {
-        state.splice(index, 1);
+        state.items.splice(index, 1);
       }
+    },
+    setSelectedItem(state, action: PayloadAction<Item>) {
+      state.selectedItem = action.payload;
     },
     // toggleTodo(state, action: PayloadAction<Todo>) {
     //     let todo = state.find(todo => todo.id === action.payload.id);
@@ -28,10 +31,10 @@ const itemsSlice = createSlice({
     //             .put("/NewTodos/" + userId + "/" + todo.id + ".json", todo);
     //     }
     // },
-    loadItems(state, action: PayloadAction<ItemModel[]>) {
-      state.length = 0;
+    loadItems(state, action: PayloadAction<Item[]>) {
+      state.items.length = 0;
       for (let item in action.payload) {
-        state.push(action.payload[item]);
+        state.items.push(action.payload[item]);
       }
     },
   },
@@ -52,7 +55,9 @@ export const removeItem = (id: string): AppThunk => async (
   //         console.log(">_>->_>->_>" + JSON.stringify(err));
   //     });
 };
-export const addItem = (text: string): AppThunk => async (dispatch: AppDispatch) => {
+export const addItem = (text: string): AppThunk => async (
+  dispatch: AppDispatch
+) => {
   // const userId = localStorage.getItem('userId');
   // const newTodo: Todo = {
   //     completed: false,
@@ -71,8 +76,7 @@ export const addItem = (text: string): AppThunk => async (dispatch: AppDispatch)
   //     });
 };
 export const loadItems = (): AppThunk => async (dispatch: AppDispatch) => {
-
-  let listings: ItemModel[] = [...LISTINGS];
+  let listings: Item[] = [...LISTINGS];
   dispatch(itemsSlice.actions.loadItems(listings));
 
   // const userId = localStorage.getItem('userId');
@@ -97,5 +101,10 @@ export const loadItems = (): AppThunk => async (dispatch: AppDispatch) => {
   //     .catch((err) => {
   //         // console.log(err);
   //     });
+};
+export const setSelectItem = (selectedItem: Item): AppThunk => async (
+  dispatch: AppDispatch
+) => {
+  dispatch(itemsSlice.actions.setSelectedItem(selectedItem));
 };
 export default itemsSlice.reducer;
