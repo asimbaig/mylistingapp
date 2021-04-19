@@ -54,14 +54,11 @@ type Props = {
 
 const Listings: React.FC<Props> = ({ history }) => {
   const windowWidth = window.innerWidth;
-  // const [isLoading, setIsLoading] = useState(false);
   const [segmentView, setSegmentView] = useState<string>("LIST");
+  const [cardWidth, setCardWidth] = useState(200);
   const [favItems, setFavItems] = useState<Item[]>();
-  // const [searchedItems, setSearchedItems] = useState<Item[]>();
-  //const [searchText, setSearchText] = useState("");
   const [showSearchbar, setShowSearchbar] = useState<boolean>(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
-  // const [checked, setChecked] = useState(false);
   var listingFilter = {
     Services: {
       Plumber: true,
@@ -112,21 +109,11 @@ const Listings: React.FC<Props> = ({ history }) => {
     const filteredItems = items.filter((i) => favoriteIds.indexOf(i._id) > -1);
     return filteredItems;
   };
-  const getSearchedItems = (items: Item[], searchText: string) => {
-    if (!searchText) {
-      return items;
-    }
-    const _items = items.filter(
-      (s) => s.title.toLowerCase().indexOf(searchText.toLowerCase()) > -1
-    );
-
-    return _items as Item[];
-  };
 
   useEffect(() => {
     dispatch(setIsLoading(true));
     setTimeout(() => {
-        dispatch(setIsLoading(false));
+      dispatch(setIsLoading(false));
     }, 1500);
   }, []);
 
@@ -161,23 +148,22 @@ const Listings: React.FC<Props> = ({ history }) => {
       }
     }
   }, [listings]);
-  
 
   useEffect(() => {
     if (listings && userFavourites) {
       setFavItems(filterArray(listings, userFavourites));
     }
   }, [userFavourites]);
-
-  // useEffect(() => {
-  //   if (searchText && listings) {
-  //     var SItems = getSearchedItems(listings, searchText);
-  //     // console.log("SItems", SItems);
-  //   }
-  // }, [searchText]);
+  useEffect(() => {
+    if (windowWidth <= 375) {
+      setCardWidth(160);
+    } else {
+      setCardWidth(200);
+    }
+  }, [windowWidth]);
 
   // Random component
-  const Completionist = () => <span>Listing expired!!</span>;
+  const Completionist = () => <span>Expired!!</span>;
 
   // Renderer callback with condition
   const renderer = (props: any) => {
@@ -205,7 +191,6 @@ const Listings: React.FC<Props> = ({ history }) => {
 
   return (
     <IonPage>
-      
       <IonHeader className="header-custom">
         <IonToolbar className="toolbar-no-border toolbar-no-safe-area">
           <IonSegment
@@ -230,7 +215,6 @@ const Listings: React.FC<Props> = ({ history }) => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="matches-page">
-        
         <div className="safe-area-bottom">
           {segmentView === "LIST" && (
             <div>
@@ -258,36 +242,44 @@ const Listings: React.FC<Props> = ({ history }) => {
                   </IonButton>
                 )}
               </IonButtons>
-              {/* <div className="border-bottom">
-              <IonSearchbar placeholder="Search" onIonChange={(e: CustomEvent) => setSearchText(e.detail.value)}></IonSearchbar>
-              </div> */}
+              {/* {console.log("Width: " + windowWidth)} */}
               <IonGrid>
                 <IonRow id="cards">
                   {listings.map((item: Item, itemIndex: number) => (
                     <IonCol key={itemIndex} id={"card" + itemIndex}>
                       <IonCard
                         style={{
-                          width: "200px",
-                          height: "280px",
+                          width: `${cardWidth}px`,
+                          height: "300px",
                           margin: "auto",
                         }}
                       >
                         <IonCardContent
                           onClick={() => onClickItem(item)}
-                          style={{ padding: "0", cursor: "pointer" }}
+                          style={{
+                            padding: "0",
+                            cursor: "pointer",
+                            textAlign: "center",
+                          }}
                         >
                           <img
                             src={item.item_images[0]}
                             alt=""
-                            style={{ width: "200px", height: "180px" }}
+                            style={{ width: `${cardWidth}px`, height: "180px" }}
                           />
 
                           <div>
                             <IonLabel>{item.title}</IonLabel>
                             <br />
                             <IonNote>
-                              Expire: <Countdown date={item.enddate} renderer={renderer} />
+                              Expire:{" "}
+                              <Countdown
+                                date={item.enddate}
+                                renderer={renderer}
+                              />
                             </IonNote>
+                            <br />
+                            <IonNote>£{item.price}</IonNote>
                           </div>
                         </IonCardContent>
                         <IonRow no-padding>
@@ -300,7 +292,9 @@ const Listings: React.FC<Props> = ({ history }) => {
                                   color="danger"
                                   size="small"
                                   onClick={() => {
-                                    dispatch(toggleFavourite(item._id, CurrentUser._id));
+                                    dispatch(
+                                      toggleFavourite(item._id, CurrentUser._id)
+                                    );
                                   }}
                                 >
                                   <IonIcon slot="start" icon={star}></IonIcon>
@@ -313,7 +307,9 @@ const Listings: React.FC<Props> = ({ history }) => {
                                   size="small"
                                   onClick={(event) => {
                                     event.stopPropagation();
-                                    dispatch(toggleFavourite(item._id,CurrentUser._id));
+                                    dispatch(
+                                      toggleFavourite(item._id, CurrentUser._id)
+                                    );
                                   }}
                                 >
                                   <IonIcon
@@ -339,7 +335,6 @@ const Listings: React.FC<Props> = ({ history }) => {
                   ))}
                 </IonRow>
               </IonGrid>
-            
             </div>
           )}
 
@@ -352,26 +347,41 @@ const Listings: React.FC<Props> = ({ history }) => {
                       <IonCol key={itemIndex}>
                         <IonCard
                           style={{
-                            width: "250px",
-                            height: "280px",
+                            width: `${cardWidth}px`,
+                            height: "300px",
                             margin: "auto",
                           }}
                         >
                           <IonCardContent
                             onClick={() => onClickItem(item)}
-                            style={{ padding: "0", cursor: "pointer" }}
+                            style={{
+                              padding: "0",
+                              cursor: "pointer",
+                              textAlign: "center",
+                            }}
                           >
                             <img
                               src={item.item_images[0]}
                               alt=""
-                              style={{ width: "250px", height: "180px" }}
+                              style={{
+                                width: `${cardWidth}px`,
+                                height: "180px",
+                              }}
                             />
-                            <IonItem>
+
+                            <div>
                               <IonLabel>{item.title}</IonLabel>
+                              <br />
                               <IonNote>
-                                Expire: {item.enddate.substr(0, 10)}
+                                Expire:{" "}
+                                <Countdown
+                                  date={item.enddate}
+                                  renderer={renderer}
+                                />
                               </IonNote>
-                            </IonItem>
+                              <br />
+                              <IonNote>£{item.price}</IonNote>
+                            </div>
                           </IonCardContent>
                           <IonRow no-padding>
                             <IonCol>
@@ -383,7 +393,12 @@ const Listings: React.FC<Props> = ({ history }) => {
                                     color="danger"
                                     size="small"
                                     onClick={() => {
-                                      dispatch(toggleFavourite(item._id,CurrentUser._id));
+                                      dispatch(
+                                        toggleFavourite(
+                                          item._id,
+                                          CurrentUser._id
+                                        )
+                                      );
                                     }}
                                   >
                                     <IonIcon slot="start" icon={star}></IonIcon>
@@ -396,7 +411,12 @@ const Listings: React.FC<Props> = ({ history }) => {
                                     size="small"
                                     onClick={(event) => {
                                       event.stopPropagation();
-                                      dispatch(toggleFavourite(item._id,CurrentUser._id));
+                                      dispatch(
+                                        toggleFavourite(
+                                          item._id,
+                                          CurrentUser._id
+                                        )
+                                      );
                                     }}
                                   >
                                     <IonIcon
@@ -428,7 +448,7 @@ const Listings: React.FC<Props> = ({ history }) => {
             </div>
           )}
         </div>
-        
+
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
           <IonButton
             color="white"
@@ -441,7 +461,7 @@ const Listings: React.FC<Props> = ({ history }) => {
           </IonButton>
         </IonFab>
       </IonContent>
-      
+
       <IonModal
         swipeToClose
         isOpen={showFilterModal}
@@ -449,8 +469,10 @@ const Listings: React.FC<Props> = ({ history }) => {
         leaveAnimation={modalLeaveZoomIn}
       >
         <IonContent>
-          <div style={{textAlign:"center"}}><h1>Filter</h1></div>
-          
+          <div style={{ textAlign: "center" }}>
+            <h1>Filter</h1>
+          </div>
+
           <IonList>
             <IonItemDivider>Services</IonItemDivider>
             <IonItem>

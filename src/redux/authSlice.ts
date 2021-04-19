@@ -22,7 +22,9 @@ const initialState: AuthModel = {
     rating: 0,
     joinDate: "",
     favourites: [],
+    favUsers: [],
   },
+  favUserProfiles: [],
 };
 
 const authSlice = createSlice({
@@ -39,20 +41,17 @@ const authSlice = createSlice({
       state.user = action.payload;
     },
     toggleFavourite(state, action: PayloadAction<string[]>) {
-        state.user.favourites = action.payload;
+      state.user.favourites = action.payload;
     },
-    removeFavourite(state, action: PayloadAction<string>) {
-      var index = state.user?.favourites.findIndex(
-        (id) => id === action.payload
-      );
-      if (index && index > -1) {
-        state.user?.favourites.splice(index, 1);
-      }
+    toggleFavUsers(state, action: PayloadAction<string[]>) {
+      state.user.favUsers = action.payload;
+    },
+    loadFavUserProfiles(state, action: PayloadAction<UserModel>) {
+      //state.favUserProfiles = action.payload;
+      state.favUserProfiles = [...state.favUserProfiles, action.payload];
     },
   },
 });
-
-// export const { toggleFavourite } = authSlice.actions;
 
 const checkAuthTimeout = (expirationTime: number): AppThunk => async (
   dispatch: AppDispatch
@@ -83,17 +82,35 @@ export const login = (email: string, password: string): AppThunk => async (
       localStorage.setItem("displayname", response.data.displayname);
       localStorage.setItem("expiresAt", response.data.expiresAt);
       dispatch(authSlice.actions.login(true));
-      axios.get("users/" + response.data.userId, {
+      axios
+        .get("users/" + response.data.userId, {
           headers: { Authorization: `Bearer ${response.data.token}` },
-        }).then((res) => {
+        })
+        .then((res) => {
           dispatch(authSlice.actions.setUser(res.data as UserModel));
+          //var _favUserProfiles: UserModel[] = [];
+      for (var i=0; i < res.data.favUsers.length; i++) {
+
+        console.log(res.data.favUsers[i]);
+        axios
+          .get("users/" + res.data.favUsers[i], {
+            headers: { Authorization: `Bearer ${response.data.token}` },
+          })
+          .then((res) => {
+            dispatch(authSlice.actions.loadFavUserProfiles(res.data as UserModel));
+            console.log("_favUserProfile: " +JSON.stringify(res.data));
+          })
+          .catch((er) => {
+            console.log(er);
+          });
+      }
+      //console.log("_favUserProfiles: " + _favUserProfiles);
+      
         })
         .catch((error) => {
           console.log(error);
         });
-        // console.log("UserId: "+ response.data.userId);
-        dispatch(loadMyItems(response.data.userId));
-        // checkAuthTimeout(response.data.expiresAt);
+      dispatch(loadMyItems(response.data.userId));
     })
     .catch((err) => {
       console.log(err);
@@ -123,10 +140,27 @@ export const changeEmail = (newEmail: string): AppThunk => async (
   //         console.log(err);
   //     });
 };
-export const toggleFavourite = (itemId: string, userId: string): AppThunk => async (dispatch: AppDispatch) => {
-  axios.post("users/updateFavs/"+ userId, { itemId: itemId }).then((res) => {
-            dispatch(authSlice.actions.toggleFavourite(res.data.favourites));
-          }).catch((err) => {});
+export const toggleFavourite = (
+  itemId: string,
+  userId: string
+): AppThunk => async (dispatch: AppDispatch) => {
+  axios
+    .post("users/updateFavs/" + userId, { itemId: itemId })
+    .then((res) => {
+      dispatch(authSlice.actions.toggleFavourite(res.data.favourites));
+    })
+    .catch((err) => {});
+};
+export const toggleFavUsers = (
+  favUserId: string,
+  userId: string
+): AppThunk => async (dispatch: AppDispatch) => {
+  axios
+    .post("users/updateFavUsers/" + userId, { userId: favUserId })
+    .then((res) => {
+      dispatch(authSlice.actions.toggleFavUsers(res.data.favUsers));
+    })
+    .catch((err) => {});
 };
 export const changePassword = (
   email: string,
@@ -162,22 +196,29 @@ export const authCheckState = (): AppThunk => async (dispatch: AppDispatch) => {
   if (new Date().getTime() > expirationTime || !token) {
     logout();
   } else {
-    var userId= localStorage.getItem("userId");
-    axios.get("users/" + userId, {
-      headers: { Authorization: `Bearer ${token}` },
-    }).then((res) => {
-      dispatch(authSlice.actions.setUser(res.data as UserModel));
-      dispatch(authSlice.actions.login(true));
-      dispatch(loadMyItems(userId!));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    var userId = localStorage.getItem("userId");
+    axios
+      .get("users/" + userId, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        dispatch(authSlice.actions.setUser(res.data as UserModel));
+        dispatch(authSlice.actions.login(true));
+        dispatch(loadMyItems(userId!));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 };
-export const sendMsg = (msg: MsgModel, userId: string): AppThunk => async (dispatch: AppDispatch) => {
-  axios.post("users/updateMsgs/"+ userId, msg).then((res) => {
-            console.log(res.data);
-          }).catch((err) => {});
+export const sendMsg = (msg: MsgModel, userId: string): AppThunk => async (
+  dispatch: AppDispatch
+) => {
+  axios
+    .post("users/updateMsgs/" + userId, msg)
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {});
 };
 export default authSlice.reducer;

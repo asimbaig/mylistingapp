@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   IonPage,
   IonHeader,
@@ -6,8 +6,16 @@ import {
   IonContent,
   IonFab,
   IonButton,
-  IonIcon,IonLoading,
-  IonCard, IonCardHeader, IonAvatar, IonCardContent, IonNote, IonList, IonItem, IonLabel
+  IonIcon,
+  IonLoading,
+  IonCard,
+  IonCardHeader,
+  IonAvatar,
+  IonCardContent,
+  IonNote,
+  IonList,
+  IonItem,
+  IonLabel,
 } from "@ionic/react";
 import {
   arrowBack,
@@ -18,6 +26,7 @@ import {
   play,
   closeSharp,
   star,
+  starOutline,
   heartSharp,
 } from "ionicons/icons";
 import ImageSwiperSlides from "../../components/ImageSwiperSlides/ImageSwiperSlides";
@@ -28,6 +37,7 @@ import "swiper/swiper.scss";
 import "swiper/components/effect-flip/effect-flip.scss";
 import { Item } from "../../redux/itemType";
 import { setSelectItem } from "../../redux/itemSlice";
+import { toggleFavUsers } from "../../redux/authSlice";
 
 type Props = {
   history: any;
@@ -39,8 +49,22 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
     (state: RootState) => state.listings.selectedItem
   );
   const ItemUser = useSelector((state: RootState) => state.listings.itemUser);
-  const OtherUserItems = useSelector((state: RootState) => state.listings.userOtherItems);
+  const OtherUserItems = useSelector(
+    (state: RootState) => state.listings.userOtherItems
+  );
+  const CurrentUser = useSelector((state: RootState) => state.auth.user);
+  const favUsers = useSelector((state: RootState) => state.auth.user?.favUsers);
 
+  const isFavUser = (currentfavuserId: string) => {
+    if (favUsers) {
+      var index = favUsers.findIndex((fuid) => fuid === currentfavuserId);
+      if (index && index > -1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
   const onClose = () => {
     history.push("/listings");
   };
@@ -63,100 +87,141 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
       </IonHeader>
 
       <IonContent className="profile-page">
-      <IonLoading
+        <IonLoading
           isOpen={isLoading}
           message={"Loading details..."}
           duration={1000}
         />
-        { selectedItem && 
+        {selectedItem && (
           <div>
-              <div className="profile-header">
-         <ImageSwiperSlides images={selectedItem?.item_images!} />
-          
-          <IonFab vertical="bottom" horizontal="end" edge slot="fixed">
-            <IonButton
-              color="white"
-              className="button-custom button-icon button-sm button-brand"
-              onClick={onClose}
-            >
-              <IonIcon icon={arrowBack} slot="icon-only" />
-            </IonButton>
-          </IonFab>
-        </div>
-         
-        <div className="profile-info border-bottom">
-          <div className="profile-title">
-            <span className="profile-user-name">{selectedItem?.title}</span>
-            <div className="profile-user-age">£{selectedItem?.price}</div>
-          </div>
+            <div className="profile-header">
+              <ImageSwiperSlides images={selectedItem?.item_images!} />
 
-          
-        </div>
+              <IonFab vertical="bottom" horizontal="end" edge slot="fixed">
+                <IonButton
+                  color="white"
+                  className="button-custom button-icon button-sm button-brand"
+                  onClick={onClose}
+                >
+                  <IonIcon icon={arrowBack} slot="icon-only" />
+                </IonButton>
+              </IonFab>
+            </div>
 
-        <div className="ion-padding">
-          <div className="profile-user-info">
-             <div className="info-item">
-              {selectedItem?.description}
+            <div className="profile-info border-bottom">
+              <div className="profile-title">
+                <span className="profile-user-name">{selectedItem?.title}</span>
+                <div className="profile-user-age">£{selectedItem?.price}</div>
               </div>
-          </div>
+            </div>
 
-          <hr />
-          { ItemUser &&
-            <IonCard>
-            <IonCardHeader>
-              <IonAvatar>
-               <img src={ItemUser.profileImages[0]} alt="" />
-              </IonAvatar>
-              <IonNote color="primary">{ItemUser?.displayname}</IonNote>
-            </IonCardHeader>
-            <IonCardContent>
-              {OtherUserItems && OtherUserItems.length > 0 && (
-                <IonList>
-                  {OtherUserItems.filter((x) => x._id !== selectedItem._id).map(
-                    (otherItem: Item, index: number) => (
-                      <IonItem
-                        key={index}
-                        onClick={() => onClickItem(otherItem)}
-                        style={{cursor: "pointer"}}
+            <div className="ion-padding">
+              <div className="profile-user-info">
+                <div className="info-item">{selectedItem?.description}</div>
+              </div>
+
+              <hr />
+              {ItemUser && (
+                <IonCard>
+                  <IonCardHeader>
+                    <IonAvatar>
+                      <img src={ItemUser.profileImages[0]} alt="" />
+                    </IonAvatar>
+                    <IonNote color="primary">{ItemUser?.displayname}</IonNote>
+                    {/* <IonButton
+                      expand="full"
+                      fill="clear"
+                      color="danger"
+                      size="small"
+                      onClick={() => {
+                        dispatch(toggleFavUsers(ItemUser._id, CurrentUser._id));
+                      }}
+                    >
+                      <IonIcon slot="start" icon={star}></IonIcon>
+                    </IonButton> */}
+                    {isFavUser(ItemUser._id) ? (
+                      <IonButton
+                        expand="full"
+                        fill="clear"
+                        color="danger"
+                        size="small"
+                        onClick={() => {
+                          dispatch(
+                            toggleFavUsers(ItemUser._id, CurrentUser._id)
+                          );
+                        }}
                       >
-                        <IonAvatar>
-                          <img src={otherItem.item_images[0]} alt="" />
-                        </IonAvatar>
-                        <IonLabel>
-                          <h2>{otherItem.title}</h2>
-                          <IonNote>Expires: {otherItem.enddate}</IonNote>
-                        </IonLabel>
-                      </IonItem>
-                    )
-                  )}
-                </IonList>
+                        <IonIcon slot="start" icon={star}></IonIcon>
+                      </IonButton>
+                    ) : (
+                      <IonButton
+                        expand="full"
+                        fill="clear"
+                        color="danger"
+                        size="small"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          dispatch(
+                            toggleFavUsers(ItemUser._id, CurrentUser._id)
+                          );
+                        }}
+                      >
+                        <IonIcon slot="start" icon={starOutline}></IonIcon>
+                      </IonButton>
+                    )}
+                  </IonCardHeader>
+                  <IonCardContent>
+                    {OtherUserItems && OtherUserItems.length > 0 && (
+                      <IonList>
+                        {OtherUserItems.filter(
+                          (x) => x._id !== selectedItem._id
+                        ).map((otherItem: Item, index: number) => (
+                          <IonItem
+                            key={index}
+                            onClick={() => onClickItem(otherItem)}
+                            style={{ cursor: "pointer" }}
+                          >
+                            <IonAvatar>
+                              <img src={otherItem.item_images[0]} alt="" />
+                            </IonAvatar>
+                            <IonLabel>
+                              <h2>{otherItem.title}</h2>
+                              <IonNote>Expires: {otherItem.enddate}</IonNote>
+                            </IonLabel>
+                          </IonItem>
+                        ))}
+                      </IonList>
+                    )}
+                  </IonCardContent>
+                </IonCard>
               )}
-            </IonCardContent>
-          </IonCard>
-          
-          } 
-        </div>
-        <div className="profile-footer border-bottom">
-          <IonButton fill="clear" expand="block" color="medium" size="small">
-            <div className="button-label">REPORT THIS ITEM</div>
-          </IonButton>
-        </div>
-
-          </div> }
-        { !selectedItem && 
-          <div style={{textAlign:"center"}}>
+            </div>
+            <div className="profile-footer border-bottom">
+              <IonButton
+                fill="clear"
+                expand="block"
+                color="medium"
+                size="small"
+              >
+                <div className="button-label">REPORT THIS ITEM</div>
+              </IonButton>
+            </div>
+          </div>
+        )}
+        {!selectedItem && (
+          <div style={{ textAlign: "center" }}>
             No content available
             <IonFab vertical="bottom" horizontal="end" slot="fixed">
-            <IonButton
-              color="white"
-              className="button-custom button-icon button-sm button-brand"
-              onClick={onClose}
-            >
-              <IonIcon icon={arrowBack} slot="icon-only" />
-            </IonButton>
-          </IonFab>
-          </div> }
-        
+              <IonButton
+                color="white"
+                className="button-custom button-icon button-sm button-brand"
+                onClick={onClose}
+              >
+                <IonIcon icon={arrowBack} slot="icon-only" />
+              </IonButton>
+            </IonFab>
+          </div>
+        )}
       </IonContent>
     </IonPage>
   );

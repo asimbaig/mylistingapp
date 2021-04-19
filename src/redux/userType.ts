@@ -12,4 +12,5 @@ export interface UserModel {
   rating: number;
   joinDate: string;
   favourites: string[];
+  favUsers: string[];
 }
