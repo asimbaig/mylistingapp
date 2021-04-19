@@ -2,7 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk, AppDispatch } from "./store";
 import { AuthModel } from "./authtypes";
 import { UserModel } from "./userType";
+import { MsgModel } from "./MsgType";
 import axios from "./api-ref";
+import { loadMyItems } from "./itemSlice";
 
 const initialState: AuthModel = {
   isAuthenticated: false,
@@ -36,9 +38,8 @@ const authSlice = createSlice({
     setUser(state, action: PayloadAction<UserModel>) {
       state.user = action.payload;
     },
-    addFavourite(state, action: PayloadAction<string>) {
-      state.user?.favourites.push(action.payload);
-      //state.user = action.payload;
+    toggleFavourite(state, action: PayloadAction<string[]>) {
+        state.user.favourites = action.payload;
     },
     removeFavourite(state, action: PayloadAction<string>) {
       var index = state.user?.favourites.findIndex(
@@ -51,8 +52,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { addFavourite } = authSlice.actions;
-export const { removeFavourite } = authSlice.actions;
+// export const { toggleFavourite } = authSlice.actions;
 
 const checkAuthTimeout = (expirationTime: number): AppThunk => async (
   dispatch: AppDispatch
@@ -83,17 +83,17 @@ export const login = (email: string, password: string): AppThunk => async (
       localStorage.setItem("displayname", response.data.displayname);
       localStorage.setItem("expiresAt", response.data.expiresAt);
       dispatch(authSlice.actions.login(true));
-      axios
-        .get("users/" + response.data.userId, {
+      axios.get("users/" + response.data.userId, {
           headers: { Authorization: `Bearer ${response.data.token}` },
-        })
-        .then((res) => {
+        }).then((res) => {
           dispatch(authSlice.actions.setUser(res.data as UserModel));
         })
         .catch((error) => {
           console.log(error);
         });
-      checkAuthTimeout(response.data.expiresAt);
+        // console.log("UserId: "+ response.data.userId);
+        dispatch(loadMyItems(response.data.userId));
+        // checkAuthTimeout(response.data.expiresAt);
     })
     .catch((err) => {
       console.log(err);
@@ -123,6 +123,11 @@ export const changeEmail = (newEmail: string): AppThunk => async (
   //         console.log(err);
   //     });
 };
+export const toggleFavourite = (itemId: string, userId: string): AppThunk => async (dispatch: AppDispatch) => {
+  axios.post("users/updateFavs/"+ userId, { itemId: itemId }).then((res) => {
+            dispatch(authSlice.actions.toggleFavourite(res.data.favourites));
+          }).catch((err) => {});
+};
 export const changePassword = (
   email: string,
   newPassword: string
@@ -151,15 +156,28 @@ export const changePassword = (
 export const authCheckState = (): AppThunk => async (dispatch: AppDispatch) => {
   const token = localStorage.getItem("token");
   let expirationTime: number = 0;
-  if (localStorage.getItem("expiration")) {
-    expirationTime = Number.parseInt(localStorage.getItem("expiration")!);
+  if (localStorage.getItem("expiresAt")) {
+    expirationTime = Number.parseInt(localStorage.getItem("expiresAt")!);
   }
-  if (Math.round(Date.now() / 1000) > expirationTime || !token) {
+  if (new Date().getTime() > expirationTime || !token) {
     logout();
-    return false;
   } else {
-    dispatch(authSlice.actions.login(true));
-    return true;
+    var userId= localStorage.getItem("userId");
+    axios.get("users/" + userId, {
+      headers: { Authorization: `Bearer ${token}` },
+    }).then((res) => {
+      dispatch(authSlice.actions.setUser(res.data as UserModel));
+      dispatch(authSlice.actions.login(true));
+      dispatch(loadMyItems(userId!));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   }
+};
+export const sendMsg = (msg: MsgModel, userId: string): AppThunk => async (dispatch: AppDispatch) => {
+  axios.post("users/updateMsgs/"+ userId, msg).then((res) => {
+            console.log(res.data);
+          }).catch((err) => {});
 };
 export default authSlice.reducer;

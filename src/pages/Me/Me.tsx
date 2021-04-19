@@ -20,11 +20,13 @@ import PlusIntro from "../../components/PlusIntro/PlusIntro";
 import Settings from "../Settings/Settings";
 import Profile from "../Profile/Profile";
 import ProfileEdit from "../ProfileEdit/ProfileEdit";
-import TinderGold from "../TinderGold/TinderGold";
+import SpecialModel from "../SpecialModel/SpecialModel";
 import "./Me.scss";
 import USERS from "../Explore/users.dummy";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
+import {sendMsg} from "../../redux/authSlice"; 
+import {MsgModel} from "../../redux/MsgType"; 
 
 type Props = {
   history: any;
@@ -34,13 +36,20 @@ const Me: React.FC<Props> = ({ history }) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
   const [isProfileEditOpen, setIsProfileEditOpen] = useState<boolean>(false);
-  const [isTinderGoldOpen, setIsTinderGoldOpen] = useState<boolean>(false);
+  const [isSpecialModelOpen, setIsSpecialModelOpen] = useState<boolean>(false);
   const user = USERS[3];
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const loggedin_User = useSelector((state: RootState) => state.auth.user);
-
+  const msg: MsgModel = {
+    text: "My Message 2",
+    fromUser: "607616f3908e524b6cc195e8", 
+    fromUserImg: "./assets/images/user1.jpg",
+    dateTime: new Date(),
+    isRead: false
+  };
   useEffect(() => {
-    console.log(JSON.stringify(loggedin_User));
+    //console.log(JSON.stringify(loggedin_User));
   }, []);
   const handleViewSettings = () => {
     setIsSettingsOpen(true);
@@ -54,10 +63,13 @@ const Me: React.FC<Props> = ({ history }) => {
     setIsProfileEditOpen(true);
   };
 
-  const handleViewTinderGold = () => {
-    setIsTinderGoldOpen(true);
+  const handleViewSpecialModel = () => {
+    setIsSpecialModelOpen(true);
   };
-
+  if(!isAuthenticated){
+    history.push("/");
+    return null;
+  }
   return (
     <IonPage>
       <IonContent force-overscroll="false" className="me-page bg-light">
@@ -127,9 +139,16 @@ const Me: React.FC<Props> = ({ history }) => {
               <IonButton
                 color="white"
                 className="button-custom text-primary button-tinder-plus"
-                onClick={handleViewTinderGold}
+                onClick={handleViewSpecialModel}
               >
-                MY TINDER PLUS
+                SPECIAL MODEL
+              </IonButton>
+              <IonButton
+                color="white"
+                className="button-custom text-primary button-tinder-plus"
+                onClick={()=>{dispatch(sendMsg(msg,"607616ba908e524b6cc195e7"))}}
+              >
+                Send Msg
               </IonButton>
             </div>
           </div>
@@ -140,16 +159,16 @@ const Me: React.FC<Props> = ({ history }) => {
         <Settings history={history} onClose={() => setIsSettingsOpen(false)} />
       </IonModal>
 
-      <IonModal isOpen={isProfileOpen} swipeToClose>
+      {/* <IonModal isOpen={isProfileOpen} swipeToClose>
         <Profile user={user} onClose={() => setIsProfileOpen(false)} />
-      </IonModal>
+      </IonModal> */}
 
       <IonModal isOpen={isProfileEditOpen}>
         <ProfileEdit user={user} onClose={() => setIsProfileEditOpen(false)} />
       </IonModal>
 
-      <IonModal isOpen={isTinderGoldOpen} cssClass="custom-modal-small">
-        <TinderGold onClose={() => setIsTinderGoldOpen(false)} />
+      <IonModal isOpen={isSpecialModelOpen} cssClass="custom-modal-small">
+        <SpecialModel onClose={() => setIsSpecialModelOpen(false)} />
       </IonModal>
     </IonPage>
   );

@@ -1,22 +1,21 @@
-import React, { useState, useRef } from "react";
-import { TapticEngine } from "@ionic-native/taptic-engine";
-import { IonSlides, IonSlide } from "@ionic/react";
-import {} from "ionicons/icons";
-import "./ProfileImageSlides.scss";
+import React, { useState, useRef } from 'react';
+import { TapticEngine } from '@ionic-native/taptic-engine';
+import {
+  IonSlides, IonSlide
+} from '@ionic/react';
+import {
+
+} from 'ionicons/icons';
+import './ProfileImageSlides.scss';
 
 type Props = {
-  images: any[];
-  isClickable?: boolean;
-  onNoMoreSlide?: (l: boolean) => void;
-  onChange?: (i: number) => void;
-};
+  images: any[],
+  isClickable?: boolean,
+  onNoMoreSlide?: (l: boolean) => void,
+  onChange?: (i: number) => void,
+}
 
-const ProfileImageSlides: React.FC<Props> = ({
-  images,
-  isClickable,
-  onChange,
-  onNoMoreSlide,
-}) => {
+const ProfileImageSlides: React.FC<Props> = ({ images, isClickable, onChange, onNoMoreSlide }) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [currentEnd, setCurrentEnd] = useState<number>(-1);
   const ionSlidesRef = useRef<HTMLIonSlidesElement>(null);
@@ -26,16 +25,17 @@ const ProfileImageSlides: React.FC<Props> = ({
     if (ionSlidesRef && ionSlidesRef.current) {
       ionSlidesRef.current.update();
     }
-  };
+  }
 
   const handleSlideChange = () => {
     if (ionSlidesRef && ionSlidesRef.current) {
-      ionSlidesRef.current.getActiveIndex().then((index: number) => {
-        setActiveIndex(index);
-        if (onChange) onChange(index);
-      });
+      ionSlidesRef.current.getActiveIndex()
+        .then((index: number) => {
+          setActiveIndex(index);
+          if (onChange) onChange(index);
+        })
     }
-  };
+  }
 
   const handleMoveSlide = (step: number = 1) => {
     if (ionSlidesRef && ionSlidesRef.current) {
@@ -53,19 +53,19 @@ const ProfileImageSlides: React.FC<Props> = ({
         TapticEngine.selection();
       }
     }
-  };
+  }
 
   const onNoMore = (isOnTheLeft: boolean) => {
     if (onNoMoreSlide) onNoMoreSlide(isOnTheLeft);
-    TapticEngine.notification({ type: "warning" });
-  };
+    TapticEngine.notification({type: 'warning'});
+  }
 
   const handleReachStart = () => {
     setCurrentEnd(-1);
-  };
+  }
   const handleReachEnd = () => {
     setCurrentEnd(1);
-  };
+  }
 
   if (images.length === 0) return null;
 
@@ -73,44 +73,35 @@ const ProfileImageSlides: React.FC<Props> = ({
     <div className="profile-image-slides">
       <IonSlides
         className="slides"
-        ref={ionSlidesRef}
-        onIonSlidesDidLoad={handleSlideLoaded}
-        onIonSlideDidChange={handleSlideChange}
-        onIonSlideReachStart={handleReachStart}
-        onIonSlideReachEnd={handleReachEnd}
+        ref={ ionSlidesRef }
+        onIonSlidesDidLoad={ handleSlideLoaded }
+        onIonSlideDidChange={ handleSlideChange }
+        onIonSlideReachStart={ handleReachStart }
+        onIonSlideReachEnd={ handleReachEnd }
       >
-        {images.map((item, index) => (
-          <IonSlide key={item + index}>
-            <div
-              className="slide-img background-img"
-              style={{ backgroundImage: `url('${item}')` }}
-            />
-          </IonSlide>
-        ))}
+        {
+          images.map(item => (
+            <IonSlide key={ item.id }>
+              <div className="slide-img background-img" style={{ backgroundImage: `url('${ item.imageUrl }')` }} />
+            </IonSlide>
+          ))
+        }
       </IonSlides>
       <div className="custom-pagination">
-        {images?.map((item, index) => (
-          <div
-            key={item}
-            className={`pagination-bullet${
-              activeIndex === index ? " pagination-bullet-active" : ""
-            }`}
-          />
-        ))}
+        {
+          images?.map((item, index) => (
+            <div key={ item.id } className={ `pagination-bullet${ activeIndex === index ? ' pagination-bullet-active' : '' }` } />
+          ))
+        }
       </div>
 
-      {isClickable && (
+      {
+        isClickable &&
         <div className="overlay-navigation">
-          <div
-            className="navi navi-left"
-            onClick={() => handleMoveSlide(-1)}
-          ></div>
-          <div
-            className="navi navi-right"
-            onClick={() => handleMoveSlide(1)}
-          ></div>
+          <div className="navi navi-left" onClick={ () => handleMoveSlide(-1) }></div>
+          <div className="navi navi-right" onClick={ () => handleMoveSlide(1) }></div>
         </div>
-      )}
+      }
     </div>
   );
 };
@@ -119,6 +110,6 @@ ProfileImageSlides.defaultProps = {
   isClickable: false,
   onNoMoreSlide: () => {},
   onChange: () => {},
-};
+}
 
 export default ProfileImageSlides;

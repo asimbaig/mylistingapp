@@ -79,7 +79,6 @@ class Explore extends React.Component<Props, State> {
       });
     }, 3000);
   };
-
   getTopCardEl = () => {
     if (this.stackRef) {
       // @ts-ignore
@@ -95,7 +94,6 @@ class Explore extends React.Component<Props, State> {
 
     return null;
   };
-
   getNextCardEl = () => {
     if (this.stackRef) {
       // @ts-ignore
@@ -111,7 +109,6 @@ class Explore extends React.Component<Props, State> {
 
     return null;
   };
-
   checkMatching = (card: any) => {
     if (card.name === "Hieu Pham") {
       console.info("MATCHED!!!");
@@ -119,7 +116,6 @@ class Explore extends React.Component<Props, State> {
       this.handleToggleMatchModal();
     }
   };
-
   handleSetStack = (swingStack: any) => {
     this.setState({ stack: swingStack });
 
@@ -132,7 +128,6 @@ class Explore extends React.Component<Props, State> {
 
     this.nextCardEl = this.getNextCardEl();
   };
-
   handleButtonClicked = (type: string = "NOPE") => {
     if (this.state.isLocked) return false;
 
@@ -166,21 +161,17 @@ class Explore extends React.Component<Props, State> {
       }
     }
   };
-
   handleClickNope = () => {
     this.handleButtonClicked("NOPE");
   };
-
   handleClickLike = () => {
     this.handleButtonClicked("LIKE");
   };
-
   handleGetMoreCards = () => {
     if (this.state.isLocked) return false;
 
     this.getData();
   };
-
   // Called whenever we drag an element
   handleCardDragging = (
     element: HTMLElement,
@@ -219,7 +210,6 @@ class Explore extends React.Component<Props, State> {
       });
     }
   };
-
   handleCardThrowOut = (e: any, direction = ReactSwing.DIRECTION.LEFT) => {
     this.setState({ isLocked: true });
 
@@ -235,11 +225,9 @@ class Explore extends React.Component<Props, State> {
       }: ${removedCard.name}`
     );
   };
-
   handleThrowIn = () => {
     this.setState({ isLocked: false });
   };
-
   handleCardThrowOutEnd = () => {
     let { cards: cardList } = this.state;
 
@@ -267,13 +255,11 @@ class Explore extends React.Component<Props, State> {
       }
     );
   };
-
   handleToggleMatchModal = () => {
     this.setState({
       isMatchModalOpen: !this.state.isMatchModalOpen,
     });
   };
-
   handleNoMoreSlide = (isOnTheLeft: boolean) => {
     if (this.stackRef && this.stackRef.current) {
       const className = isOnTheLeft ? "rotate-left" : "rotate-right";
@@ -286,23 +272,17 @@ class Explore extends React.Component<Props, State> {
       }, 250);
     }
   };
-
   handleOpenProfile = (user: User) => {
     this.setState({
       isProfileOpen: !this.state.isProfileOpen,
       currentProfile: user,
     });
   };
-
   handleToggleProfile = () => {
     this.setState({
       isProfileOpen: !this.state.isProfileOpen,
     });
   };
-
-  /**
-    Read more: https://github.com/gajus/swing#configuration
-  */
   stackConfig = {
     // Default setting only allows UP, LEFT and RIGHT so you can override this as below
     allowedDirections: [ReactSwing.DIRECTION.LEFT, ReactSwing.DIRECTION.RIGHT],

@@ -1,10 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk, AppDispatch } from "./store";
 import { Item, ItemModel } from "./itemType";
-// import axios from "../../api/database";
-import LISTINGS from "../../src/redux/listings.dummy";
+import { UserModel } from "./userType";
+import axios from "./api-ref";
 
-const initialState: ItemModel = { items: [], selectedItem: undefined };
+
+const initialState: ItemModel = { 
+  items: [], 
+  selectedItem: undefined, 
+  userOtherItems: [], 
+  itemUser: undefined, 
+  myItems: [],
+  searchText:  ""
+};
 
 const itemsSlice = createSlice({
   name: "listings",
@@ -22,25 +30,38 @@ const itemsSlice = createSlice({
     setSelectedItem(state, action: PayloadAction<Item>) {
       state.selectedItem = action.payload;
     },
-    // toggleTodo(state, action: PayloadAction<Todo>) {
-    //     let todo = state.find(todo => todo.id === action.payload.id);
-    //     if (todo) {
-    //         const userId = localStorage.getItem('userId');
-    //         todo.completed = !todo.completed;
-    //         axios
-    //             .put("/NewTodos/" + userId + "/" + todo.id + ".json", todo);
-    //     }
-    // },
     loadItems(state, action: PayloadAction<Item[]>) {
-      state.items.length = 0;
-      for (let item in action.payload) {
-        state.items.push(action.payload[item]);
+      if (state.searchText) {
+        state.items = action.payload.filter(s => s.title.toLowerCase().indexOf(state.searchText.toLowerCase()) > -1);
+      }else{
+        state.items.length = 0;
+        for (let item in action.payload) {
+          state.items.push(action.payload[item]);
+        }
       }
+    },
+    loadUserOtherItems(state, action: PayloadAction<Item[]>) {
+      state.userOtherItems.length = 0;
+      for (let item in action.payload) {
+        state.userOtherItems.push(action.payload[item]);
+      }
+    },
+    setItemUser(state, action: PayloadAction<UserModel>) {
+      state.itemUser = action.payload;
+    },
+    loadMyItems(state, action: PayloadAction<Item[]>) {
+      state.myItems.length = 0;
+      for (let item in action.payload) {
+        state.myItems.push(action.payload[item]);
+      }
+    },
+    setSearchText(state, action: PayloadAction<string>) {
+      state.searchText = action.payload;
     },
   },
 });
 
-// export const { toggleTodo } = todoSlice.actions;
+export const { setSearchText } = itemsSlice.actions;
 
 export const removeItem = (id: string): AppThunk => async (
   dispatch: AppDispatch
@@ -76,35 +97,42 @@ export const addItem = (text: string): AppThunk => async (
   //     });
 };
 export const loadItems = (): AppThunk => async (dispatch: AppDispatch) => {
-  let listings: Item[] = [...LISTINGS];
-  dispatch(itemsSlice.actions.loadItems(listings));
-
-  // const userId = localStorage.getItem('userId');
-  // axios
-  //     .get("/NewTodos/" + userId + ".json")
-  //     .then((res) => {
-  //         const fetchedTodos = [];
-  //         for (let key in res.data) {
-  //             fetchedTodos.push({
-  //                 ...res.data[key],
-  //                 id: key,
-  //             });
-  //         }
-  //         fetchedTodos.sort(function (a, b) {
-  //             return a.status - b.status;
-  //         });
-  //         return fetchedTodos;
-  //     })
-  //     .then((fetchedTodos) => {
-  //         dispatch(todoSlice.actions.loadTodos(fetchedTodos));
-  //     })
-  //     .catch((err) => {
-  //         // console.log(err);
-  //     });
+  axios.get("items")
+        .then((res) => {
+          dispatch(itemsSlice.actions.loadItems(res.data as Item[]));
+        })
+        .catch((err) => {});
 };
-export const setSelectItem = (selectedItem: Item): AppThunk => async (
-  dispatch: AppDispatch
-) => {
+export const loadUserOtherItems = (userItemIds: String[]): AppThunk => async (dispatch: AppDispatch) => {
+  let UserItems: Item[] = [];
+  axios.get("items").then((res) => {
+          const items = res.data as Item[]
+          items.map((item)=>{
+            for(var i=0;  i < userItemIds.length;i++){
+                  if(item._id===userItemIds[i]){
+                      UserItems.push(item);
+                  }
+            }
+          });
+          // console.log("UserItems: "+ UserItems);
+          dispatch(itemsSlice.actions.loadUserOtherItems(UserItems));
+        }).catch((err) => {console.log(err)});
+};
+export const loadMyItems = (userId: String): AppThunk => async (dispatch: AppDispatch) => {
+  axios.get("items/user/"+userId).then((res) => {
+          const items = res.data as Item[];
+          dispatch(itemsSlice.actions.loadMyItems(items));
+        }).catch((err) => {console.log(err)});
+};
+export const setSelectItem = (selectedItem: Item): AppThunk => async (dispatch: AppDispatch) => {
+  axios.get("users/ItemUser/" + selectedItem.userId).then((res) => {
+          var itemUser = res.data as UserModel;
+          dispatch(itemsSlice.actions.setItemUser(itemUser));
+          dispatch(loadUserOtherItems(itemUser.listedItems));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
   dispatch(itemsSlice.actions.setSelectedItem(selectedItem));
 };
 export default itemsSlice.reducer;

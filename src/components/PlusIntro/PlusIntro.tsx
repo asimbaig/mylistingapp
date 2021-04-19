@@ -16,38 +16,28 @@ const PlusIntro: React.FC<Props> = () => {
   const items = [
     {
       icon: flameSharp,
-      title: 'Get Tinder Gold',
-      body: 'See who Likes You & more!'
+      title: 'Slide 1',
+      body: 'Information on slide 1'
     },
     {
       icon: flashSharp,
-      title: 'Get Matches Faster',
-      body: 'Boost your profile once a month!'
+      title: 'Slide 2',
+      body: 'Information on slide 2'
     },
     {
       icon: starSharp,
-      title: 'Stand Out With Super Likes',
-      body: `You're 3x more likely to get a match!`
+      title: 'Slide 3',
+      body: `Information on slide 3`
     },
     {
       icon: locationSharp,
-      title: 'Swipe Around the World',
-      body: 'Passport to anywhere with Tinder Plus!'
+      title: 'Slide 4',
+      body: 'Information on slide 4'
     },
     {
       icon: keySharp,
-      title: 'Control Your Profile',
-      body: 'Limit what others see with Tinder Plus.'
-    },
-    {
-      icon: refreshCircleSharp,
-      title: 'I Meant to Swipe Right',
-      body: 'Get unlimited Rewinds with Tinder Plus!'
-    },
-    {
-      icon: heartSharp,
-      title: 'Increase Your Chances',
-      body: 'Get unlimited Likes with Tinder Plus!'
+      title: 'Slide 5',
+      body: 'Information on slide 5'
     }
   ]
 

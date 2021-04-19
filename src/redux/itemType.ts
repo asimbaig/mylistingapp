@@ -1,6 +1,11 @@
+import { UserModel } from "./userType";
 export interface ItemModel {
   items: Item[];
   selectedItem?: Item;
+  userOtherItems: Item[];
+  itemUser?: UserModel;
+  myItems: Item[];
+  searchText: string;
 }
 
 export interface Item {

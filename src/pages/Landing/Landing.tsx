@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   IonPage,
   IonContent,
@@ -11,33 +11,40 @@ import "./Landing.scss";
 import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from '../../redux/rootReducer';
 import { login } from "../../redux/authSlice";
+import { setIsLoading } from "../../redux/appSlice";
 
 type Props = {
   history: any;
 };
 
 const Landing: React.FC<Props> = ({ history }) => {
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(setIsLoading(true));
+    setTimeout(() => {
+        dispatch(setIsLoading(false));
+    }, 3000);
+  }, []);
 
   const goToExplore = () => {
-    setIsLoading(true);
-    dispatch(login("user1@test.com","password1"));
-    setTimeout(() => {
-      setIsLoading(false);
-      history.push("/listings");
-    }, 1000); // dummy loader for Loggin In
+    dispatch(login("user2@test.com","password1"));
+    dispatch(setIsLoading(true));
+        setTimeout(() => {
+            dispatch(setIsLoading(false));
+            history.push("/listings");
+        }, 3000);
   };
 
   return (
     <IonPage>
       <IonContent forceOverscroll={false} className="landing-page bg-gradient">
-        <IonLoading
+        {/* <IonLoading
           isOpen={isLoading}
           message={"Logging in..."}
           duration={5000}
-        />
+        /> */}
 
         <div className="vertical-layout safe-area-bottom">
           <div className="section-brand">

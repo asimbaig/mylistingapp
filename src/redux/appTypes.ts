@@ -1,3 +1,4 @@
 export interface AppModel {
-    darkMode: boolean
+    darkMode: boolean,
+    isLoading: boolean
 }

@@ -1,0 +1,14 @@
+.highlights-page {
+  .boost-promotion {
+    margin: 12px 24px 8px;
+    padding: 16px;
+    background: linear-gradient(var(--ion-color-white) 0%, rgba(var(--ion-color-boost-rgb), 0.3) 100%);
+    text-align: center;
+    border-radius: 0 0 36px 36px;
+  }
+
+  .offer-message {
+    text-align: center;
+    padding: 24px;
+  }
+}

@@ -6,18 +6,18 @@ import {
 
 } from 'ionicons/icons';
 import PlusIntro from '../../components/PlusIntro/PlusIntro';
-import './TinderGold.scss';
+import './SpecialModel.scss';
 
 type Props = {
   onClose: () => void,
 }
 
-const TinderGold: React.FC<Props> = ({ onClose }) => {
+const SpecialModel: React.FC<Props> = ({ onClose }) => {
   return (
     <>
       <IonContent forceOverscroll={false} scrollY={false} className="tinder-gold-page bg-light">
         <div className="header-title">
-          <IonText color="gold"><strong>Get Tinder Gold</strong></IonText>
+          <IonText color="gold"><strong>Special Model</strong></IonText>
         </div>
         <div className="slides-intro">
           <PlusIntro />
@@ -27,10 +27,10 @@ const TinderGold: React.FC<Props> = ({ onClose }) => {
           <div className="plan-name">
             <div className="number-big">1</div>
             <div><strong>month</strong></div>
-            <IonText color="medium">$4.95/mo</IonText>
+            <IonText color="medium">£4.95/mo</IonText>
           </div>
           <div className="total">
-            <div className="text-lg"><strong>$4.95</strong></div>
+            <div className="text-lg"><strong>£4.95</strong></div>
           </div>
         </div>
 
@@ -48,8 +48,8 @@ const TinderGold: React.FC<Props> = ({ onClose }) => {
   );
 };
 
-TinderGold.defaultProps = {
+SpecialModel.defaultProps = {
 
 }
 
-export default TinderGold;
+export default SpecialModel;
