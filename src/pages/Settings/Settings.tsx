@@ -10,14 +10,16 @@ import './Settings.scss';
 import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/authSlice";
+import RedirectToLogin from "../Settings/RedirectToLogin";
+import { useHistory } from 'react-router-dom';
 
 type Props = {
-  history: any,
   onClose: () => void,
 }
 
-const Settings: React.FC<Props> = ({ onClose, history }) => {
+const Settings: React.FC<Props> = ({ onClose }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [distance, setDistance] = useState<number>(30);
   const [ageRange, setAgeRange] = useState<any>({
     lower: 20,
@@ -26,13 +28,23 @@ const Settings: React.FC<Props> = ({ onClose, history }) => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(ThemeService.getCurrentSetting());
   const CurrentUser = useSelector((state: RootState) => state.auth.user);
 
-  const handleLogout = () => {
-    dispatch(logout());
-    setTimeout(() => {
-      // onClose();
-      history.push('/listings');
-    }, 1000);
-  }
+  // const handleLogout = () => {
+  //   //dispatch(logout());
+    
+  //   // setTimeout(() => {
+  //   // onClose();
+  //   // console.log("handleLogout");
+  //   // history.push('/listings');
+  //   // return (<RedirectToLogin/>)
+  //   //   history.push('/listings');
+  //   // }, 1000);
+  //   // const interval = setInterval(() => {
+  //   //onClose();
+     
+  //   //   history.push('/listings');
+  //   // }, 500);
+  //   // return () => clearInterval(interval);
+  // }
 
   const handleToggleDarkTheme = (isDarkMode: boolean = true) => {
     setIsDarkMode(isDarkMode);
@@ -90,11 +102,11 @@ const Settings: React.FC<Props> = ({ onClose, history }) => {
             <IonToggle color="primary" checked={ isDarkMode } onIonChange={ e => handleToggleDarkTheme(e.detail.checked as boolean) } />
           </IonItem>
         </IonList>
-        <IonList className="list-custom">
+        {/* <IonList className="list-custom">
           <IonItem className="ion-text-center" button detail={false} onClick={ handleLogout } lines="none">
             <IonLabel>Logout</IonLabel>
           </IonItem>
-        </IonList>
+        </IonList> */}
 
         <IonList className="list-custom">
           <IonListHeader>

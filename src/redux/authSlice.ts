@@ -88,17 +88,17 @@ export const login = (email: string, password: string): AppThunk => async (
         })
         .then((res) => {
           dispatch(authSlice.actions.setUser(res.data as UserModel));
-          //var _favUserProfiles: UserModel[] = [];
+          // console.log("Favs: "+res.data.favUsers);
       for (var i=0; i < res.data.favUsers.length; i++) {
 
-        console.log(res.data.favUsers[i]);
+        // console.log(res.data.favUsers[i]);
         axios
           .get("users/" + res.data.favUsers[i], {
             headers: { Authorization: `Bearer ${response.data.token}` },
           })
           .then((res) => {
             dispatch(authSlice.actions.loadFavUserProfiles(res.data as UserModel));
-            console.log("_favUserProfile: " +JSON.stringify(res.data));
+            // console.log("_favUserProfile: " +JSON.stringify(res.data));
           })
           .catch((er) => {
             console.log(er);

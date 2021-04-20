@@ -48,9 +48,10 @@ const Me: React.FC<Props> = ({ history }) => {
     dateTime: new Date(),
     isRead: false
   };
-  useEffect(() => {
-    //console.log(JSON.stringify(loggedin_User));
-  }, []);
+  // useEffect(() => {
+  //   //console.log(JSON.stringify(loggedin_User));
+  // }, []);
+  //const logout = () => {}
   const handleViewSettings = () => {
     setIsSettingsOpen(true);
   };
@@ -156,7 +157,9 @@ const Me: React.FC<Props> = ({ history }) => {
       </IonContent>
 
       <IonModal isOpen={isSettingsOpen}>
-        <Settings history={history} onClose={() => setIsSettingsOpen(false)} />
+        <Settings onClose={() => {
+          setIsSettingsOpen(false);
+        }} />
       </IonModal>
 
       {/* <IonModal isOpen={isProfileOpen} swipeToClose>

@@ -43,7 +43,7 @@ import {
 import {
   stop,
   chatbubbles,
-  person,
+  person,logOut,
   listCircle,
   logIn
 } from "ionicons/icons";
@@ -60,6 +60,7 @@ import Signup from "../src/pages/Login/Signup";
 import { loadItems } from "./redux/itemSlice";
 import { authCheckState } from "./redux/authSlice";
 import RippleLoader from "./components/RippleLoader/RippleLoader";
+import RedirectToLogin from "./pages/Settings/RedirectToLogin";
 
 // force the theme to iOS mode
 setupConfig({
@@ -104,6 +105,7 @@ const App: React.FC = () => {
             <Route path="/matches" component={Matches} exact />
             <Route path="/login" component={Login} exact />
             <Route path="/signup" component={Signup} exact />
+            <Route path="/logout" component={RedirectToLogin} exact />
             <Route exact path="/">
               <Redirect to="/listings" />
             </Route>
@@ -145,6 +147,11 @@ const App: React.FC = () => {
                 <IonIcon icon={person} />
               </IonTabButton>
             }
+            {/* {isAuthenticated && 
+              <IonTabButton tab="logout" href="/logout">
+                <IonIcon icon={logOut} />
+              </IonTabButton>
+            } */}
             {!isAuthenticated && 
               <IonTabButton tab="login" href="/login">
                 <IonIcon icon={logIn} />
