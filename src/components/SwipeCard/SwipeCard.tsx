@@ -101,6 +101,7 @@ const SwipeCard: React.FC<Props> = ({ user, isPreview, onNoMoreSlide, onViewInfo
           }
         </IonRow>
       </div>
+    
     </div>
   );
 };

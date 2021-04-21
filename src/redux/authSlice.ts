@@ -204,6 +204,21 @@ export const authCheckState = (): AppThunk => async (dispatch: AppDispatch) => {
       .then((res) => {
         dispatch(authSlice.actions.setUser(res.data as UserModel));
         dispatch(authSlice.actions.login(true));
+        for (var i=0; i < res.data.favUsers.length; i++) {
+
+          // console.log(res.data.favUsers[i]);
+          axios
+            .get("users/" + res.data.favUsers[i], {
+              headers: { Authorization: `Bearer ${token}` },
+            })
+            .then((res) => {
+              dispatch(authSlice.actions.loadFavUserProfiles(res.data as UserModel));
+              // console.log("_favUserProfile: " +JSON.stringify(res.data));
+            })
+            .catch((er) => {
+              console.log(er);
+            });
+        }
         dispatch(loadMyItems(userId!));
       })
       .catch((error) => {

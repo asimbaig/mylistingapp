@@ -1,6 +1,9 @@
 .explore-page {
   &.explore-bg {
-    --background: linear-gradient(var(--ion-color-white), var(--ion-color-light));
+    --background: linear-gradient(
+      var(--ion-color-white),
+      var(--ion-color-light)
+    );
   }
 
   .segment-fit {
@@ -73,8 +76,8 @@
         text-transform: uppercase;
         transform: rotate(15deg);
         opacity: 0;
-        box-shadow: 0 2px 6px 0 rgba(112,125,134,0.14);
-        text-shadow: 0 2px 6px rgba(112,125,134,0.14);
+        box-shadow: 0 2px 6px 0 rgba(112, 125, 134, 0.14);
+        text-shadow: 0 2px 6px rgba(112, 125, 134, 0.14);
         will-change: opacity;
 
         &.stamp-like {
@@ -110,7 +113,7 @@
   }
 
   @media (max-width: 386px) {
-    .button-custom  {
+    .button-custom {
       &.button-icon {
         width: 48px;
         height: 48px;
@@ -128,12 +131,76 @@
   }
 
   @keyframes rotateRight {
-    from {transform: perspective(1000px) rotateY(4deg)}
-    to {transform: perspective(1000px) rotateY(0deg)}
+    from {
+      transform: perspective(1000px) rotateY(4deg);
+    }
+    to {
+      transform: perspective(1000px) rotateY(0deg);
+    }
   }
 
   @keyframes rotateLeft {
-    from {transform: perspective(1000px) rotateY(-4deg)}
-    to {transform: perspective(1000px) rotateY(0deg)}
+    from {
+      transform: perspective(1000px) rotateY(-4deg);
+    }
+    to {
+      transform: perspective(1000px) rotateY(0deg);
+    }
+  }
+}
+.overlay-navigation {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  .navi {
+    height: 100%;
+    width: 50%;
+  }
+}
+.card-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px;
+  z-index: 200;
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.7) 10%, rgba(40, 50, 60, 0.1) 100%);
+  color: #fff;
+  border-radius: 0 0 var(--swipe-card-border-radius) var(--swipe-card-border-radius);
+  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
+}
+
+.card-user-name {
+  font-size: 32px;
+  font-weight: 700;
+  margin-right: 4px;
+  color: rgb(235, 60, 147);
+}
+
+.card-user-age {
+  font-size: 24px;
+  color: rgb(235, 60, 147);
+}
+
+.button-info {
+  font-size: 32px;
+  color: rgb(235, 60, 147);
+}
+
+.card-user-info {
+  line-height: 1.4em;
+  font-size: 18px;
+  color: rgb(235, 60, 147);
+  ion-icon {
+    margin-right: 8px;
+    font-size: 12px;
   }
 }

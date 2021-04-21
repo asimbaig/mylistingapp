@@ -27,17 +27,25 @@ import {
 } from "@ionic/react";
 import {
   shareSocial,
+  ellipse,
+  briefcaseOutline,
+  locationOutline,
+  chevronBack,
+  chevronForward,
   starOutline,
   star,
   reload,
   options,
   search,
   close,
+  informationCircle,
 } from "ionicons/icons";
 import "./Listings.scss";
+import "./Explore.scss";
 import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { Item } from "../../redux/itemType";
+import { UserModel } from "../../redux/userType";
 import { setSelectItem, setSearchText, loadItems } from "../../redux/itemSlice";
 import { toggleFavourite } from "../../redux/authSlice";
 import {
@@ -45,7 +53,7 @@ import {
   modalLeaveZoomIn,
 } from "../../animations/animations";
 import { setIsLoading } from "../../redux/appSlice";
-import { isPlatform } from '@ionic/react';
+import { isPlatform } from "@ionic/react";
 
 type Props = {
   history: any;
@@ -56,7 +64,11 @@ const Explore: React.FC<Props> = ({ history }) => {
   const dispatch = useDispatch();
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
   const listings = useSelector((state: RootState) => state.listings.items);
+  const favUsers = useSelector(
+    (state: RootState) => state.auth.favUserProfiles
+  );
   const [cardHeight, setCardHeight] = useState(window.innerHeight);
+  const [totalUsers, setTotalUsers] = useState(0);
 
   useEffect(() => {
     dispatch(setIsLoading(true));
@@ -65,10 +77,23 @@ const Explore: React.FC<Props> = ({ history }) => {
     }, 1500);
   }, []);
 
+  // useEffect(() => {
+  //   console.log("totalUsers: " + totalUsers);
+  // }, [totalUsers]);
+
   useEffect(() => {
     console.log("In Gesture...");
-    if (listings.length > 0) {
-      for (let i = 0; i < listings.length; i++) {
+    loadUser();
+    setTotalUsers(favUsers.length);
+  }, [favUsers]);
+
+  useEffect(() => {
+    //console.log("Height: "+ (window.innerHeight - (window.innerHeight * .10)));
+    setCardHeight(window.innerHeight - window.innerHeight * 0.1);
+  }, [window.innerHeight]);
+  const loadUser = () => {
+    if (favUsers.length > 0) {
+      for (let i = 0; i < favUsers.length; i++) {
         const card = document.getElementById("profilecard" + i); //drawerRef.current[i];
         const gesture = createGesture({
           el: card!,
@@ -82,11 +107,16 @@ const Explore: React.FC<Props> = ({ history }) => {
             }deg)`;
           },
           onEnd: (ev) => {
+            //console.log(">>>>>> "+ev.deltaX);
             var parenrRow = document.getElementById("profilecards");
             card!.style.transition = ".5s east-out";
             if (ev.deltaX > windowWidth) {
+              console.log("totalUsers: R:" + totalUsers);
+              setTotalUsers(totalUsers - 1);
               parenrRow!.removeChild(card!);
             } else if (ev.deltaX < -windowWidth) {
+              console.log("totalUsers: L:" + totalUsers);
+              setTotalUsers(totalUsers - 1);
               parenrRow!.removeChild(card!);
             } else {
               card!.style.transform = ``;
@@ -96,56 +126,156 @@ const Explore: React.FC<Props> = ({ history }) => {
         gesture.enable(true);
       }
     }
-  }, [listings]);
-
-  useEffect(() => {
-    console.log("Height: "+ (window.innerHeight - (window.innerHeight * .10)));
-    setCardHeight(window.innerHeight - (window.innerHeight * .10));  
-  }, [window.innerHeight]);
-
+  };
+  const handleRemoveUser = (pos: number, id: string) => {
+    var parenrRow = document.getElementById("profilecards");
+    const card = document.getElementById(id);
+    // card!.style.transition = ".5s east-out";
+    // card!.style.transform = `translateX(${windowWidth}px) rotate(${(windowWidth)/30}deg)`;
+    parenrRow!.removeChild(card!);
+    console.log("totalUsers: " + totalUsers);
+    setTotalUsers(totalUsers - 1);
+  };
   return (
     <IonPage>
       <IonContent className="matches-page">
         <div className="safe-area-bottom">
-              <IonGrid>
-                <IonRow id="profilecards">
-                  {listings.map((item: Item, itemIndex: number) => (
-                    <IonCol key={itemIndex} id={"profilecard" + itemIndex} 
-                     style={{position: "absolute", top: "0", left:"0"}}
+          <IonGrid>
+            <IonRow id="profilecards">
+              {favUsers.map((user: UserModel, itemIndex: number) => (
+                <IonCol
+                  key={itemIndex}
+                  id={"profilecard" + itemIndex}
+                  style={{ position: "absolute", top: "0", left: "0" }}
+                >
+                  <IonCard
+                    style={{
+                      width: `100%`,
+                      height: `${cardHeight}px`,
+                      margin: "auto",
+                    }}
+                  >
+                    <IonCardContent
+                      // onClick={() => onClickItem(item)}
+                      style={{
+                        padding: "0",
+                        cursor: "pointer",
+                      }}
                     >
-                      <IonCard
+                      <div
                         style={{
-                          width: `100%`,
+                          backgroundImage: `url('${user.profileImages[0]}')`,
+                          backgroundColor: "#cccccc",
                           height: `${cardHeight}px`,
-                          margin: "auto",
+                          backgroundPosition: "center",
+                          backgroundRepeat: "no-repeat",
+                          backgroundSize: "cover",
+                          // position: "relative"
                         }}
                       >
-                        <IonCardContent
-                          // onClick={() => onClickItem(item)}
-                          style={{
-                            padding: "0",
-                            cursor: "pointer",
-                            textAlign: "center",
-                          }}
-                        >
-                          <img
+                        <div className="overlay-navigation">
+                          <div
+                            className="navi navi-left"
+                            style={{
+                              color: "#fff",
+                              fontSize: "50px",
+                              textAlign: "left",
+                            }}
+                            onClick={() =>
+                              handleRemoveUser(-1, "profilecard" + itemIndex)
+                            }
+                          >
+                            <IonIcon slot="start" icon={chevronBack} />
+                          </div>
+                          <div
+                            className="navi navi-right"
+                            style={{
+                              color: "#fff",
+                              fontSize: "50px",
+                              textAlign: "right",
+                            }}
+                            onClick={() =>
+                              handleRemoveUser(1, "profilecard" + itemIndex)
+                            }
+                          >
+                            <IonIcon slot="end" icon={chevronForward} />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="card-caption">
+                        <IonRow className="ion-justify-content-center ion-align-items-center">
+                          <IonCol>
+                            <div className="card-title">
+                              <span className="card-user-name">
+                                {user.displayname}
+                              </span>
+                              {/* <span className="icon-verified">
+                <IonIcon icon={checkmarkOutline} />
+              </span> */}
+                            </div>
+
+                            {
+                              <div className="card-user-info">
+                                <div>
+                                  <IonIcon icon={ellipse} color="success" />
+                                  {user.joinDate}
+                                </div>
+                                <div>
+                                  <IonIcon icon={ellipse} color="success" />
+                                  {user.lastActive}
+                                </div>
+                                <div>
+                                  <IonIcon icon={briefcaseOutline} />
+                                  {user.listedItems.length}
+                                </div>
+                                <div>
+                                  <IonIcon icon={locationOutline} />
+                                  71 kilometers away
+                                </div>
+                              </div>
+                            }
+                          </IonCol>
+                          <IonCol size="auto">
+                            <IonIcon
+                              className="button-info"
+                              icon={informationCircle}
+                              onClick={() => console.log("Show Profile")}
+                            />
+                          </IonCol>
+                        </IonRow>
+                      </div>
+
+                      {/* <img
                             src={item.item_images[0]}
                             alt=""
                             style={{ width: `100%`, height: `${cardHeight}px` }}
-                          />
-                        </IonCardContent>
-                      </IonCard>
-                    </IonCol>
-                  ))}
-                </IonRow>
-              </IonGrid>
+                            onClick={() => console.log("profilecard" + itemIndex)}
+                          /> */}
+                    </IonCardContent>
+                  </IonCard>
+                </IonCol>
+              ))}
+            </IonRow>
+          </IonGrid>
         </div>
-        
+        {totalUsers < 1 && (
+          <IonFab vertical="center" horizontal="center" slot="fixed">
+            <IonButton
+              color="white"
+              className="button-custom button-icon button-sm button-brand"
+              onClick={() => {
+                window.location.reload(false);
+              }}
+            >
+              <IonIcon icon={reload} slot="icon-only" />
+            </IonButton>
+          </IonFab>
+        )}
       </IonContent>
-      
     </IonPage>
   );
-}
+};
 Explore.defaultProps = {};
 
 export default Explore;
