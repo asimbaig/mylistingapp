@@ -1,13 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonSegment,
-  IonSegmentButton,
-  IonLabel,
+  // IonHeader,
+  // IonToolbar,
+  // IonSegment,
+  // IonSegmentButton,
+  // IonLabel,
   IonContent,
-  IonSearchbar,
+  // IonSearchbar,
   IonIcon,
   IonRow,
   IonCol,
@@ -15,45 +16,47 @@ import {
   IonGrid,
   IonCard,
   IonCardContent,
-  IonItem,
-  IonNote,
+  // IonItem,
+  // IonNote,
   createGesture,
-  IonFab,
-  IonButtons,
-  IonModal,
-  IonList,
-  IonItemDivider,
-  IonCheckbox,
+  IonFab,IonModal
+  // IonButtons,
+  // IonModal,
+  // IonList,
+  // IonItemDivider,
+  // IonCheckbox,
 } from "@ionic/react";
 import {
-  shareSocial,
+  //shareSocial,
   ellipse,
   briefcaseOutline,
   locationOutline,
   chevronBack,
   chevronForward,
-  starOutline,
-  star,
+  // starOutline,
+  // star,
   reload,
-  options,
-  search,
-  close,
+  // options,
+  // search,
+  // close,
   informationCircle,
+  closeCircle,
 } from "ionicons/icons";
 import "./Listings.scss";
 import "./Explore.scss";
 import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
-import { Item } from "../../redux/itemType";
+//import { Item } from "../../redux/itemType";
 import { UserModel } from "../../redux/userType";
-import { setSelectItem, setSearchText, loadItems } from "../../redux/itemSlice";
-import { toggleFavourite } from "../../redux/authSlice";
+//import { setSelectItem, setSearchText, loadItems } from "../../redux/itemSlice";
+import { loadUserOtherItems } from "../../redux/itemSlice";
 import {
-  modalEnterZoomOut,
-  modalLeaveZoomIn,
+  // modalEnterZoomOut,
+  // modalLeaveZoomIn,
 } from "../../animations/animations";
 import { setIsLoading } from "../../redux/appSlice";
-import { isPlatform } from "@ionic/react";
+import Profile from "../Profile/Profile";
+// import { isPlatform } from "@ionic/react";
 
 type Props = {
   history: any;
@@ -62,13 +65,15 @@ type Props = {
 const Explore: React.FC<Props> = ({ history }) => {
   const windowWidth = window.innerWidth;
   const dispatch = useDispatch();
-  const isLoading = useSelector((state: RootState) => state.app.isLoading);
-  const listings = useSelector((state: RootState) => state.listings.items);
+  //const isLoading = useSelector((state: RootState) => state.app.isLoading);
+  // const listings = useSelector((state: RootState) => state.listings.items);
   const favUsers = useSelector(
     (state: RootState) => state.auth.favUserProfiles
   );
+  
   const [cardHeight, setCardHeight] = useState(window.innerHeight);
-  const [totalUsers, setTotalUsers] = useState(0);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState<UserModel>();
 
   useEffect(() => {
     dispatch(setIsLoading(true));
@@ -78,19 +83,20 @@ const Explore: React.FC<Props> = ({ history }) => {
   }, []);
 
   // useEffect(() => {
-  //   console.log("totalUsers: " + totalUsers);
+  //   console.log("totalUsers:** " + totalUsers);
   // }, [totalUsers]);
 
   useEffect(() => {
     console.log("In Gesture...");
     loadUser();
-    setTotalUsers(favUsers.length);
+    // setTotalUsers(favUsers.length);
   }, [favUsers]);
 
   useEffect(() => {
     //console.log("Height: "+ (window.innerHeight - (window.innerHeight * .10)));
     setCardHeight(window.innerHeight - window.innerHeight * 0.1);
   }, [window.innerHeight]);
+  
   const loadUser = () => {
     if (favUsers.length > 0) {
       for (let i = 0; i < favUsers.length; i++) {
@@ -108,16 +114,19 @@ const Explore: React.FC<Props> = ({ history }) => {
           },
           onEnd: (ev) => {
             //console.log(">>>>>> "+ev.deltaX);
-            var parenrRow = document.getElementById("profilecards");
+            // var parenrRow = document.getElementById("profilecards");
             card!.style.transition = ".5s east-out";
             if (ev.deltaX > windowWidth) {
-              console.log("totalUsers: R:" + totalUsers);
-              setTotalUsers(totalUsers - 1);
-              parenrRow!.removeChild(card!);
+              // console.log("R:" + ev.deltaX);
+              // parenrRow!.removeChild(card!);
+              // console.log("totalUsers: " + totalUsers);
+              // setTotalUsers(totalUsers - 1);
+              handleRemoveUser(0, "profilecard" + i);
             } else if (ev.deltaX < -windowWidth) {
-              console.log("totalUsers: L:" + totalUsers);
-              setTotalUsers(totalUsers - 1);
-              parenrRow!.removeChild(card!);
+              // console.log("L:" + ev.deltaX);
+              // console.log("totalUsers: " + totalUsers);
+              // setTotalUsers(totalUsers - 1);
+              handleRemoveUser(0, "profilecard" + i);
             } else {
               card!.style.transform = ``;
             }
@@ -127,15 +136,19 @@ const Explore: React.FC<Props> = ({ history }) => {
       }
     }
   };
+
   const handleRemoveUser = (pos: number, id: string) => {
-    var parenrRow = document.getElementById("profilecards");
-    const card = document.getElementById(id);
+    let parentRow = document.getElementById("profilecards");
+    let card = document.getElementById(id);
     // card!.style.transition = ".5s east-out";
     // card!.style.transform = `translateX(${windowWidth}px) rotate(${(windowWidth)/30}deg)`;
-    parenrRow!.removeChild(card!);
-    console.log("totalUsers: " + totalUsers);
-    setTotalUsers(totalUsers - 1);
+    if(card){
+      parentRow!.removeChild(card!);
+    }
   };
+  // const   handleToggleProfile = () => {
+  //     setIsProfileOpen(!isProfileOpen);
+  // };
   return (
     <IonPage>
       <IonContent className="matches-page">
@@ -182,23 +195,29 @@ const Explore: React.FC<Props> = ({ history }) => {
                               textAlign: "left",
                             }}
                             onClick={() =>
-                              handleRemoveUser(-1, "profilecard" + itemIndex)
+                              {
+                                // setTotalUsers(totalUsers - 1);
+                                handleRemoveUser(-1, "profilecard" + itemIndex);
+                              }
                             }
                           >
-                            <IonIcon slot="start" icon={chevronBack} />
+                            {/* <IonIcon slot="start" icon={chevronBack} /> */}
                           </div>
                           <div
                             className="navi navi-right"
                             style={{
                               color: "#fff",
-                              fontSize: "50px",
+                              fontSize: "30px",
                               textAlign: "right",
                             }}
                             onClick={() =>
-                              handleRemoveUser(1, "profilecard" + itemIndex)
+                              {
+                                // setTotalUsers(totalUsers - 1);
+                                handleRemoveUser(1, "profilecard" + itemIndex);
+                              }
                             }
                           >
-                            <IonIcon slot="end" icon={chevronForward} />
+                            <IonIcon slot="end" style={{color:"black"}} icon={closeCircle} />
                           </div>
                         </div>
                       </div>
@@ -240,7 +259,11 @@ const Explore: React.FC<Props> = ({ history }) => {
                             <IonIcon
                               className="button-info"
                               icon={informationCircle}
-                              onClick={() => console.log("Show Profile")}
+                              onClick={() => {
+                                dispatch(loadUserOtherItems(user.listedItems));
+                                setSelectedProfile(user);
+                                setIsProfileOpen(!isProfileOpen);
+                              }}
                             />
                           </IonCol>
                         </IonRow>
@@ -259,8 +282,8 @@ const Explore: React.FC<Props> = ({ history }) => {
             </IonRow>
           </IonGrid>
         </div>
-        {totalUsers < 1 && (
-          <IonFab vertical="center" horizontal="center" slot="fixed">
+        {(
+          <IonFab vertical="top" horizontal="start" slot="fixed">
             <IonButton
               color="white"
               className="button-custom button-icon button-sm button-brand"
@@ -273,6 +296,9 @@ const Explore: React.FC<Props> = ({ history }) => {
           </IonFab>
         )}
       </IonContent>
+      <IonModal isOpen={isProfileOpen} swipeToClose>
+           <Profile user={selectedProfile!} onClose={()=>setIsProfileOpen(!isProfileOpen)} />
+      </IonModal>
     </IonPage>
   );
 };

@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Redirect, Route } from "react-router-dom";
 import { IonApp, IonRouterOutlet, setupConfig } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import Landing from "./pages/Landing/Landing";
+// import Landing from "./pages/Landing/Landing";
 import ThemeService from "./services/theme.service";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./redux/rootReducer";
@@ -43,7 +43,8 @@ import {
 import {
   stop,
   chatbubbles,
-  person,logOut,
+  person,
+  //logOut,
   listCircle,
   logIn
 } from "ionicons/icons";

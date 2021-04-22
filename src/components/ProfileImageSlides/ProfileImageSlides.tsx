@@ -9,7 +9,7 @@ import {
 import './ProfileImageSlides.scss';
 
 type Props = {
-  images: any[],
+  images: string[],
   isClickable?: boolean,
   onNoMoreSlide?: (l: boolean) => void,
   onChange?: (i: number) => void,
@@ -80,17 +80,17 @@ const ProfileImageSlides: React.FC<Props> = ({ images, isClickable, onChange, on
         onIonSlideReachEnd={ handleReachEnd }
       >
         {
-          images.map(item => (
-            <IonSlide key={ item.id }>
-              <div className="slide-img background-img" style={{ backgroundImage: `url('${ item.imageUrl }')` }} />
+          images.map((image,index) => (
+            <IonSlide key={ index }>
+              <div className="slide-img background-img" style={{ backgroundImage: `url('${ image }')` }} />
             </IonSlide>
           ))
         }
       </IonSlides>
       <div className="custom-pagination">
         {
-          images?.map((item, index) => (
-            <div key={ item.id } className={ `pagination-bullet${ activeIndex === index ? ' pagination-bullet-active' : '' }` } />
+          images?.map((image, index) => (
+            <div key={ index} className={ `pagination-bullet${ activeIndex === index ? ' pagination-bullet-active' : '' }` } />
           ))
         }
       </div>
