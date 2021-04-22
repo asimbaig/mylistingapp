@@ -41,12 +41,12 @@ import {
   IonBadge,IonRow
 } from "@ionic/react";
 import {
-  stop,
+  rose,
   chatbubbles,
   person,
   //logOut,
-  listCircle,
-  logIn
+  grid,
+  logIn,heartCircle
 } from "ionicons/icons";
 import "./Tabs.scss";
 import Explore from "../src/pages/Explore/Explore";
@@ -115,11 +115,12 @@ const App: React.FC = () => {
           <IonTabBar slot="top" className="tabs-page tab-bar-no-border">
 
             <IonTabButton tab="listings" href="/listings">
-              <IonIcon icon={listCircle} />
+              <IonIcon icon={grid} />
             </IonTabButton>
 
             <IonTabButton tab="explore" href="/explore">
-              <img
+              <IonIcon icon={heartCircle} />
+              {/* <img
                 className="tab-icon-inactive"
                 src="assets/img/logo_small_bw.png"
                 width="24"
@@ -130,14 +131,14 @@ const App: React.FC = () => {
                 src="assets/img/logo_small.png"
                 width="24"
                 alt=""
-              />
+              /> */}
             </IonTabButton>
             {isAuthenticated && <IonTabButton
               tab="mylistings"
               href="/mylistings"
               className="color-gold"
             >
-              <IonIcon icon={stop} className="rotate-45" />
+              <IonIcon icon={rose} />
               <IonBadge color="primary">9</IonBadge>
             </IonTabButton>}
             <IonTabButton tab="matches" href="/matches">
