@@ -95,7 +95,12 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
         {selectedItem && (
           <div>
             <div className="profile-header">
-              <ImageSwiperSlides images={selectedItem?.item_images!} />
+              {
+                (selectedItem && selectedItem.item_images && selectedItem.item_images.length > 0) ?
+                (<ImageSwiperSlides images={selectedItem?.item_images!}/>) :
+                (<ImageSwiperSlides images={["./assets/images/itemnophoto.jpg"]}/>)
+              }
+              
 
               <IonFab vertical="bottom" horizontal="end" edge slot="fixed">
                 <IonButton
@@ -125,7 +130,10 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                 <IonCard>
                   <IonCardHeader>
                     <IonAvatar>
-                      <img src={ItemUser.profileImages[0]} alt="" />
+                      {/* <img src={ItemUser.profileImages[0]} alt="" /> */}
+                      {(ItemUser.profileImages && ItemUser.profileImages.length>0) ?
+                              (<img src={ItemUser.profileImages[0]} alt="" />):
+                              (<img src="./assets/images/usernophoto.jpg" alt="" />)}
                     </IonAvatar>
                     <IonNote color="primary">{ItemUser?.displayname}</IonNote>
                     {/* <IonButton
@@ -160,7 +168,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                         color="danger"
                         size="small"
                         onClick={(event) => {
-                          event.stopPropagation();
+                          // event.stopPropagation();
                           dispatch(
                             toggleFavUsers(ItemUser._id, CurrentUser._id)
                           );
@@ -182,7 +190,9 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                             style={{ cursor: "pointer" }}
                           >
                             <IonAvatar>
-                              <img src={otherItem.item_images[0]} alt="" />
+                              {(otherItem.item_images && otherItem.item_images.length>0) ?
+                              (<img src={otherItem.item_images[0]} alt="" />):
+                              (<img src="./assets/images/itemnophoto.jpg" alt="" />)}
                             </IonAvatar>
                             <IonLabel>
                               <h2>{otherItem.title}</h2>

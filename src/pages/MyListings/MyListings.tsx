@@ -46,11 +46,19 @@ const MyListings: React.FC<Props> = () => {
                           // onClick={() => onClickItem(item)}
                           style={{ padding: "0", cursor: "pointer" }}
                         >
-                          <img
+                          {(item.item_images && item.item_images.length > 0) ? 
+                            (<img
                             src={item.item_images[0]}
                             alt=""
                             style={{ width: "250px", height: "180px" }}
-                          />
+                          />):
+                          (<img
+                            src="./assets/images/itemnophoto.jpg"
+                            alt=""
+                            style={{ width: "250px", height: "180px" }}
+                          />)
+                          }
+                          
 
                           <div>
                             <IonLabel>{item.title}</IonLabel>

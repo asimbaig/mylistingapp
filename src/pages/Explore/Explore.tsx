@@ -19,7 +19,8 @@ import {
   // IonItem,
   // IonNote,
   createGesture,
-  IonFab,IonModal
+  IonFab,
+  IonModal,
   // IonButtons,
   // IonModal,
   // IonList,
@@ -50,10 +51,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { UserModel } from "../../redux/userType";
 //import { setSelectItem, setSearchText, loadItems } from "../../redux/itemSlice";
 import { loadUserOtherItems } from "../../redux/itemSlice";
-import {
-  // modalEnterZoomOut,
-  // modalLeaveZoomIn,
-} from "../../animations/animations";
+import // modalEnterZoomOut,
+// modalLeaveZoomIn,
+"../../animations/animations";
 import { setIsLoading } from "../../redux/appSlice";
 import Profile from "../Profile/Profile";
 // import { isPlatform } from "@ionic/react";
@@ -70,7 +70,7 @@ const Explore: React.FC<Props> = ({ history }) => {
   const favUsers = useSelector(
     (state: RootState) => state.auth.favUserProfiles
   );
-  
+
   const [cardHeight, setCardHeight] = useState(window.innerHeight);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState<UserModel>();
@@ -96,7 +96,7 @@ const Explore: React.FC<Props> = ({ history }) => {
     //console.log("Height: "+ (window.innerHeight - (window.innerHeight * .10)));
     setCardHeight(window.innerHeight - window.innerHeight * 0.1);
   }, [window.innerHeight]);
-  
+
   const loadUser = () => {
     if (favUsers.length > 0) {
       for (let i = 0; i < favUsers.length; i++) {
@@ -142,7 +142,7 @@ const Explore: React.FC<Props> = ({ history }) => {
     let card = document.getElementById(id);
     // card!.style.transition = ".5s east-out";
     // card!.style.transform = `translateX(${windowWidth}px) rotate(${(windowWidth)/30}deg)`;
-    if(card){
+    if (card) {
       parentRow!.removeChild(card!);
     }
   };
@@ -177,7 +177,11 @@ const Explore: React.FC<Props> = ({ history }) => {
                     >
                       <div
                         style={{
-                          backgroundImage: `url('${user.profileImages[0]}')`,
+                          backgroundImage: `url('${
+                            user.profileImages.length > 0
+                              ? user.profileImages[0]
+                              : "./assets/images/usernophoto.jpg"
+                          }')`,
                           backgroundColor: "#cccccc",
                           height: `${cardHeight}px`,
                           backgroundPosition: "center",
@@ -194,12 +198,10 @@ const Explore: React.FC<Props> = ({ history }) => {
                               fontSize: "50px",
                               textAlign: "left",
                             }}
-                            onClick={() =>
-                              {
-                                // setTotalUsers(totalUsers - 1);
-                                handleRemoveUser(-1, "profilecard" + itemIndex);
-                              }
-                            }
+                            onClick={() => {
+                              // setTotalUsers(totalUsers - 1);
+                              handleRemoveUser(-1, "profilecard" + itemIndex);
+                            }}
                           >
                             {/* <IonIcon slot="start" icon={chevronBack} /> */}
                           </div>
@@ -210,14 +212,16 @@ const Explore: React.FC<Props> = ({ history }) => {
                               fontSize: "30px",
                               textAlign: "right",
                             }}
-                            onClick={() =>
-                              {
-                                // setTotalUsers(totalUsers - 1);
-                                handleRemoveUser(1, "profilecard" + itemIndex);
-                              }
-                            }
+                            onClick={() => {
+                              // setTotalUsers(totalUsers - 1);
+                              handleRemoveUser(1, "profilecard" + itemIndex);
+                            }}
                           >
-                            <IonIcon slot="end" style={{color:"black"}} icon={closeCircle} />
+                            <IonIcon
+                              slot="end"
+                              style={{ color: "black" }}
+                              icon={closeCircle}
+                            />
                           </div>
                         </div>
                       </div>
@@ -238,19 +242,20 @@ const Explore: React.FC<Props> = ({ history }) => {
                               <div className="card-user-info">
                                 <div>
                                   <IonIcon icon={ellipse} color="success" />
-                                  {user.joinDate}
+                                  Join: {user.joinDate.substring(0, 10)}
                                 </div>
                                 <div>
                                   <IonIcon icon={ellipse} color="success" />
-                                  {user.lastActive}
+                                  Last Active:{" "}
+                                  {user.lastActive.substring(0, 10)}
                                 </div>
                                 <div>
                                   <IonIcon icon={briefcaseOutline} />
-                                  {user.listedItems.length}
+                                  Listed Items: {user.listedItems.length}
                                 </div>
                                 <div>
                                   <IonIcon icon={locationOutline} />
-                                  71 kilometers away
+                                  21 miles away
                                 </div>
                               </div>
                             }
@@ -282,7 +287,7 @@ const Explore: React.FC<Props> = ({ history }) => {
             </IonRow>
           </IonGrid>
         </div>
-        {(
+        {
           <IonFab vertical="top" horizontal="start" slot="fixed">
             <IonButton
               color="white"
@@ -294,10 +299,13 @@ const Explore: React.FC<Props> = ({ history }) => {
               <IonIcon icon={reload} slot="icon-only" />
             </IonButton>
           </IonFab>
-        )}
+        }
       </IonContent>
       <IonModal isOpen={isProfileOpen} swipeToClose>
-           <Profile user={selectedProfile!} onClose={()=>setIsProfileOpen(!isProfileOpen)} />
+        <Profile
+          user={selectedProfile!}
+          onClose={() => setIsProfileOpen(!isProfileOpen)}
+        />
       </IonModal>
     </IonPage>
   );

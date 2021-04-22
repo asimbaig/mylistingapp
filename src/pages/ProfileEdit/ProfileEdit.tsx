@@ -1,28 +1,73 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from "react";
 import {
-  IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonSegment, IonSegmentButton, IonLabel, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonList, IonListHeader, IonItem, IonToggle, IonTextarea, IonNote, IonInput, IonText, IonModal,
-} from '@ionic/react';
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonSegment,
+  IonSegmentButton,
+  IonLabel,
+  IonContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonIcon,
+  IonList,
+  IonListHeader,
+  IonItem,
+  IonToggle,
+  IonTextarea,
+  IonNote,
+  IonInput,
+  IonText,
+  IonModal,
+} from "@ionic/react";
 import {
-  close, add, logoSnapchat, logoInstagram, logoRss
-} from 'ionicons/icons';
-import SwipeCard from '../../components/SwipeCard/SwipeCard';
-import Passions from '../Passions/Passions';
-import './ProfileEdit.scss';
+  close,
+  add,
+  logoSnapchat,
+  logoInstagram,
+  logoRss,
+} from "ionicons/icons";
+import SwipeCard from "../../components/SwipeCard/SwipeCard";
+import Passions from "../Passions/Passions";
+import "./ProfileEdit.scss";
+import { rangeArray } from "../../utils/utils";
+import { usePhotoGallery, Photo } from "../../hooks/usePhotoGallery";
+import { UserModel } from "../../redux/userType";
 
 type Props = {
-  user: any,
-  onClose: () => void,
-}
+  user: UserModel;
+  onClose: () => void;
+};
+let TotalImageSlots = 6;
+let userImages: Photo[] = [
+  //"assets/img/people/hieu.png",
+  //"assets/img/people/ironman.png",
+  //"assets/img/people/hulk.png",
+];
 
 const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
-  const [segmentView, setSegmentView] = useState<string>('PREVIEW');
+  const { photos, takePhoto, deletePhoto } = usePhotoGallery();
+  const [imageSlotsAvailable, setImageSlotsAvailable] = useState(
+    TotalImageSlots - photos.length
+  );
+  const [segmentView, setSegmentView] = useState<string>("EDIT");
   const [isPassionsOpen, setIsPassionsOpen] = useState<boolean>(false);
-  const [aboutMe, setAboutMe] = useState<string>(`I'm obsessed with building mobile apps with Ionic Framework. What about you?`);
+  const [aboutMe, setAboutMe] = useState<string>(
+    `I'm obsessed with building mobile apps with Ionic Framework. What about you?`
+  );
   const stackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    //user.images = 
+    setImageSlotsAvailable(TotalImageSlots - photos.length);
+  }, [photos.length]);
 
   const handleNoMoreSlide = (isOnTheLeft: boolean = true) => {
     if (stackRef && stackRef.current) {
-      const className = isOnTheLeft ? 'rotate-left' : 'rotate-right';
+      const className = isOnTheLeft ? "rotate-left" : "rotate-right";
 
       // @ts-ignore
       stackRef.current.classList.add(className);
@@ -31,11 +76,11 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
         stackRef.current.classList.remove(className);
       }, 250);
     }
-  }
+  };
 
   const handleOpenPassions = () => {
     setIsPassionsOpen(true);
-  }
+  };
 
   return (
     <>
@@ -43,7 +88,7 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
         <IonToolbar>
           <IonTitle>Edit Info</IonTitle>
           <IonButtons slot="end">
-            <IonButton color="primary" onClick={ onClose }>
+            <IonButton color="primary" onClick={onClose}>
               Done
             </IonButton>
           </IonButtons>
@@ -52,19 +97,15 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
         <IonToolbar className="toolbar-no-border">
           <IonSegment
             className="segment-custom"
-            value={ segmentView }
-            onIonChange={ e => setSegmentView(e.detail.value as string) }
+            value={segmentView}
+            onIonChange={(e) => setSegmentView(e.detail.value as string)}
             mode="md"
           >
             <IonSegmentButton value="EDIT">
-              <IonLabel>
-                Edit
-              </IonLabel>
+              <IonLabel>Edit</IonLabel>
             </IonSegmentButton>
             <IonSegmentButton value="PREVIEW">
-              <IonLabel>
-                Preview
-              </IonLabel>
+              <IonLabel>Preview</IonLabel>
             </IonSegmentButton>
           </IonSegment>
         </IonToolbar>
@@ -72,40 +113,44 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
 
       <IonContent className="profile-edit-page bg-light">
         <div className="full-height">
-          {
-            segmentView === 'EDIT' &&
+          {segmentView === "EDIT" && (
             <div className="segment-view">
               <div className="photos-edit">
                 <IonGrid>
                   <IonRow>
-                    <IonCol size="4" className="photo-item">
-                      <div className="photo-image background-img" style={{ backgroundImage: 'url(assets/img/people/hieu.png)' }} />
-                      <div className="photo-button">
-                        <IonIcon icon={close} />
-                      </div>
-                    </IonCol>
-                    <IonCol size="4" className="photo-item">
-                    <div className="photo-image background-img" style={{ backgroundImage: 'url(assets/img/people/ironman.png)' }} />
-                      <div className="photo-button">
-                        <IonIcon icon={close} />
-                      </div>
-                    </IonCol>
-                    <IonCol size="4" className="photo-item">
-                    <div className="photo-image background-img" style={{ backgroundImage: 'url(assets/img/people/hulk.png)' }} />
-                      <div className="photo-button">
-                        <IonIcon icon={close} />
-                      </div>
-                    </IonCol>
-                    {
-                      [0,1,2,3,4,5].map(i => (
-                        <IonCol size="4" className="photo-item no-photo" key={ i }>
-                          <div className="photo-image background-img" />
-                          <div className="photo-button photo-button-invert">
-                            <IonIcon icon={add} />
-                          </div>
-                        </IonCol>
-                      ))
-                    }
+                    {photos.map((photo, index) => (
+                      <IonCol
+                        size="4"
+                        className="photo-item"
+                        key={"photo" + index}
+                      >
+                        <div
+                          className="photo-image background-img"
+                          style={{
+                            backgroundImage: `url(${photo.webviewPath})`,
+                          }}
+                        />
+                        <div className="photo-button">
+                          <IonIcon
+                            icon={close}
+                            onClick={() => deletePhoto(photo)}
+                            style={{ cursor: "pointer" }}
+                          />
+                        </div>
+                      </IonCol>
+                    ))}
+                    {rangeArray(1, imageSlotsAvailable).map((i) => (
+                      <IonCol size="4" className="photo-item no-photo" key={i}>
+                        <div className="photo-image background-img" />
+                        <div className="photo-button photo-button-invert">
+                          <IonIcon
+                            icon={add}
+                            onClick={() => takePhoto()}
+                            style={{ cursor: "pointer" }}
+                          />
+                        </div>
+                      </IonCol>
+                    ))}
                   </IonRow>
                 </IonGrid>
               </div>
@@ -114,7 +159,7 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
                 <IonListHeader>
                   <IonLabel>PHOTO OPTIONS</IonLabel>
                 </IonListHeader>
-                <IonItem lines="none">
+                {/* <IonItem lines="none">
                   <IonLabel>Smart Photos</IonLabel>
                   <IonToggle color="primary" checked></IonToggle>
                 </IonItem>
@@ -122,7 +167,7 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
                   <IonLabel color="medium">
                     Smart Photos continuously tests all your profile photos and picks the best one to show first.
                   </IonLabel>
-                </IonListHeader>
+                </IonListHeader> */}
               </IonList>
 
               <IonList className="list-custom">
@@ -130,12 +175,14 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
                   <IonLabel>ABOUT ME</IonLabel>
                 </IonListHeader>
                 <IonItem lines="none">
-                  <IonTextarea rows={3} value={ aboutMe } onIonChange={ e => setAboutMe(e.detail.value as string) }/>
+                  <IonTextarea
+                    rows={3}
+                    value={aboutMe}
+                    onIonChange={(e) => setAboutMe(e.detail.value as string)}
+                  />
                 </IonItem>
                 <IonItem lines="none">
-                  <IonNote slot="end">
-                    { 500 - aboutMe.length }
-                  </IonNote>
+                  <IonNote slot="end">{500 - aboutMe.length}</IonNote>
                 </IonItem>
               </IonList>
 
@@ -143,7 +190,7 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
                 <IonListHeader>
                   <IonLabel>PASSIONS</IonLabel>
                 </IonListHeader>
-                <IonItem lines="none" detail onClick={ handleOpenPassions }>
+                <IonItem lines="none" detail onClick={handleOpenPassions}>
                   <IonLabel>Travel, Instagram, Music</IonLabel>
                 </IonItem>
               </IonList>
@@ -209,7 +256,9 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
                   <IonIcon icon={logoRss} color="success" slot="start" />
                   <IonLabel>
                     <div>Sunday Morning</div>
-                    <div className="text-sm"><IonText color="medium">Maroon 5</IonText></div>
+                    <div className="text-sm">
+                      <IonText color="medium">Maroon 5</IonText>
+                    </div>
                   </IonLabel>
                 </IonItem>
               </IonList>
@@ -248,7 +297,10 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
               <div className="safe-area-bottom">
                 <IonList className="list-custom">
                   <IonListHeader>
-                    <IonLabel>CONTROL YOUR PROFILE <IonText color="primary">· Tinder Plus</IonText></IonLabel>
+                    <IonLabel>
+                      CONTROL YOUR PROFILE{" "}
+                      <IonText color="primary">· Tinder Plus</IonText>
+                    </IonLabel>
                   </IonListHeader>
                   <IonItem>
                     <IonLabel>Don't Show My Age</IonLabel>
@@ -261,34 +313,29 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
                 </IonList>
               </div>
             </div>
-          }
+          )}
 
-          {
-            segmentView === 'PREVIEW' &&
+          {segmentView === "PREVIEW" && (
             <div className="segment-view preview-container full-height">
-              <div className="card-border full-height" ref={ stackRef }>
+              <div className="card-border full-height" ref={stackRef}>
                 <SwipeCard
-                  user={ user }
+                  user={user}
                   isPreview
-                  onNoMoreSlide={ handleNoMoreSlide }
+                  onNoMoreSlide={handleNoMoreSlide}
                 />
               </div>
             </div>
-          }
+          )}
         </div>
 
-        <IonModal isOpen={ isPassionsOpen }>
-          <Passions
-            onClose={ () => setIsPassionsOpen(false) }
-          />
+        <IonModal isOpen={isPassionsOpen}>
+          <Passions onClose={() => setIsPassionsOpen(false)} />
         </IonModal>
       </IonContent>
     </>
   );
 };
 
-ProfileEdit.defaultProps = {
-
-}
+ProfileEdit.defaultProps = {};
 
 export default ProfileEdit;
