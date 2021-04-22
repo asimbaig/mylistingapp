@@ -1,6 +1,6 @@
 {
   "appId": "io.ionic.starter",
-  "appName": "tinder-react-5",
+  "appName": "com.mylisting.app",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",

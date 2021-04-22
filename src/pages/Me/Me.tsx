@@ -28,6 +28,7 @@ import { RootState } from "../../redux/rootReducer";
 import {sendMsg} from "../../redux/authSlice"; 
 import {MsgModel} from "../../redux/MsgType"; 
 
+
 type Props = {
   history: any;
 };
@@ -78,7 +79,12 @@ const Me: React.FC<Props> = ({ history }) => {
           <div className="section-upper">
             <div className="me-header" onClick={handleViewProfile}>
               <IonAvatar className="avatar">
-                <img src={loggedin_User?.profileImages[0]} alt="" />
+                {
+                  (loggedin_User?.profileImages && loggedin_User?.profileImages.length>0) ?
+                  (<img src={loggedin_User?.profileImages[0]} alt="" />):
+                  (<img src="./assets/images/usernophoto.jpg" alt="" />)
+                }
+                
               </IonAvatar>
               <div>
                 <span className="me-title">{loggedin_User?.displayname}</span>
@@ -86,7 +92,7 @@ const Me: React.FC<Props> = ({ history }) => {
                   <IonIcon icon={checkmarkOutline} />
                 </span>
               </div>
-              <div className="me-level">Joined : {loggedin_User?.joinDate}</div>
+              <div className="me-level">Joined : {loggedin_User?.joinDate.substring(0,10)}</div>
             </div>
 
             <IonRow className="ion-justify-content-center ion-align-items-center">
@@ -167,7 +173,7 @@ const Me: React.FC<Props> = ({ history }) => {
       </IonModal> */}
 
       <IonModal isOpen={isProfileEditOpen}>
-        <ProfileEdit user={user} onClose={() => setIsProfileEditOpen(false)} />
+        <ProfileEdit user={loggedin_User} onClose={() => setIsProfileEditOpen(false)} />
       </IonModal>
 
       <IonModal isOpen={isSpecialModelOpen} cssClass="custom-modal-small">

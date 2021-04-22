@@ -4,7 +4,7 @@ import { AuthModel } from "./authtypes";
 import { UserModel } from "./userType";
 import { MsgModel } from "./MsgType";
 import axios from "./api-ref";
-import { loadMyItems } from "./itemSlice";
+import { loadMyItems, loadItems } from "./itemSlice";
 
 const initialState: AuthModel = {
   isAuthenticated: false,
@@ -220,6 +220,7 @@ export const authCheckState = (): AppThunk => async (dispatch: AppDispatch) => {
             });
         }
         dispatch(loadMyItems(userId!));
+        dispatch(loadItems());
       })
       .catch((error) => {
         console.log(error);

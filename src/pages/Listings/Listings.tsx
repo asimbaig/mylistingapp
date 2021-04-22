@@ -153,7 +153,7 @@ const Listings: React.FC<Props> = ({ history }) => {
     if (listings && userFavourites) {
       setFavItems(filterArray(listings, userFavourites));
     }
-  }, [userFavourites]);
+  }, [listings,userFavourites]);
   useEffect(() => {
     if (windowWidth <= 375) {
       setCardWidth(160);
@@ -262,11 +262,25 @@ const Listings: React.FC<Props> = ({ history }) => {
                             textAlign: "center",
                           }}
                         >
-                          <img
-                            src={item.item_images[0]}
-                            alt=""
-                            style={{ width: `${cardWidth}px`, height: "180px" }}
-                          />
+                          {item.item_images && item.item_images.length > 0 ? (
+                            <img
+                              src={item.item_images[0]}
+                              alt=""
+                              style={{
+                                width: `${cardWidth}px`,
+                                height: "180px",
+                              }}
+                            />
+                          ) : (
+                            <img
+                              src="./assets/images/itemnophoto.jpg"
+                              alt=""
+                              style={{
+                                width: `${cardWidth}px`,
+                                height: "180px",
+                              }}
+                            />
+                          )}
 
                           <div>
                             <IonLabel>{item.title}</IonLabel>
@@ -305,8 +319,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                                   fill="clear"
                                   color="danger"
                                   size="small"
-                                  onClick={(event) => {
-                                    event.stopPropagation();
+                                  onClick={() => {
                                     dispatch(
                                       toggleFavourite(item._id, CurrentUser._id)
                                     );
@@ -360,15 +373,25 @@ const Listings: React.FC<Props> = ({ history }) => {
                               textAlign: "center",
                             }}
                           >
-                            <img
-                              src={item.item_images[0]}
-                              alt=""
-                              style={{
-                                width: `${cardWidth}px`,
-                                height: "180px",
-                              }}
-                            />
-
+                            {item.item_images && item.item_images.length > 0 ? (
+                              <img
+                                src={item.item_images[0]}
+                                alt=""
+                                style={{
+                                  width: `${cardWidth}px`,
+                                  height: "180px",
+                                }}
+                              />
+                            ) : (
+                              <img
+                                src="./assets/images/itemnophoto.jpg"
+                                alt=""
+                                style={{
+                                  width: `${cardWidth}px`,
+                                  height: "180px",
+                                }}
+                              />
+                            )}
                             <div>
                               <IonLabel>{item.title}</IonLabel>
                               <br />
@@ -409,8 +432,8 @@ const Listings: React.FC<Props> = ({ history }) => {
                                     fill="clear"
                                     color="danger"
                                     size="small"
-                                    onClick={(event) => {
-                                      event.stopPropagation();
+                                    onClick={() => {
+                                      //event.stopPropagation();
                                       dispatch(
                                         toggleFavourite(
                                           item._id,
