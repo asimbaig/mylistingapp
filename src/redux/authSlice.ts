@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk, AppDispatch } from "./store";
 import { AuthModel } from "./authtypes";
 import { UserModel } from "./userType";
+import { PhotoModel } from "./photoType";
 import { MsgModel } from "./MsgType";
 import axios from "./api-ref";
 import { loadMyItems, loadItems } from "./itemSlice";
@@ -89,23 +90,23 @@ export const login = (email: string, password: string): AppThunk => async (
         .then((res) => {
           dispatch(authSlice.actions.setUser(res.data as UserModel));
           // console.log("Favs: "+res.data.favUsers);
-      for (var i=0; i < res.data.favUsers.length; i++) {
-
-        // console.log(res.data.favUsers[i]);
-        axios
-          .get("users/" + res.data.favUsers[i], {
-            headers: { Authorization: `Bearer ${response.data.token}` },
-          })
-          .then((res) => {
-            dispatch(authSlice.actions.loadFavUserProfiles(res.data as UserModel));
-            // console.log("_favUserProfile: " +JSON.stringify(res.data));
-          })
-          .catch((er) => {
-            console.log(er);
-          });
-      }
-      //console.log("_favUserProfiles: " + _favUserProfiles);
-      
+          for (var i = 0; i < res.data.favUsers.length; i++) {
+            // console.log(res.data.favUsers[i]);
+            axios
+              .get("users/" + res.data.favUsers[i], {
+                headers: { Authorization: `Bearer ${response.data.token}` },
+              })
+              .then((res) => {
+                dispatch(
+                  authSlice.actions.loadFavUserProfiles(res.data as UserModel)
+                );
+                // console.log("_favUserProfile: " +JSON.stringify(res.data));
+              })
+              .catch((er) => {
+                console.log(er);
+              });
+          }
+          //console.log("_favUserProfiles: " + _favUserProfiles);
         })
         .catch((error) => {
           console.log(error);
@@ -204,15 +205,16 @@ export const authCheckState = (): AppThunk => async (dispatch: AppDispatch) => {
       .then((res) => {
         dispatch(authSlice.actions.setUser(res.data as UserModel));
         dispatch(authSlice.actions.login(true));
-        for (var i=0; i < res.data.favUsers.length; i++) {
-
+        for (var i = 0; i < res.data.favUsers.length; i++) {
           // console.log(res.data.favUsers[i]);
           axios
             .get("users/" + res.data.favUsers[i], {
               headers: { Authorization: `Bearer ${token}` },
             })
             .then((res) => {
-              dispatch(authSlice.actions.loadFavUserProfiles(res.data as UserModel));
+              dispatch(
+                authSlice.actions.loadFavUserProfiles(res.data as UserModel)
+              );
               // console.log("_favUserProfile: " +JSON.stringify(res.data));
             })
             .catch((er) => {
@@ -232,6 +234,17 @@ export const sendMsg = (msg: MsgModel, userId: string): AppThunk => async (
 ) => {
   axios
     .post("users/updateMsgs/" + userId, msg)
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {});
+};
+export const updateUserImages = (
+  photo: PhotoModel,
+  userId: string
+): AppThunk => async (dispatch: AppDispatch) => {
+  axios
+    .post("users/updateUserImages/" + userId, photo)
     .then((res) => {
       console.log(res.data);
     })

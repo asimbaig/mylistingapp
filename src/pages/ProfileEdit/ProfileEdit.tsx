@@ -36,6 +36,9 @@ import "./ProfileEdit.scss";
 import { rangeArray } from "../../utils/utils";
 import { usePhotoGallery, Photo } from "../../hooks/usePhotoGallery";
 import { UserModel } from "../../redux/userType";
+import { RootState } from "../../redux/rootReducer";
+import { useSelector, useDispatch } from "react-redux";
+import { updateUserImages } from "../../redux/authSlice";
 
 type Props = {
   user: UserModel;
@@ -49,19 +52,27 @@ let userImages: Photo[] = [
 ];
 
 const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
-  const { photos, takePhoto, deletePhoto } = usePhotoGallery();
+  const { photos, takePhoto, deletePhoto, returnPhoto } = usePhotoGallery();
   const [imageSlotsAvailable, setImageSlotsAvailable] = useState(
     TotalImageSlots - photos.length
   );
+  const dispatch = useDispatch();
   const [segmentView, setSegmentView] = useState<string>("EDIT");
   const [isPassionsOpen, setIsPassionsOpen] = useState<boolean>(false);
   const [aboutMe, setAboutMe] = useState<string>(
     `I'm obsessed with building mobile apps with Ionic Framework. What about you?`
   );
+  const CurrentUser = useSelector((state: RootState) => state.auth.user);
   const stackRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (returnPhoto){
+      console.log("returnPhoto: >>>> " +JSON.stringify(returnPhoto));
+      dispatch(updateUserImages(returnPhoto, CurrentUser._id));
+    } 
+  }, [returnPhoto]);
 
   useEffect(() => {
-    //user.images = 
+    //user.images =
     setImageSlotsAvailable(TotalImageSlots - photos.length);
   }, [photos.length]);
 
@@ -145,7 +156,9 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
                         <div className="photo-button photo-button-invert">
                           <IonIcon
                             icon={add}
-                            onClick={() => takePhoto()}
+                            onClick={() => {
+                              takePhoto();
+                            }}
                             style={{ cursor: "pointer" }}
                           />
                         </div>
