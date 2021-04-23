@@ -11,6 +11,8 @@ import {
   FilesystemDirectory,
 } from "@capacitor/core";
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
+import { addPhoto, deletePhotoById } from "../services/photoService";
+import { PhotoModel } from "../redux/photoType";
 
 // import { useDispatch } from "react-redux";
 // import { addPhoto } from "../features/Photos/photoSlice";
@@ -19,8 +21,8 @@ import { defineCustomElements } from "@ionic/pwa-elements/loader";
 const PHOTO_STORAGE = "photos";
 
 export function usePhotoGallery() {
-  // const dispatch = useDispatch();
   defineCustomElements(window);
+  const [returnPhoto, setReturnPhoto] = useState<PhotoModel>();
   const [photos, setPhotos] = useState<Photo[]>([]);
   const { getPhoto } = useCamera();
   const { deleteFile, readFile, writeFile } = useFilesystem();
@@ -54,7 +56,8 @@ export function usePhotoGallery() {
       source: CameraSource.Camera,
       quality: 100,
     });
-    const fileName = new Date().getTime() + ".jpeg";
+
+    const fileName = new Date().getTime() + "." + cameraPhoto.format;
 
     const savedFileImage = await savePicture(cameraPhoto, fileName);
 
@@ -73,10 +76,13 @@ export function usePhotoGallery() {
       const file = await readFile({
         path: photo.path!,
       });
+      //console.log("Photos Type::>>>>>:::" + typeof file);
       base64Data = file.data;
     } else {
       base64Data = await base64FromPath(photo.webPath!);
+      //console.log("Photos Type::>>>>>:::" + base64Data.length);
     }
+
     const savedFile = await writeFile({
       path: fileName,
       data: base64Data,
@@ -90,13 +96,16 @@ export function usePhotoGallery() {
     ) {
       base64Data = "data:image/jpeg;base64," + base64Data;
     }
-    // let image: Image = {
-    //   fileName: fileName,
-    //   image: base64Data,
-    //   day: d.getDate(),
-    //   month: d.getMonth() + 1,
-    //   year: d.getFullYear()
-    // };
+
+    fetch(base64Data)
+      .then((res) => res.blob())
+      .then((blob) => {
+        const file = new File([blob], fileName, { type: "image/png" });
+        addPhoto(file, fileName).then((res) => {
+          setReturnPhoto(res as PhotoModel);
+        }).catch(err=> console.log(err));
+      });
+
     // dispatch(addPhoto(image));
     if (isPlatform("hybrid")) {
       // Display the new image by rewriting the 'file://' path to HTTP
@@ -116,6 +125,7 @@ export function usePhotoGallery() {
   };
 
   const deletePhoto = async (photo: Photo) => {
+    //deletePhotoById("6082c3218d71f700150046f5");
     // Remove this photo from the Photos reference data array
     const newPhotos = photos.filter((p) => p.filepath !== photo.filepath);
 
@@ -135,6 +145,7 @@ export function usePhotoGallery() {
     deletePhoto,
     photos,
     takePhoto,
+    returnPhoto
   };
 }
 
