@@ -25,11 +25,9 @@ import {
   IonList,
   IonItemDivider,
   IonCheckbox,
+  IonText,
 } from "@ionic/react";
 import {
-  shareSocial,
-  starOutline,
-  star,
   reload,
   options,
   search,
@@ -39,14 +37,11 @@ import "./Listings.scss";
 import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { Item } from "../../redux/itemType";
-import { setSelectItem, setSearchText, loadItems } from "../../redux/itemSlice";
-import { toggleFavourite } from "../../redux/authSlice";
-import {
-  modalEnterZoomOut,
-  modalLeaveZoomIn,
-} from "../../animations/animations";
+import { setSelectItem, setSearchText, loadItems, updateItemViews } from "../../redux/itemSlice";
+import { modalEnterZoomOut, modalLeaveZoomIn } from "../../animations/animations";
 import { setIsLoading } from "../../redux/appSlice";
 import Countdown from "react-countdown";
+import TopPicksItems from "../../components/TopPicksItems/TopPicksItems";
 
 type Props = {
   history: any;
@@ -83,6 +78,8 @@ const Listings: React.FC<Props> = ({ history }) => {
     },
   };
   const dispatch = useDispatch();
+  // let location = useLocation();
+  // console.log("Location:>>> "+ location.pathname);
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
   const listings = useSelector((state: RootState) => state.listings.items);
 
@@ -93,18 +90,18 @@ const Listings: React.FC<Props> = ({ history }) => {
   const userFavourites = useSelector(
     (state: RootState) => state.auth.user?.favourites
   );
-  const CurrentUser = useSelector((state: RootState) => state.auth.user);
+  // const CurrentUser = useSelector((state: RootState) => state.auth.user);
 
-  const isFavourite = (currentItemId: string) => {
-    if (userFavourites) {
-      var index = userFavourites.findIndex((fid) => fid === currentItemId);
-      if (index && index > -1) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  };
+  // const isFavourite = (currentItemId: string) => {
+  //   if (userFavourites) {
+  //     var index = userFavourites.findIndex((fid) => fid === currentItemId);
+  //     if (index && index > -1) {
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   }
+  // };
   const filterArray = (items: Item[], favoriteIds: string[]) => {
     const filteredItems = items.filter((i) => favoriteIds.indexOf(i._id) > -1);
     return filteredItems;
@@ -128,9 +125,11 @@ const Listings: React.FC<Props> = ({ history }) => {
             card!.style.transition = "none";
           },
           onMove: (ev) => {
-            card!.style.transform = `translateX(${ev.deltaX}px) rotate(${
+            card!.style.transform = `translateX(${ev.deltaX}px) translateY(${ev.deltaY}px) rotate(${
               ev.deltaX / 20
             }deg)`;
+            // card!.style.transform = `translateX(${ev.deltaX}px) translateY(${ev.deltaY}px)`;
+            
           },
           onEnd: (ev) => {
             var parenrRow = document.getElementById("cards");
@@ -153,7 +152,7 @@ const Listings: React.FC<Props> = ({ history }) => {
     if (listings && userFavourites) {
       setFavItems(filterArray(listings, userFavourites));
     }
-  }, [listings,userFavourites]);
+  }, [listings, userFavourites]);
   useEffect(() => {
     if (windowWidth <= 375) {
       setCardWidth(160);
@@ -215,6 +214,34 @@ const Listings: React.FC<Props> = ({ history }) => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="matches-page">
+        <div>
+          <div className="list-header">
+            <IonText color="primary">
+              <strong>Top picks</strong>
+            </IonText>
+          </div>
+
+          <div className="scroll-horizontal matches-list">
+            {listings.map((item) => (
+              <div
+                className="scroll-item matches-item"
+                key={item._id + "toppicks"}
+                onClick={
+                  () => {
+                    dispatch(updateItemViews(item._id));
+                    onClickItem(item);
+                  }
+                }
+              >
+                <TopPicksItems size="lg" item={item} />
+                <div className="scroll-item-title text-ellipsis">
+                  {item.title}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div className="safe-area-bottom">
           {segmentView === "LIST" && (
             <div>
@@ -250,12 +277,17 @@ const Listings: React.FC<Props> = ({ history }) => {
                       <IonCard
                         style={{
                           width: `${cardWidth}px`,
-                          height: "300px",
+                          height: "250px",
                           margin: "auto",
                         }}
                       >
                         <IonCardContent
-                          onClick={() => onClickItem(item)}
+                          onClick={
+                            () => {
+                              dispatch(updateItemViews(item._id));
+                              onClickItem(item);
+                            }
+                          }
                           style={{
                             padding: "0",
                             cursor: "pointer",
@@ -284,19 +316,24 @@ const Listings: React.FC<Props> = ({ history }) => {
 
                           <div>
                             <IonLabel>{item.title}</IonLabel>
-                            <br />
-                            <IonNote>
-                              Expire:{" "}
-                              <Countdown
-                                date={item.enddate}
-                                renderer={renderer}
-                              />
-                            </IonNote>
-                            <br />
-                            <IonNote>£{item.price}</IonNote>
+                            <IonNote>{item.userId}</IonNote>
+                            {/* <IonGrid>
+                              <IonRow>
+                                <IonCol>
+                                    <IonNote>
+                                      Exp:
+                                      <Countdown date={item.enddate} renderer={renderer}/>
+                                    </IonNote>
+                                </IonCol>
+                                <IonCol>
+                                    <IonNote>£{item.price}</IonNote>
+                                </IonCol>
+                              </IonRow>
+                            </IonGrid> */}
+                          
                           </div>
                         </IonCardContent>
-                        <IonRow no-padding>
+                        {/* <IonRow no-padding>
                           <IonCol>
                             {isAuthenticated &&
                               (isFavourite(item._id) ? (
@@ -342,7 +379,9 @@ const Listings: React.FC<Props> = ({ history }) => {
                               <IonIcon slot="end" icon={shareSocial}></IonIcon>
                             </IonButton>
                           </IonCol>
+                        
                         </IonRow>
+                       */}
                       </IonCard>
                     </IonCol>
                   ))}
@@ -361,7 +400,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                         <IonCard
                           style={{
                             width: `${cardWidth}px`,
-                            height: "300px",
+                            height: "250px",
                             margin: "auto",
                           }}
                         >
@@ -394,19 +433,22 @@ const Listings: React.FC<Props> = ({ history }) => {
                             )}
                             <div>
                               <IonLabel>{item.title}</IonLabel>
-                              <br />
-                              <IonNote>
-                                Expire:{" "}
-                                <Countdown
-                                  date={item.enddate}
-                                  renderer={renderer}
-                                />
-                              </IonNote>
-                              <br />
-                              <IonNote>£{item.price}</IonNote>
+                              <IonGrid>
+                              <IonRow>
+                                <IonCol>
+                                    <IonNote>
+                                      Exp:
+                                      <Countdown date={item.enddate} renderer={renderer}/>
+                                    </IonNote>
+                                </IonCol>
+                                <IonCol>
+                                    <IonNote>£{item.price}</IonNote>
+                                </IonCol>
+                              </IonRow>
+                            </IonGrid>
                             </div>
                           </IonCardContent>
-                          <IonRow no-padding>
+                          {/* <IonRow no-padding>
                             <IonCol>
                               {isAuthenticated &&
                                 (isFavourite(item._id) ? (
@@ -463,6 +505,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                               </IonButton>
                             </IonCol>
                           </IonRow>
+                         */}
                         </IonCard>
                       </IonCol>
                     ))}

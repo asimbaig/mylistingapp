@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
-  IonPage, IonGrid, IonCardContent, IonCard, IonNote, IonLabel, IonContent, IonText, IonButton, IonRow, IonCol
+  IonPage, IonGrid, IonCardContent, IonCard, IonNote, IonLabel, IonContent, IonIcon, IonButton, IonRow, IonCol,
+  IonList, IonItemSliding, IonItem, IonItemOptions, IonItemOption, IonCardHeader, IonCardSubtitle, IonCardTitle
 } from '@ionic/react';
 import {
-
+  ellipsisHorizontal, heart, chatbubbles, briefcaseOutline, locationOutline, arrowRedo, arrowUndo,thumbsUp, trash
 } from 'ionicons/icons';
 import './MyListings.scss';
 import { RootState } from "../../redux/rootReducer";
@@ -31,6 +32,55 @@ const MyListings: React.FC<Props> = () => {
         <div className="boost-promotion">
             MY LISTINGS
         </div>
+        
+        <IonList>
+      {!isLoading && mylistings && mylistings.map((item, index) => (
+        <IonItemSliding key={index}>
+          <IonItem
+            onClick={() => {
+              // setSelectedTodo(todo);
+              // setShowModal(true);
+            }}
+            // style={{ height: "300px" }}
+          >
+            <div>
+            {(item.item_images && item.item_images.length > 0) ? 
+                            (<img
+                            src={item.item_images[0]}
+                            alt=""
+                            style={{ width: "100%", height: "220px" }}
+                          />):
+                          (<img
+                            src="./assets/images/itemnophoto.jpg"
+                            alt=""
+                            style={{ width: "100%", height: "220px" }}
+                          />)
+                          }    
+        <div>
+          <h3>{item.title}</h3>
+          <b>£{item.price}</b>
+        </div>
+
+      </div>
+          </IonItem>
+
+          <IonItemOptions side="start">
+            <IonItemOption color="success" onClick={() => console.log("item 1")}>
+              <IonIcon slot="icon-only" icon={thumbsUp} />
+            </IonItemOption>
+          </IonItemOptions>
+
+          <IonItemOptions side="end">
+            <IonItemOption color="danger" onClick={() => console.log("item 2")}>
+              <IonIcon slot="icon-only" icon={trash} />
+            </IonItemOption>
+          </IonItemOptions>
+        </IonItemSliding>
+      ))}
+      
+    </IonList>
+
+
         <IonGrid>
                 <IonRow id="cards">
                   {!isLoading && mylistings && mylistings.map((item: Item, itemIndex: number) => (

@@ -7,7 +7,7 @@ import {
 } from 'ionicons/icons';
 import PersonCard from '../../components/PersonCard/PersonCard';
 import './Highlights.scss';
-import USERS from '../Explore/users.dummy';
+import USERS from '../FavouriteUsers/users.dummy';
 
 type Props = {
 

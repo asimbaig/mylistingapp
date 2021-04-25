@@ -20,7 +20,7 @@ export interface Item {
   startdate: string;
   enddate: string;
   isactive: boolean;
-  views: string[];
+  views: number;
   likes: string[];
   location: { latitude: number; longitude: number };
   relist_count: number;

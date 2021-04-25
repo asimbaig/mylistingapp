@@ -34,3 +34,15 @@
     }
   }
 }
+#outer-div {
+  width: 100%;
+  text-align: center;
+}
+
+#inner-div {
+  display: inline-block;
+  margin: 0 auto;
+  padding: 3px;
+  width: 100px;
+  height: 100px;
+}

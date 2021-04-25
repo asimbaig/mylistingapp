@@ -1,9 +1,11 @@
+import { PhotoModel } from "./photoType";
+import { MsgModel } from "./MsgType";
 export interface UserModel {
   _id: string;
   email: string;
   displayname: string;
   role: string;
-  profileImages: string[];
+  profileImages: PhotoModel[];
   listedItems: string[];
   address: string;
   phone: string;
@@ -13,4 +15,6 @@ export interface UserModel {
   joinDate: string;
   favourites: string[];
   favUsers: string[];
+  msgFromUsers: string[];
+  messages: MsgModel[];
 }

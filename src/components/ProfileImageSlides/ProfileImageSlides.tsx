@@ -3,9 +3,11 @@ import { TapticEngine } from "@ionic-native/taptic-engine";
 import { IonSlides, IonSlide } from "@ionic/react";
 import {} from "ionicons/icons";
 import "./ProfileImageSlides.scss";
+import {PhotoModel} from "../../redux/photoType";
+import {imgBaseUrl} from "../../redux/api-ref"; 
 
 type Props = {
-  images: any[];
+  images: PhotoModel[];
   isClickable?: boolean;
   onNoMoreSlide?: (l: boolean) => void;
   onChange?: (i: number) => void;
@@ -84,11 +86,11 @@ const ProfileImageSlides: React.FC<Props> = ({
         onIonSlideReachStart={handleReachStart}
         onIonSlideReachEnd={handleReachEnd}
       >
-        {images.map((imageUrl, index) => (
+        {images.map((image, index) => (
           <IonSlide key={index}>
             <div
               className="slide-img background-img"
-              style={{ backgroundImage: `url('${imageUrl}')` }}
+              style={{ backgroundImage: `url('${imgBaseUrl + image.filename}')` }}
             />
           </IonSlide>
         ))}

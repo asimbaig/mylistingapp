@@ -5,7 +5,7 @@ import {
 import {
   heart
 } from 'ionicons/icons';
-import LabelMatched from '../../components/LabelMatched/LabelMatched';
+import LabelMatched from '../../components/SendMsgHeader/SendMsgHeader';
 import './MatchedModal.scss';
 
 type Props = {
@@ -22,7 +22,7 @@ const MatchedModal: React.FC<Props> = ({ onClose }) => {
       <div className="matched-container">
         <div style={{ backgroundImage: `url('${ user.profile_image_url }')` }} className="background-img full-height" />
         <div className="matched-overlay">
-          <LabelMatched />
+          {/* <LabelMatched /> */}
 
           <div className="matched-input">
             <div className="label">

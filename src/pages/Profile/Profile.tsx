@@ -56,10 +56,8 @@ const Profile: React.FC<Props> = ({ user, onClose }) => {
 
       <IonContent className="profile-page">
         <div className="profile-header">
-          {user.profileImages && user.profileImages.length > 0 ? (
+          {user.profileImages && user.profileImages.length > 0 && (
             <ProfileImageSlides images={user.profileImages} />
-          ) : (
-            <ProfileImageSlides images={["./assets/images/usernophoto.jpg"]} />
           )}
 
           <IonFab vertical="bottom" horizontal="end" edge slot="fixed">
@@ -172,15 +170,6 @@ const Profile: React.FC<Props> = ({ user, onClose }) => {
 
         {/* <div className="profile-spotify border-bottom">
           <SpotifyHighlights />
-        </div> */}
-
-        {/* <div className="profile-share border-bottom">
-          <IonButton fill="clear" expand="block" color="primary" size="small">
-            <div className="button-label">
-              <div>SHARE HIEU PHAM'S PROFILE</div>
-              <div>SEE WHAT A FRIEND THINKS</div>
-            </div>
-          </IonButton>
         </div> */}
 
         <div className="profile-footer border-bottom">

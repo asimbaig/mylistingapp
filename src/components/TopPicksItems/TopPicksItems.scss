@@ -1,0 +1,44 @@
+.random-item {
+  display: inline-block;
+
+  .item {
+    display: block;
+    width: 48px;
+    height: 48px;
+    background-position: center center;
+    background-color: transparent;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 5px;
+
+    &.item-xs {
+      width: 24px;
+      height: 24px;
+    }
+
+    &.item-sm {
+      width: 32px;
+      height: 32px;
+    }
+
+    &.item-md {
+      width: 40px;
+      height: 40px;
+    }
+
+    &.item-lg {
+      width: 64px;
+      height: 64px;
+    }
+
+    &.item-xl {
+      width: 96px;
+      height: 96px;
+    }
+
+    &.item-xxl {
+      width: 128px;
+      height: 128px;
+    }
+  }
+}

@@ -1,58 +1,60 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from "react";
 import {
-  IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonButton, IonIcon, IonContent, IonText, IonFooter
-} from '@ionic/react';
-import {
-  shield, checkmarkCircle, heartOutline
-} from 'ionicons/icons';
-import RandomAvatar from '../../components/RandomAvatar/RandomAvatar';
-import InputWithGiphy from '../../components/InputWithGiphy/InputWithGiphy';
-import './Chat.scss';
-import MESSAGES from './messages.dummy';
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonTitle,
+  IonAvatar,
+  IonContent,
+  IonFooter,
+} from "@ionic/react";
+import {} from "ionicons/icons";
+import InputWithGiphy from "../../components/InputWithGiphy/InputWithGiphy";
+import "./Chat.scss";
 
-type Props = {
+import { RootState } from "../../redux/rootReducer";
+import { useSelector, useDispatch } from "react-redux";
+import { imgBaseUrl } from "../../redux/api-ref";
+import { MsgModel } from "../../redux/MsgType";
+import { sendMsg } from "../../redux/authSlice";
 
-}
+type Props = {};
 
 const Chat: React.FC<Props> = () => {
-  const [messages, setMessages] = useState<any[]>(MESSAGES);
+  const dispatch = useDispatch();
   const contentRef = useRef<React.RefObject<HTMLIonContentElement>>(null);
+  const chatStream = useSelector((state: RootState) => state.auth.chatStream);
+  const chatUser = useSelector(
+    (state: RootState) => state.auth.selectedChatUser
+  );
+  const currentUser = useSelector((state: RootState) => state.auth.user);
 
   useEffect(() => {
     scrollToBottom(0, true);
-  })
+  });
 
   const handleSubmitMessage = (data: any) => {
-    setMessages(prev => [...prev, {
-      id: prev.length,
-      isSender: true,
-      type: data.type, // 'text' or 'image'
-      body: data.type.toUpperCase() === 'IMAGE' ? data.imageUrl : data.message,
-      timestamp: 'Mar 30, 2021 9:55am'
-    }]);
+    console.log("data.message:" + data.message);
+    const msg: MsgModel = {
+      text: data.message,
+      fromUser: currentUser._id,
+      fromUserImg: currentUser.profileImages[0].filename!,
+      dateTime: new Date(),
+      isRead: false,
+    };
+    dispatch(sendMsg(msg, chatUser?._id!, true));
 
     setTimeout(() => {
       scrollToBottom();
-      fakeReply();
     });
-  }
+  };
 
-  const fakeReply = () => {
-    setMessages(prev => [...prev, {
-      id: prev.length,
-      isSender: false,
-      avatar: 'assets/img/avatars/hieu.png',
-      type: 'text',
-      body: 'Nice. Keep typing dude',
-      timestamp: 'Mar 30, 2021 9:57am'
-    }]);
-
-    setTimeout(() => {
-      scrollToBottom();
-    }, 500);
-  }
-
-  const scrollToBottom = (duration: number = 500, isFirstLoad: boolean = false) => {
+  const scrollToBottom = (
+    duration: number = 500,
+    isFirstLoad: boolean = false
+  ) => {
     if (isFirstLoad) {
       setTimeout(() => {
         if (contentRef && contentRef.current) {
@@ -66,13 +68,13 @@ const Chat: React.FC<Props> = () => {
         contentRef.current.scrollToBottom(duration);
       }
     }
-  }
+  };
 
   const nl2br = (text: string) => {
     if (!text) return text;
 
-    return text.replace(/\n/ig, '<br>');
-  }
+    return text.replace(/\n/gi, "<br>");
+  };
 
   return (
     <IonPage className="chat-page">
@@ -82,86 +84,74 @@ const Chat: React.FC<Props> = () => {
             <IonBackButton defaultHref="tabs/matches" />
           </IonButtons>
           <IonTitle>
-            <RandomAvatar size="sm" />
-            <div className="user-name">Tindie 2021</div>
+            <IonAvatar>
+              <img
+                src={imgBaseUrl + chatUser?.profileImages[0].filename}
+                alt=""
+              />
+            </IonAvatar>
+            <div className="user-name" style={{ textAlign: "left" }}>
+              {chatUser?.displayname}
+            </div>
           </IonTitle>
-          <IonButtons slot="end">
-            <IonButton color="secondary">
-              <IonIcon slot="icon-only" icon={shield} />
-            </IonButton>
-          </IonButtons>
         </IonToolbar>
       </IonHeader>
 
-      { /* @ts-ignore: TS2739 */ }
-      <IonContent className="ion-padding" ref={ contentRef }>
-        <div className="ion-padding ion-text-center match-info">
-          <IonText color="medium">YOU MATCHED WITH TINDIE ON 03/30/2021</IonText>
-        </div>
-
+      {/* @ts-ignore: TS2739 */}
+      <IonContent className="ion-padding" ref={contentRef}>
         <div className="chat-list">
-          <div className="chat-timestamp center">
-            <strong>Tue, 30 Mar,</strong> 12:38 AM
-          </div>
+          {chatStream?.myMsgs.map((msg: MsgModel, index) => (
+            <div
+              className={`chat-item${
+                msg.fromUser === currentUser._id ? " chat-item-outgoing" : ""
+              }`}
+              key={index}
+            >
+              <div className="chat-item-inner">
+                {!(msg.fromUser === currentUser._id) && (
+                  <div className="chat-avatar">
+                    <img src={imgBaseUrl + msg.fromUserImg} alt="" />
+                  </div>
+                )}
 
-          {
-            messages.map((item: any) => (
-              <div className={ `chat-item${ item.isSender ? ' chat-item-outgoing' : '' }` } key={ item.id }>
-                <div className="chat-item-inner">
-                  {
-                    !item.isSender &&
-                    <div className="chat-avatar">
-                      <img src={ item.avatar } alt="" />
-                    </div>
-                  }
-
-                  <div className="chat-body">
-                    <div className={ `chat-item-bubble${ item.type === 'image' ? ' bubble-image' : '' }` }>
-                      {
-                        item.type !== 'image' &&
-                        <div className="chat-text" dangerouslySetInnerHTML={{ __html: nl2br(item.body) }} />
-                      }
-                      {
-                        item.type === 'image' &&
-                        <img src={ item.body } alt="" />
-                      }
-                    </div>
-
+                <div className="chat-body">
+                  <div className={`chat-item-bubble${""}`}>
                     {
-                      item.isSender &&
-                      <div className="chat-item-status">
-                        <IonIcon icon={checkmarkCircle} color="secondary" />
-                        Sent
+                      <div>
+                        <div
+                          className="chat-text"
+                          dangerouslySetInnerHTML={{ __html: nl2br(msg.text) }}
+                        />
+                        <div className="chat-item-status">
+                          {new Date(msg.dateTime).getDate() +
+                            "/" +
+                            new Date(msg.dateTime).getMonth() +
+                            "/" +
+                            new Date(msg.dateTime).getFullYear() +
+                            "-" +
+                            new Date(msg.dateTime).getHours() +
+                            ":" +
+                            new Date(msg.dateTime).getMinutes()}
+                        </div>
                       </div>
                     }
                   </div>
-
-                  {
-                    !item.isSender && item.type === 'image' &&
-                    <div className="chat-item-reaction">
-                      <IonIcon icon={heartOutline} />
-                    </div>
-                  }
                 </div>
               </div>
-            ))
-          }
+            </div>
+          ))}
         </div>
       </IonContent>
 
       <IonFooter>
         <IonToolbar className="toolbar-no-border">
-          <InputWithGiphy
-            onChange={ handleSubmitMessage }
-          />
+          <InputWithGiphy onChange={handleSubmitMessage} />
         </IonToolbar>
       </IonFooter>
     </IonPage>
   );
 };
 
-Chat.defaultProps = {
-
-}
+Chat.defaultProps = {};
 
 export default Chat;

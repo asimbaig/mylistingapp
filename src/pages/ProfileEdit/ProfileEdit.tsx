@@ -38,7 +38,9 @@ import { usePhotoGallery, Photo } from "../../hooks/usePhotoGallery";
 import { UserModel } from "../../redux/userType";
 import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
-import { updateUserImages } from "../../redux/authSlice";
+import { updateUserImages, deleteUserImage } from "../../redux/authSlice";
+import {imgBaseUrl} from "../../redux/api-ref"; 
+import { deletePhotoById } from "../../services/photoService";
 
 type Props = {
   user: UserModel;
@@ -52,9 +54,11 @@ let userImages: Photo[] = [
 ];
 
 const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
+  const CurrentUser = useSelector((state: RootState) => state.auth.user);
+  //const [photoToDeleteId, setPhotoToDeleteId] = useState<string | undefined>();
   const { photos, takePhoto, deletePhoto, returnPhoto } = usePhotoGallery();
   const [imageSlotsAvailable, setImageSlotsAvailable] = useState(
-    TotalImageSlots - photos.length
+    TotalImageSlots - CurrentUser.profileImages.length
   );
   const dispatch = useDispatch();
   const [segmentView, setSegmentView] = useState<string>("EDIT");
@@ -62,19 +66,24 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
   const [aboutMe, setAboutMe] = useState<string>(
     `I'm obsessed with building mobile apps with Ionic Framework. What about you?`
   );
-  const CurrentUser = useSelector((state: RootState) => state.auth.user);
+  ;
   const stackRef = useRef<HTMLDivElement>(null);
+  // useEffect(() => {
+  //   if (photoToDeleteId){
+  //     dispatch(deleteUserImage(returnPhoto, CurrentUser._id));
+  //   } 
+  // }, [photoToDeleteId]);
   useEffect(() => {
     if (returnPhoto){
-      console.log("returnPhoto: >>>> " +JSON.stringify(returnPhoto));
+      // console.log("returnPhoto: >>>> " +JSON.stringify(returnPhoto));
       dispatch(updateUserImages(returnPhoto, CurrentUser._id));
     } 
   }, [returnPhoto]);
 
   useEffect(() => {
     //user.images =
-    setImageSlotsAvailable(TotalImageSlots - photos.length);
-  }, [photos.length]);
+    setImageSlotsAvailable(TotalImageSlots - CurrentUser.profileImages.length);
+  }, [CurrentUser.profileImages.length]);
 
   const handleNoMoreSlide = (isOnTheLeft: boolean = true) => {
     if (stackRef && stackRef.current) {
@@ -129,7 +138,8 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
               <div className="photos-edit">
                 <IonGrid>
                   <IonRow>
-                    {photos.map((photo, index) => (
+                    {CurrentUser && (CurrentUser.profileImages.length> 0) &&
+                      CurrentUser.profileImages.map((photo, index) => (
                       <IonCol
                         size="4"
                         className="photo-item"
@@ -138,13 +148,17 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
                         <div
                           className="photo-image background-img"
                           style={{
-                            backgroundImage: `url(${photo.webviewPath})`,
+                            backgroundImage: `url(${imgBaseUrl + photo.filename})`,
                           }}
                         />
                         <div className="photo-button">
                           <IonIcon
                             icon={close}
-                            onClick={() => deletePhoto(photo)}
+                            onClick={() => {
+                              deletePhotoById(photo.file_id!).then((res)=>{
+                                dispatch(deleteUserImage(photo, CurrentUser._id));
+                              }).catch(err=>console.log(err));
+                            }}
                             style={{ cursor: "pointer" }}
                           />
                         </div>
@@ -213,7 +227,7 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
                   <IonLabel>JOB TITLE</IonLabel>
                 </IonListHeader>
                 <IonItem lines="none">
-                  <IonInput value="Average Tindered" />
+                  <IonInput value="Developer" />
                 </IonItem>
               </IonList>
 
@@ -222,103 +236,31 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
                   <IonLabel>COMPANY</IonLabel>
                 </IonListHeader>
                 <IonItem lines="none">
-                  <IonInput value="Take That Design" />
+                  <IonInput value="My Company" />
                 </IonItem>
               </IonList>
 
-              <IonList className="list-custom">
+              {/* <IonList className="list-custom">
                 <IonListHeader>
                   <IonLabel>SCHOOL</IonLabel>
                 </IonListHeader>
                 <IonItem detail lines="none">
                   <IonLabel>Add School</IonLabel>
                 </IonItem>
-              </IonList>
+              </IonList> */}
 
-              <IonList className="list-custom">
-                <IonListHeader>
-                  <IonLabel>SNAPCHAT</IonLabel>
-                </IonListHeader>
-                <IonItem lines="none">
-                  <IonIcon icon={logoSnapchat} slot="start" />
-                  <IonLabel>Bitmoji Keyboard</IonLabel>
-                  <IonButton fill="clear" color="primary" slot="end">
-                    CONNECT
-                  </IonButton>
-                </IonItem>
-              </IonList>
-
-              <IonList className="list-custom">
-                <IonListHeader>
-                  <IonLabel>INSTAGRAM PHOTOS</IonLabel>
-                </IonListHeader>
-                <IonItem lines="none">
-                  <IonIcon icon={logoInstagram} color="primary" slot="start" />
-                  <IonLabel>Connect Instagram</IonLabel>
-                  <IonButton fill="clear" color="primary" slot="end">
-                    CONNECT
-                  </IonButton>
-                </IonItem>
-              </IonList>
-
-              <IonList className="list-custom">
-                <IonListHeader>
-                  <IonLabel>SPOTIFY ANTHEM</IonLabel>
-                </IonListHeader>
-                <IonItem detail lines="none">
-                  <IonIcon icon={logoRss} color="success" slot="start" />
-                  <IonLabel>
-                    <div>Sunday Morning</div>
-                    <div className="text-sm">
-                      <IonText color="medium">Maroon 5</IonText>
-                    </div>
-                  </IonLabel>
-                </IonItem>
-              </IonList>
-
-              <IonList className="list-custom">
-                <IonListHeader>
-                  <IonLabel>TOP SPOTIFY ARTIST</IonLabel>
-                </IonListHeader>
-                <IonItem lines="none">
-                  <IonIcon icon={logoRss} color="sucess" slot="start" />
-                  <IonLabel>Connect Spotify</IonLabel>
-                  <IonButton fill="clear" color="primary" slot="end">
-                    CONNECT
-                  </IonButton>
-                </IonItem>
-              </IonList>
-
-              <IonList className="list-custom">
-                <IonListHeader>
-                  <IonLabel>GENDER</IonLabel>
-                </IonListHeader>
-                <IonItem detail lines="none">
-                  <IonLabel>Man</IonLabel>
-                </IonItem>
-              </IonList>
-
-              <IonList className="list-custom">
-                <IonListHeader>
-                  <IonLabel>FEED SETTINGS</IonLabel>
-                </IonListHeader>
-                <IonItem detail lines="none">
-                  <IonLabel>Shared Content</IonLabel>
-                </IonItem>
-              </IonList>
-
+              
               <div className="safe-area-bottom">
                 <IonList className="list-custom">
                   <IonListHeader>
                     <IonLabel>
                       CONTROL YOUR PROFILE{" "}
-                      <IonText color="primary">· Tinder Plus</IonText>
                     </IonLabel>
                   </IonListHeader>
-                  <IonItem>
+                  {/* <IonItem>
                     <IonLabel>Don't Show My Age</IonLabel>
                     <IonToggle color="primary" checked={false} />
-                  </IonItem>
+                  </IonItem> */}
                   <IonItem lines="none">
                     <IonLabel>Don't Show My Distance</IonLabel>
                     <IonToggle color="primary" checked={false} />

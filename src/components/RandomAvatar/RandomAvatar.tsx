@@ -1,9 +1,3 @@
-/**
-  Random Avatar for Ionic 5 React
-  v1.0.0 (28/01/2021)
-  Hieu Pham (https://www.takethatdesign.com)
-*/
-
 import React from 'react';
 import {
 

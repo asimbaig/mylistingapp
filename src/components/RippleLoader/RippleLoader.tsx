@@ -1,7 +1,7 @@
 import React,{useEffect,useState} from 'react';
 import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
-
+import {imgBaseUrl} from "../../redux/api-ref"; 
 import {
   IonAvatar
 } from '@ionic/react';
@@ -20,7 +20,9 @@ const RippleLoader: React.FC<Props> = ({ imageUrl }) => {
 
   useEffect(() => {
     if(CurrentUser && CurrentUser.profileImages && CurrentUser.profileImages.length>0){
-      setImgUrl(CurrentUser.profileImages[0]);
+      setImgUrl(imgBaseUrl + CurrentUser.profileImages[0].filename);
+    }else{
+      setImgUrl('./assets/images/usernophoto.jpg');
     }
   }, [])
   

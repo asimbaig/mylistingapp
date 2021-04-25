@@ -3,6 +3,7 @@ import { AppThunk, AppDispatch } from "./store";
 import { Item, ItemModel } from "./itemType";
 import { UserModel } from "./userType";
 import axios from "./api-ref";
+import { setIsLoading } from "./appSlice";
 
 
 const initialState: ItemModel = { 
@@ -58,6 +59,21 @@ const itemsSlice = createSlice({
     setSearchText(state, action: PayloadAction<string>) {
       state.searchText = action.payload;
     },
+    updateItemViews(state, action: PayloadAction<Item>) {
+      // console.log("action.payload.views: "+ action.payload.views);
+      state = { 
+        ...state, 
+        items: state.items.map(
+            (item, i) => {
+              if(item._id === action.payload._id){
+                  item.views = action.payload.views;
+              }
+              return item
+            }
+        )
+     }
+
+    },
   },
 });
 
@@ -97,13 +113,16 @@ export const addItem = (text: string): AppThunk => async (
   //     });
 };
 export const loadItems = (): AppThunk => async (dispatch: AppDispatch) => {
+  setIsLoading(true);
   axios.get("items")
         .then((res) => {
           dispatch(itemsSlice.actions.loadItems(res.data as Item[]));
+          setIsLoading(false);
         })
-        .catch((err) => {});
+        .catch((err) => {setIsLoading(false);});
 };
 export const loadUserOtherItems = (userItemIds: String[]): AppThunk => async (dispatch: AppDispatch) => {
+  setIsLoading(true);
   let UserItems: Item[] = [];
   axios.get("items").then((res) => {
           const items = res.data as Item[]
@@ -116,23 +135,40 @@ export const loadUserOtherItems = (userItemIds: String[]): AppThunk => async (di
           });
           // console.log("UserItems: "+ UserItems);
           dispatch(itemsSlice.actions.loadUserOtherItems(UserItems));
-        }).catch((err) => {console.log(err)});
+          setIsLoading(false);
+        }).catch((err) => {console.log(err);setIsLoading(false);});
 };
 export const loadMyItems = (userId: String): AppThunk => async (dispatch: AppDispatch) => {
+  setIsLoading(true);
   axios.get("items/user/"+userId).then((res) => {
           const items = res.data as Item[];
           dispatch(itemsSlice.actions.loadMyItems(items));
-        }).catch((err) => {console.log(err)});
+          setIsLoading(false);
+        }).catch((err) => {console.log(err); setIsLoading(false);});
 };
 export const setSelectItem = (selectedItem: Item): AppThunk => async (dispatch: AppDispatch) => {
+  setIsLoading(true);
   axios.get("users/ItemUser/" + selectedItem.userId).then((res) => {
           var itemUser = res.data as UserModel;
           dispatch(itemsSlice.actions.setItemUser(itemUser));
           dispatch(loadUserOtherItems(itemUser.listedItems));
+          setIsLoading(false);
         })
         .catch((error) => {
           console.log(error);
+          setIsLoading(false);
         });
   dispatch(itemsSlice.actions.setSelectedItem(selectedItem));
+};
+export const updateItemViews = (itemId: string): 
+AppThunk => async (dispatch: AppDispatch) => {
+  
+  axios
+    .put("items/views/" + itemId)
+    .then((res) => {
+      dispatch(itemsSlice.actions.updateItemViews(res.data));
+      // console.log("View Updated: "+res.data.views);
+    })
+    .catch((err) => {});
 };
 export default itemsSlice.reducer;

@@ -44,16 +44,16 @@ import {
   rose,
   chatbubbles,
   person,
-  //logOut,
   grid,
   logIn,heartCircle
 } from "ionicons/icons";
 import "./Tabs.scss";
-import Explore from "../src/pages/Explore/Explore";
+import FavouriteUsers from "./pages/FavouriteUsers/FavouriteUsers";
 import Me from "../src/pages/Me/Me";
 import Highlights from "../src/pages/Highlights/Highlights";
 import MyListings from "../src/pages/MyListings/MyListings";
-import Matches from "../src/pages/Matches/Matches";
+import ChatStreams from "./pages/ChatStreams/ChatStreams";
+import Chat from "../src/pages/Chat/Chat";
 import Listings from "../src/pages/Listings/Listings";
 import ListingDetails from "../src/pages/Listings/ListingDetails";
 import Login from "../src/pages/Login/Login";
@@ -99,11 +99,12 @@ const App: React.FC = () => {
           <IonRouterOutlet>
             <Route path="/listings" component={Listings} exact />
             <Route path="/listingdetails" component={ListingDetails} exact />
-            <Route path="/explore" component={Explore} exact />
+            <Route path="/favouriteusers" component={FavouriteUsers} exact />
             <Route path="/me" component={Me} exact />
             <Route path="/highlights" component={Highlights} exact />
             <Route path="/mylistings" component={MyListings} exact />
-            <Route path="/matches" component={Matches} exact />
+            <Route path="/chatstreams" component={ChatStreams} exact />
+            <Route path="/chat" component={Chat} exact />
             <Route path="/login" component={Login} exact />
             <Route path="/signup" component={Signup} exact />
             <Route path="/logout" component={RedirectToLogin} exact />
@@ -118,20 +119,8 @@ const App: React.FC = () => {
               <IonIcon icon={grid} />
             </IonTabButton>
 
-            <IonTabButton tab="explore" href="/explore">
+            <IonTabButton tab="favouriteusers" href="/favouriteusers">
               <IonIcon icon={heartCircle} />
-              {/* <img
-                className="tab-icon-inactive"
-                src="assets/img/logo_small_bw.png"
-                width="24"
-                alt=""
-              />
-              <img
-                className="tab-icon-active"
-                src="assets/img/logo_small.png"
-                width="24"
-                alt=""
-              /> */}
             </IonTabButton>
             {isAuthenticated && <IonTabButton
               tab="mylistings"
@@ -141,7 +130,7 @@ const App: React.FC = () => {
               <IonIcon icon={rose} />
               <IonBadge color="primary">9</IonBadge>
             </IonTabButton>}
-            <IonTabButton tab="matches" href="/matches">
+            <IonTabButton tab="chatstreams" href="/chatstreams">
               <IonIcon icon={chatbubbles} />
             </IonTabButton>
             {isAuthenticated && 
@@ -149,11 +138,6 @@ const App: React.FC = () => {
                 <IonIcon icon={person} />
               </IonTabButton>
             }
-            {/* {isAuthenticated && 
-              <IonTabButton tab="logout" href="/logout">
-                <IonIcon icon={logOut} />
-              </IonTabButton>
-            } */}
             {!isAuthenticated && 
               <IonTabButton tab="login" href="/login">
                 <IonIcon icon={logIn} />

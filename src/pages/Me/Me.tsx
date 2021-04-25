@@ -22,11 +22,12 @@ import Profile from "../Profile/Profile";
 import ProfileEdit from "../ProfileEdit/ProfileEdit";
 import SpecialModel from "../SpecialModel/SpecialModel";
 import "./Me.scss";
-import USERS from "../Explore/users.dummy";
+import USERS from "../FavouriteUsers/users.dummy";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import {sendMsg} from "../../redux/authSlice"; 
-import {MsgModel} from "../../redux/MsgType"; 
+import {MsgModel} from "../../redux/MsgType";
+import {imgBaseUrl} from "../../redux/api-ref"; 
 
 
 type Props = {
@@ -42,13 +43,13 @@ const Me: React.FC<Props> = ({ history }) => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const loggedin_User = useSelector((state: RootState) => state.auth.user);
-  const msg: MsgModel = {
-    text: "My Message 2",
-    fromUser: "607616f3908e524b6cc195e8", 
-    fromUserImg: "./assets/images/user1.jpg",
-    dateTime: new Date(),
-    isRead: false
-  };
+  // const msg: MsgModel = {
+  //   text: "My Message 2",
+  //   fromUser: "607616f3908e524b6cc195e8", 
+  //   fromUserImg: "./assets/images/user1.jpg",
+  //   dateTime: new Date(),
+  //   isRead: false
+  // };
   // useEffect(() => {
   //   //console.log(JSON.stringify(loggedin_User));
   // }, []);
@@ -81,7 +82,7 @@ const Me: React.FC<Props> = ({ history }) => {
               <IonAvatar className="avatar">
                 {
                   (loggedin_User?.profileImages && loggedin_User?.profileImages.length>0) ?
-                  (<img src={loggedin_User?.profileImages[0]} alt="" />):
+                  (<img src={imgBaseUrl+loggedin_User?.profileImages[0].filename} alt="" />):
                   (<img src="./assets/images/usernophoto.jpg" alt="" />)
                 }
                 
@@ -150,13 +151,13 @@ const Me: React.FC<Props> = ({ history }) => {
               >
                 SPECIAL MODEL
               </IonButton>
-              <IonButton
+              {/* <IonButton
                 color="white"
                 className="button-custom text-primary button-tinder-plus"
                 onClick={()=>{dispatch(sendMsg(msg,"607616ba908e524b6cc195e7"))}}
               >
                 Send Msg
-              </IonButton>
+              </IonButton> */}
             </div>
           </div>
         </div>
