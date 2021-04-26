@@ -34,7 +34,7 @@ const Settings: React.FC<Props> = ({ onClose }) => {
   //   // setTimeout(() => {
   //   // onClose();
   //   // console.log("handleLogout");
-  //   // history.push('/listings');
+  //   // history.push('//logout');
   //   // return (<RedirectToLogin/>)
   //   //   history.push('/listings');
   //   // }, 1000);
@@ -102,11 +102,16 @@ const Settings: React.FC<Props> = ({ onClose }) => {
             <IonToggle color="primary" checked={ isDarkMode } onIonChange={ e => handleToggleDarkTheme(e.detail.checked as boolean) } />
           </IonItem>
         </IonList>
-        {/* <IonList className="list-custom">
-          <IonItem className="ion-text-center" button detail={false} onClick={ handleLogout } lines="none">
+        <IonList className="list-custom">
+          <IonItem className="ion-text-center" button detail={false} 
+          onClick={ ()=> {
+            onClose();
+            history.push('/logout');
+            }
+          } lines="none">
             <IonLabel>Logout</IonLabel>
           </IonItem>
-        </IonList> */}
+        </IonList>
 
         <IonList className="list-custom">
           <IonListHeader>

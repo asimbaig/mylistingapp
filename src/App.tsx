@@ -45,7 +45,7 @@ import {
   chatbubbles,
   person,
   grid,
-  logIn,heartCircle
+  logIn,heartCircle, logOut
 } from "ionicons/icons";
 import "./Tabs.scss";
 import FavouriteUsers from "./pages/FavouriteUsers/FavouriteUsers";
@@ -136,6 +136,11 @@ const App: React.FC = () => {
             {isAuthenticated && 
               <IonTabButton tab="me" href="/me">
                 <IonIcon icon={person} />
+              </IonTabButton>
+            }
+            {isAuthenticated && 
+              <IonTabButton tab="logout" href="/logout">
+                <IonIcon icon={logOut} />
               </IonTabButton>
             }
             {!isAuthenticated && 
