@@ -2,10 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   IonPage,
   IonGrid,
-  IonCardContent,
-  IonCard,
-  IonNote,
-  IonLabel,
   IonContent,
   IonIcon,
   IonButton,
@@ -16,22 +12,9 @@ import {
   IonItem,
   IonItemOptions,
   IonItemOption,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
+  IonFab,
 } from "@ionic/react";
-import {
-  ellipsisHorizontal,
-  heart,
-  chatbubbles,
-  briefcaseOutline,
-  locationOutline,
-  arrowRedo,
-  arrowUndo,
-  thumbsUp,
-  trash,
-  reloadCircle,
-} from "ionicons/icons";
+import { trash, reloadCircle, add } from "ionicons/icons";
 import "./MyListings.scss";
 import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
@@ -62,37 +45,46 @@ const MyListings: React.FC<Props> = () => {
             mylistings &&
             mylistings.map((item, index) => (
               <IonItemSliding key={index} style={{ marginBottom: "5px" }}>
-                <IonItem
-                  onClick={() => {}}
-                >
+                <IonItem onClick={() => {}}>
                   <IonGrid>
                     <IonRow>
                       <IonCol>
-                    {item.item_images && item.item_images.length > 0 ? (
-                      // <img
-                      //   src={item.item_images[0]}
-                      //   alt=""
-                      //   style={{ width: "100%", height: "220px" }}
-                      // />
-                      <div className="slide-img background-img" style={{ backgroundImage: `url('${ item.item_images[0] }')`, height: "200px" }} />
-                    ) : (
-                      // <img
-                      //   src="./assets/images/itemnophoto.jpg"
-                      //   alt=""
-                      //   style={{ width: "100%", height: "220px" }}
-                      // />
-                      <div className="slide-img background-img" style={{ backgroundImage: `url("./assets/images/itemnophoto.jpg")` }} />
-                    )}
-                    </IonCol>
-                    <IonCol>
-                      <h3>{item.title}</h3>
+                        {item.item_images && item.item_images.length > 0 ? (
+                          // <img
+                          //   src={item.item_images[0]}
+                          //   alt=""
+                          //   style={{ width: "100%", height: "220px" }}
+                          // />
+                          <div
+                            className="slide-img background-img"
+                            style={{
+                              backgroundImage: `url('${item.item_images[0]}')`,
+                              height: "200px",
+                            }}
+                          />
+                        ) : (
+                          // <img
+                          //   src="./assets/images/itemnophoto.jpg"
+                          //   alt=""
+                          //   style={{ width: "100%", height: "220px" }}
+                          // />
+                          <div
+                            className="slide-img background-img"
+                            style={{
+                              backgroundImage: `url("./assets/images/itemnophoto.jpg")`,
+                            }}
+                          />
+                        )}
+                      </IonCol>
+                      <IonCol>
+                        <h3>{item.title}</h3>
 
-                      <p>£{item.price}</p>
+                        <p>£{item.price}</p>
 
-                      <p>{item.enddate.substring(0,16)}</p>
-                      
-                      <p>Views: {item.views}</p>
-                    </IonCol>
+                        <p>{item.enddate.substring(0, 16)}</p>
+
+                        <p>Views: {item.views}</p>
+                      </IonCol>
                     </IonRow>
                   </IonGrid>
                 </IonItem>
@@ -117,6 +109,15 @@ const MyListings: React.FC<Props> = () => {
               </IonItemSliding>
             ))}
         </IonList>
+        <IonFab vertical="bottom" horizontal="end" slot="fixed">
+          <IonButton
+            color="white"
+            className="button-custom button-icon button-sm button-brand"
+            onClick={() => console.log(false)}
+          >
+            <IonIcon icon={add} slot="icon-only" />
+          </IonButton>
+        </IonFab>
       </IonContent>
     </IonPage>
   );

@@ -14,7 +14,7 @@ import {
   settingsSharp,
   camera,
   add,
-  pencilSharp,
+  logOut,
 } from "ionicons/icons";
 import PlusIntro from "../../components/PlusIntro/PlusIntro";
 import Settings from "../Settings/Settings";
@@ -25,10 +25,10 @@ import "./Me.scss";
 import USERS from "../FavouriteUsers/users.dummy";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import {sendMsg} from "../../redux/authSlice"; 
-import {MsgModel} from "../../redux/MsgType";
-import {imgBaseUrl} from "../../redux/api-ref"; 
-
+import { sendMsg } from "../../redux/authSlice";
+import { MsgModel } from "../../redux/MsgType";
+import { imgBaseUrl } from "../../redux/api-ref";
+import { logout } from "../../redux/authSlice";
 
 type Props = {
   history: any;
@@ -41,11 +41,13 @@ const Me: React.FC<Props> = ({ history }) => {
   const [isSpecialModelOpen, setIsSpecialModelOpen] = useState<boolean>(false);
   const user = USERS[3];
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
   const loggedin_User = useSelector((state: RootState) => state.auth.user);
   // const msg: MsgModel = {
   //   text: "My Message 2",
-  //   fromUser: "607616f3908e524b6cc195e8", 
+  //   fromUser: "607616f3908e524b6cc195e8",
   //   fromUserImg: "./assets/images/user1.jpg",
   //   dateTime: new Date(),
   //   isRead: false
@@ -69,7 +71,7 @@ const Me: React.FC<Props> = ({ history }) => {
   const handleViewSpecialModel = () => {
     setIsSpecialModelOpen(true);
   };
-  if(!isAuthenticated){
+  if (!isAuthenticated) {
     history.push("/");
     return null;
   }
@@ -80,12 +82,15 @@ const Me: React.FC<Props> = ({ history }) => {
           <div className="section-upper">
             <div className="me-header" onClick={handleViewProfile}>
               <IonAvatar className="avatar">
-                {
-                  (loggedin_User?.profileImages && loggedin_User?.profileImages.length>0) ?
-                  (<img src={imgBaseUrl+loggedin_User?.profileImages[0].filename} alt="" />):
-                  (<img src="./assets/images/usernophoto.jpg" alt="" />)
-                }
-                
+                {loggedin_User?.profileImages &&
+                loggedin_User?.profileImages.length > 0 ? (
+                  <img
+                    src={imgBaseUrl + loggedin_User?.profileImages[0].filename}
+                    alt=""
+                  />
+                ) : (
+                  <img src="./assets/images/usernophoto.jpg" alt="" />
+                )}
               </IonAvatar>
               <div>
                 <span className="me-title">{loggedin_User?.displayname}</span>
@@ -93,7 +98,9 @@ const Me: React.FC<Props> = ({ history }) => {
                   <IonIcon icon={checkmarkOutline} />
                 </span>
               </div>
-              <div className="me-level">Joined : {loggedin_User?.joinDate.substring(0,10)}</div>
+              <div className="me-level">
+                Joined : {loggedin_User?.joinDate.substring(0, 10)}
+              </div>
             </div>
 
             <IonRow className="ion-justify-content-center ion-align-items-center">
@@ -128,11 +135,16 @@ const Me: React.FC<Props> = ({ history }) => {
                     <IonButton
                       color="white"
                       className="button-custom button-icon"
-                      onClick={handleViewEditProfile}
+                      onClick={() => {
+                        dispatch(logout());
+                        console.log("after logout...");
+                        window.location.reload();
+                        //history.push("/listings");
+                      }}
                     >
-                      <IonIcon icon={pencilSharp} slot="icon-only" />
+                      <IonIcon icon={logOut} slot="icon-only" />
                     </IonButton>
-                    <div className="button-label">EDIT INFO</div>
+                    <div className="button-label">Logout</div>
                   </IonCol>
                 </IonRow>
               </IonCol>
@@ -164,9 +176,11 @@ const Me: React.FC<Props> = ({ history }) => {
       </IonContent>
 
       <IonModal isOpen={isSettingsOpen}>
-        <Settings onClose={() => {
-          setIsSettingsOpen(false);
-        }} />
+        <Settings
+          onClose={() => {
+            setIsSettingsOpen(false);
+          }}
+        />
       </IonModal>
 
       {/* <IonModal isOpen={isProfileOpen} swipeToClose>
@@ -174,7 +188,10 @@ const Me: React.FC<Props> = ({ history }) => {
       </IonModal> */}
 
       <IonModal isOpen={isProfileEditOpen}>
-        <ProfileEdit user={loggedin_User} onClose={() => setIsProfileEditOpen(false)} />
+        <ProfileEdit
+          user={loggedin_User}
+          onClose={() => setIsProfileEditOpen(false)}
+        />
       </IonModal>
 
       <IonModal isOpen={isSpecialModelOpen} cssClass="custom-modal-small">

@@ -102,7 +102,7 @@ const Settings: React.FC<Props> = ({ onClose }) => {
             <IonToggle color="primary" checked={ isDarkMode } onIonChange={ e => handleToggleDarkTheme(e.detail.checked as boolean) } />
           </IonItem>
         </IonList>
-        <IonList className="list-custom">
+        {/* <IonList className="list-custom">
           <IonItem className="ion-text-center" button detail={false} 
           onClick={ ()=> {
             onClose();
@@ -111,7 +111,7 @@ const Settings: React.FC<Props> = ({ onClose }) => {
           } lines="none">
             <IonLabel>Logout</IonLabel>
           </IonItem>
-        </IonList>
+        </IonList> */}
 
         <IonList className="list-custom">
           <IonListHeader>

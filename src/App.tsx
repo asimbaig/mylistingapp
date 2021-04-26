@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Redirect, Route } from "react-router-dom";
 import { IonApp, IonRouterOutlet, setupConfig } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-// import Landing from "./pages/Landing/Landing";
+
 import ThemeService from "./services/theme.service";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./redux/rootReducer";
@@ -47,10 +47,9 @@ import {
   grid,
   logIn,heartCircle, logOut
 } from "ionicons/icons";
-import "./Tabs.scss";
+import "./App.scss";
 import FavouriteUsers from "./pages/FavouriteUsers/FavouriteUsers";
 import Me from "../src/pages/Me/Me";
-import Highlights from "../src/pages/Highlights/Highlights";
 import MyListings from "../src/pages/MyListings/MyListings";
 import ChatStreams from "./pages/ChatStreams/ChatStreams";
 import Chat from "../src/pages/Chat/Chat";
@@ -82,6 +81,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     dispatch(authCheckState());
+    
     dispatch(loadItems());
   }, []);
 
@@ -101,7 +101,6 @@ const App: React.FC = () => {
             <Route path="/listingdetails" component={ListingDetails} exact />
             <Route path="/favouriteusers" component={FavouriteUsers} exact />
             <Route path="/me" component={Me} exact />
-            <Route path="/highlights" component={Highlights} exact />
             <Route path="/mylistings" component={MyListings} exact />
             <Route path="/chatstreams" component={ChatStreams} exact />
             <Route path="/chat" component={Chat} exact />
@@ -138,11 +137,11 @@ const App: React.FC = () => {
                 <IonIcon icon={person} />
               </IonTabButton>
             }
-            {isAuthenticated && 
+            {/* {isAuthenticated && 
               <IonTabButton tab="logout" href="/logout">
                 <IonIcon icon={logOut} />
               </IonTabButton>
-            }
+            } */}
             {!isAuthenticated && 
               <IonTabButton tab="login" href="/login">
                 <IonIcon icon={logIn} />

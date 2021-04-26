@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   IonPage,
   IonHeader,
@@ -11,7 +11,7 @@ import {
   IonFooter,
 } from "@ionic/react";
 import {} from "ionicons/icons";
-import InputWithGiphy from "../../components/InputWithGiphy/InputWithGiphy";
+import InputWithEmoji from "../../components/InputWithEmoji/InputWithEmoji";
 import "./Chat.scss";
 
 import { RootState } from "../../redux/rootReducer";
@@ -24,6 +24,7 @@ type Props = {};
 
 const Chat: React.FC<Props> = () => {
   const dispatch = useDispatch();
+
   const contentRef = useRef<React.RefObject<HTMLIonContentElement>>(null);
   const chatStream = useSelector((state: RootState) => state.auth.chatStream);
   const chatUser = useSelector(
@@ -37,6 +38,7 @@ const Chat: React.FC<Props> = () => {
 
   const handleSubmitMessage = (data: any) => {
     console.log("data.message:" + data.message);
+
     const msg: MsgModel = {
       text: data.message,
       fromUser: currentUser._id,
@@ -145,7 +147,7 @@ const Chat: React.FC<Props> = () => {
 
       <IonFooter>
         <IonToolbar className="toolbar-no-border">
-          <InputWithGiphy onChange={handleSubmitMessage} />
+          <InputWithEmoji onChange={handleSubmitMessage} />
         </IonToolbar>
       </IonFooter>
     </IonPage>

@@ -15,19 +15,18 @@ import {
   IonNote,
   IonList,
   IonItem,
-  IonLabel,IonGrid,IonRow,IonCol, IonModal
+  IonLabel,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonModal,
 } from "@ionic/react";
 import {
   arrowBack,
-  checkmarkOutline,
-  briefcaseOutline,
-  locationOutline,
-  musicalNote,
-  play,
-  closeSharp,
-  star,
-  starOutline,
-  heartSharp,mail, shareSocial
+  thumbsUp,
+  thumbsUpOutline,
+  mail,
+  shareSocial,
 } from "ionicons/icons";
 import ImageSwiperSlides from "../../components/ImageSwiperSlides/ImageSwiperSlides";
 import "./Profile.scss";
@@ -38,8 +37,8 @@ import "swiper/components/effect-flip/effect-flip.scss";
 import { Item } from "../../redux/itemType";
 import { setSelectItem } from "../../redux/itemSlice";
 import { toggleFavUsers, toggleFavourite } from "../../redux/authSlice";
-import {imgBaseUrl} from "../../redux/api-ref"; 
-import SendMsg from '../SendMsg/SendMsg';
+import { imgBaseUrl } from "../../redux/api-ref";
+import SendMsg from "../SendMsg/SendMsg";
 import {
   modalEnterZoomOut,
   modalLeaveZoomIn,
@@ -50,8 +49,9 @@ type Props = {
 };
 const ListingDetails: React.FC<Props> = ({ history }) => {
   const dispatch = useDispatch();
+  const [slideImages, setSlideImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const [isSendMsgOpen, setIsSendMsgOpen] = useState(false);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -68,7 +68,26 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
   const userFavourites = useSelector(
     (state: RootState) => state.auth.user?.favourites
   );
-
+  useEffect(() => {
+    if (selectedItem?.item_images.length === 0) {
+      setSlideImages(
+        [
+          "./assets/images/itemnophoto.jpg",
+          "./assets/images/itemnophoto.jpg",
+        ].reverse()
+      );
+    } else if (selectedItem?.item_images.length === 1) {
+      setSlideImages(
+        [
+          ...selectedItem.item_images,
+          "./assets/images/itemnophoto.jpg",
+        ].reverse()
+      );
+    } else {
+      setSlideImages([...selectedItem?.item_images!].reverse());
+    }
+  },[selectedItem]);
+  
   const isFavUser = (currentfavuserId: string) => {
     if (favUsers) {
       var index = favUsers.findIndex((fuid) => fuid === currentfavuserId);
@@ -119,12 +138,9 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
         {selectedItem && (
           <div>
             <div className="profile-header">
-              {
-                (selectedItem && selectedItem.item_images && selectedItem.item_images.length > 0) ?
-                (<ImageSwiperSlides images={selectedItem?.item_images!}/>) :
-                (<ImageSwiperSlides images={["./assets/images/itemnophoto.jpg"]}/>)
-              }
-              
+              {selectedItem && selectedItem.item_images && (
+                <ImageSwiperSlides images={slideImages} />
+              )}
               <IonFab vertical="bottom" horizontal="end" edge slot="fixed">
                 <IonButton
                   color="white"
@@ -135,75 +151,79 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                 </IonButton>
               </IonFab>
             </div>
-            
+
             <div className="profile-info border-bottom">
               <div className="profile-title">
                 <span className="profile-user-name">{selectedItem?.title}</span>
                 <div className="profile-user-age">£{selectedItem?.price}</div>
               </div>
-              {selectedItem.views > 0 && <IonNote><i>Views: {selectedItem.views}</i></IonNote>}
+              {selectedItem.views > 0 && (
+                <IonNote>
+                  <i>Views: {selectedItem.views}</i>
+                </IonNote>
+              )}
               <IonGrid>
                 <IonRow>
                   <IonCol>
                     <IonButton
-                        expand="full"
-                        fill="clear"
-                        color="danger"
-                        size="small"
-                        onClick={() => {setIsSendMsgOpen(true);}}
-                      >
-                        <IonIcon slot="start" icon={mail}></IonIcon>
+                      expand="full"
+                      fill="clear"
+                      color="danger"
+                      size="small"
+                      onClick={() => {
+                        setIsSendMsgOpen(true);
+                      }}
+                    >
+                      <IonIcon slot="start" icon={mail}></IonIcon>
                     </IonButton>
                   </IonCol>
                   <IonCol>
-                            {isAuthenticated &&
-                              (isFavourite(selectedItem._id) ? (
-                                <IonButton
-                                  expand="full"
-                                  fill="clear"
-                                  color="danger"
-                                  size="small"
-                                  onClick={() => {
-                                    dispatch(
-                                      toggleFavourite(selectedItem._id, CurrentUser._id)
-                                    );
-                                  }}
-                                >
-                                  <IonIcon slot="start" icon={star}></IonIcon>
-                                </IonButton>
-                              ) : (
-                                <IonButton
-                                  expand="full"
-                                  fill="clear"
-                                  color="danger"
-                                  size="small"
-                                  onClick={() => {
-                                    dispatch(
-                                      toggleFavourite(selectedItem._id, CurrentUser._id)
-                                    );
-                                  }}
-                                >
-                                  <IonIcon
-                                    slot="start"
-                                    icon={starOutline}
-                                  ></IonIcon>
-                                </IonButton>
-                              ))}
-                          </IonCol>
-                          <IonCol>
-                            <IonButton
-                              expand="full"
-                              fill="clear"
-                              color="danger"
-                              size="small"
-                            >
-                              <IonIcon slot="end" icon={shareSocial}></IonIcon>
-                            </IonButton>
-                          </IonCol>
- 
+                    {isAuthenticated &&
+                      (isFavourite(selectedItem._id) ? (
+                        <IonButton
+                          expand="full"
+                          fill="clear"
+                          color="danger"
+                          size="small"
+                          onClick={() => {
+                            dispatch(
+                              toggleFavourite(selectedItem._id, CurrentUser._id)
+                            );
+                          }}
+                        >
+                          <IonIcon slot="start" icon={thumbsUp}></IonIcon>
+                        </IonButton>
+                      ) : (
+                        <IonButton
+                          expand="full"
+                          fill="clear"
+                          color="danger"
+                          size="small"
+                          onClick={() => {
+                            dispatch(
+                              toggleFavourite(selectedItem._id, CurrentUser._id)
+                            );
+                          }}
+                        >
+                          <IonIcon
+                            slot="start"
+                            icon={thumbsUpOutline}
+                          ></IonIcon>
+                        </IonButton>
+                      ))}
+                  </IonCol>
+                  <IonCol>
+                    <IonButton
+                      expand="full"
+                      fill="clear"
+                      color="danger"
+                      size="small"
+                    >
+                      <IonIcon slot="end" icon={shareSocial}></IonIcon>
+                    </IonButton>
+                  </IonCol>
                 </IonRow>
               </IonGrid>
-              
             </div>
 
             <div className="ion-padding">
@@ -216,23 +236,17 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                 <IonCard>
                   <IonCardHeader>
                     <IonAvatar>
-                      {/* <img src={ItemUser.profileImages[0]} alt="" /> */}
-                      {(ItemUser.profileImages && ItemUser.profileImages.length>0) ?
-                              (<img src={imgBaseUrl + ItemUser.profileImages[0].filename} alt="" />):
-                              (<img src="./assets/images/usernophoto.jpg" alt="" />)}
+                      {ItemUser.profileImages &&
+                      ItemUser.profileImages.length > 0 ? (
+                        <img
+                          src={imgBaseUrl + ItemUser.profileImages[0].filename}
+                          alt=""
+                        />
+                      ) : (
+                        <img src="./assets/images/usernophoto.jpg" alt="" />
+                      )}
                     </IonAvatar>
                     <IonNote color="primary">{ItemUser?.displayname}</IonNote>
-                    {/* <IonButton
-                      expand="full"
-                      fill="clear"
-                      color="danger"
-                      size="small"
-                      onClick={() => {
-                        dispatch(toggleFavUsers(ItemUser._id, CurrentUser._id));
-                      }}
-                    >
-                      <IonIcon slot="start" icon={star}></IonIcon>
-                    </IonButton> */}
                     {isFavUser(ItemUser._id) ? (
                       <IonButton
                         expand="full"
@@ -245,7 +259,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                           );
                         }}
                       >
-                        <IonIcon slot="start" icon={star}></IonIcon>
+                        <IonIcon slot="start" icon={thumbsUp}></IonIcon>
                       </IonButton>
                     ) : (
                       <IonButton
@@ -254,13 +268,12 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                         color="danger"
                         size="small"
                         onClick={(event) => {
-                          // event.stopPropagation();
                           dispatch(
                             toggleFavUsers(ItemUser._id, CurrentUser._id)
                           );
                         }}
                       >
-                        <IonIcon slot="start" icon={starOutline}></IonIcon>
+                        <IonIcon slot="start" icon={thumbsUpOutline}></IonIcon>
                       </IonButton>
                     )}
                   </IonCardHeader>
@@ -276,9 +289,15 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                             style={{ cursor: "pointer" }}
                           >
                             <IonAvatar>
-                              {(otherItem.item_images && otherItem.item_images.length>0) ?
-                              (<img src={otherItem.item_images[0]} alt="" />):
-                              (<img src="./assets/images/itemnophoto.jpg" alt="" />)}
+                              {otherItem.item_images &&
+                              otherItem.item_images.length > 0 ? (
+                                <img src={otherItem.item_images[0]} alt="" />
+                              ) : (
+                                <img
+                                  src="./assets/images/itemnophoto.jpg"
+                                  alt=""
+                                />
+                              )}
                             </IonAvatar>
                             <IonLabel>
                               <h2>{otherItem.title}</h2>
@@ -320,19 +339,21 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
         )}
       </IonContent>
       <IonModal
-          swipeToClose
-          isOpen={ isSendMsgOpen }
-          enterAnimation={ modalEnterZoomOut }
-          leaveAnimation={ modalLeaveZoomIn }
-        >
-          <SendMsg 
-            onClose={ ()=>setIsSendMsgOpen(false) } 
-            itemImage={
-              selectedItem!.item_images.length> 0 ? selectedItem!.item_images[0]: "./assets/images/itemnophoto.jpg"
-            }
-            itemUser={ItemUser!}
-            />
-        </IonModal>
+        swipeToClose
+        isOpen={isSendMsgOpen}
+        enterAnimation={modalEnterZoomOut}
+        leaveAnimation={modalLeaveZoomIn}
+      >
+        <SendMsg
+          onClose={() => setIsSendMsgOpen(false)}
+          itemImage={
+            selectedItem!.item_images.length > 0
+              ? selectedItem!.item_images[0]
+              : "./assets/images/itemnophoto.jpg"
+          }
+          itemUser={ItemUser!}
+        />
+      </IonModal>
     </IonPage>
   );
 };

@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { TapticEngine } from '@ionic-native/taptic-engine';
 import {
-  IonImg, IonModal, IonToolbar,IonButtons, IonButton
+  IonModal
 } from '@ionic/react';
 import {
 
@@ -54,64 +53,17 @@ const ImageSwiperSlides: React.FC<Props> = ({ images }) => {
             return (
               <SwiperSlide
                 key={index}
-                // style={{ backgroundColor: `${randomColor()}` }}
                 onClick={() => {
-                  // setOpenActionSheet(!openActionSheet);
-                  // // setPhotoToDelete(photo)
                   setSelectedPhoto(imgUrl);
                   setShowModal(true);
                 }}
               >
                 <div className="slide-img background-img" style={{ backgroundImage: `url('${ imgUrl }')` }} />
-                {/* <IonImg src={imgUrl} style={{ maxHeight: "500px" }} /> */}
-                {/* <img src={img} alt={" : "+index}></img> */}
               </SwiperSlide>
             );
           })}
       </Swiper>
-      {/* <IonSlides
-        className="slides"
-        ref={ ionSlidesRef }
-        onIonSlidesDidLoad={ handleSlideLoaded }
-        onIonSlideDidChange={ handleSlideChange }
-        onIonSlideReachStart={ handleReachStart }
-        onIonSlideReachEnd={ handleReachEnd }
-      >
-        {
-          images.map(item => (
-            <IonSlide key={ item.id }>
-              <div className="slide-img background-img" style={{ backgroundImage: `url('${ item.imageUrl }')` }} />
-            </IonSlide>
-          ))
-        }
-      </IonSlides> */}
-      {/* <div className="custom-pagination">
-        {
-          images?.map((item, index) => (
-            <div key={ item.id } className={ `pagination-bullet${ activeIndex === index ? ' pagination-bullet-active' : '' }` } />
-          ))
-        }
-      </div> */}
 
-      {/* {
-        isClickable &&
-        <div className="overlay-navigation">
-          <div className="navi navi-left" onClick={ () => handleMoveSlide(-1) }></div>
-          <div className="navi navi-right" onClick={ () => handleMoveSlide(1) }></div>
-        </div>
-      } */}
-      {/* <IonModal isOpen={showModal} swipeToClose cssClass="fullscreen">
-      <IonToolbar>
-            <IonButtons slot="end">
-              <IonButton onClick={() => setShowModal(false)}>Close</IonButton>
-            </IonButtons>
-          </IonToolbar>
-          {selectedPhoto && (
-            <div style={{ display: "relative", top: "20%" }}>
-              <IonImg src={selectedPhoto} />
-            </div>
-          )}
-      </IonModal>  */}
       <IonModal
           swipeToClose
           isOpen={showModal}
@@ -124,11 +76,5 @@ const ImageSwiperSlides: React.FC<Props> = ({ images }) => {
     </div>
   );
 };
-
-// ImageSwiperSlides.defaultProps = {
-//   isClickable: false,
-//   onNoMoreSlide: () => {},
-//   onChange: () => {},
-// }
 
 export default ImageSwiperSlides;

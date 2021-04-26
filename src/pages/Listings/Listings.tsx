@@ -27,18 +27,21 @@ import {
   IonCheckbox,
   IonText,
 } from "@ionic/react";
-import {
-  reload,
-  options,
-  search,
-  close,
-} from "ionicons/icons";
+import { reload, options, search, close } from "ionicons/icons";
 import "./Listings.scss";
 import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { Item } from "../../redux/itemType";
-import { setSelectItem, setSearchText, loadItems, updateItemViews } from "../../redux/itemSlice";
-import { modalEnterZoomOut, modalLeaveZoomIn } from "../../animations/animations";
+import {
+  setSelectItem,
+  setSearchText,
+  loadItems,
+  updateItemViews,
+} from "../../redux/itemSlice";
+import {
+  modalEnterZoomOut,
+  modalLeaveZoomIn,
+} from "../../animations/animations";
 import { setIsLoading } from "../../redux/appSlice";
 import Countdown from "react-countdown";
 import TopPicksItems from "../../components/TopPicksItems/TopPicksItems";
@@ -78,8 +81,6 @@ const Listings: React.FC<Props> = ({ history }) => {
     },
   };
   const dispatch = useDispatch();
-  // let location = useLocation();
-  // console.log("Location:>>> "+ location.pathname);
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
   const listings = useSelector((state: RootState) => state.listings.items);
 
@@ -90,22 +91,18 @@ const Listings: React.FC<Props> = ({ history }) => {
   const userFavourites = useSelector(
     (state: RootState) => state.auth.user?.favourites
   );
-  // const CurrentUser = useSelector((state: RootState) => state.auth.user);
-
-  // const isFavourite = (currentItemId: string) => {
-  //   if (userFavourites) {
-  //     var index = userFavourites.findIndex((fid) => fid === currentItemId);
-  //     if (index && index > -1) {
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   }
-  // };
   const filterArray = (items: Item[], favoriteIds: string[]) => {
     const filteredItems = items.filter((i) => favoriteIds.indexOf(i._id) > -1);
     return filteredItems;
   };
+
+  useEffect(() => {
+    if (windowWidth <= 375) {
+      setCardWidth(160);
+    } else {
+      setCardWidth(200);
+    }
+  }, []);
 
   useEffect(() => {
     dispatch(setIsLoading(true));
@@ -115,9 +112,9 @@ const Listings: React.FC<Props> = ({ history }) => {
   }, []);
 
   useEffect(() => {
-    if (listings.length > 0) {
+    if (listings && listings.length > 0) {
       for (let i = 0; i < listings.length; i++) {
-        const card = document.getElementById("card" + i); //drawerRef.current[i];
+        const card = document.getElementById("card" + i);
         const gesture = createGesture({
           el: card!,
           gestureName: "swipeout",
@@ -125,11 +122,9 @@ const Listings: React.FC<Props> = ({ history }) => {
             card!.style.transition = "none";
           },
           onMove: (ev) => {
-            card!.style.transform = `translateX(${ev.deltaX}px) translateY(${ev.deltaY}px) rotate(${
-              ev.deltaX / 20
-            }deg)`;
-            // card!.style.transform = `translateX(${ev.deltaX}px) translateY(${ev.deltaY}px)`;
-            
+            card!.style.transform = `translateX(${ev.deltaX}px) translateY(${
+              ev.deltaY
+            }px) rotate(${ev.deltaX / 20}deg)`;
           },
           onEnd: (ev) => {
             var parenrRow = document.getElementById("cards");
@@ -153,13 +148,6 @@ const Listings: React.FC<Props> = ({ history }) => {
       setFavItems(filterArray(listings, userFavourites));
     }
   }, [listings, userFavourites]);
-  useEffect(() => {
-    if (windowWidth <= 375) {
-      setCardWidth(160);
-    } else {
-      setCardWidth(200);
-    }
-  }, [windowWidth]);
 
   // Random component
   const Completionist = () => <span>Expired!!</span>;
@@ -199,16 +187,10 @@ const Listings: React.FC<Props> = ({ history }) => {
             mode="md"
           >
             <IonSegmentButton value="LIST">
-              <IonLabel>
-                Listings
-                {/* <div className="segment-badge">6</div> */}
-              </IonLabel>
+              <IonLabel>Listings</IonLabel>
             </IonSegmentButton>
             <IonSegmentButton value="FAVS">
-              <IonLabel>
-                Favourites
-                {/* <div className="segment-badge">3</div> */}
-              </IonLabel>
+              <IonLabel>Favourites</IonLabel>
             </IonSegmentButton>
           </IonSegment>
         </IonToolbar>
@@ -226,12 +208,10 @@ const Listings: React.FC<Props> = ({ history }) => {
               <div
                 className="scroll-item matches-item"
                 key={item._id + "toppicks"}
-                onClick={
-                  () => {
-                    dispatch(updateItemViews(item._id));
-                    onClickItem(item);
-                  }
-                }
+                onClick={() => {
+                  dispatch(updateItemViews(item._id));
+                  onClickItem(item);
+                }}
               >
                 <TopPicksItems size="lg" item={item} />
                 <div className="scroll-item-title text-ellipsis">
@@ -269,7 +249,6 @@ const Listings: React.FC<Props> = ({ history }) => {
                   </IonButton>
                 )}
               </IonButtons>
-              {/* {console.log("Width: " + windowWidth)} */}
               <IonGrid>
                 <IonRow id="cards">
                   {listings.map((item: Item, itemIndex: number) => (
@@ -282,12 +261,10 @@ const Listings: React.FC<Props> = ({ history }) => {
                         }}
                       >
                         <IonCardContent
-                          onClick={
-                            () => {
-                              dispatch(updateItemViews(item._id));
-                              onClickItem(item);
-                            }
-                          }
+                          onClick={() => {
+                            dispatch(updateItemViews(item._id));
+                            onClickItem(item);
+                          }}
                           style={{
                             padding: "0",
                             cursor: "pointer",
@@ -317,71 +294,8 @@ const Listings: React.FC<Props> = ({ history }) => {
                           <div>
                             <IonLabel>{item.title}</IonLabel>
                             <IonNote>{item.userId}</IonNote>
-                            {/* <IonGrid>
-                              <IonRow>
-                                <IonCol>
-                                    <IonNote>
-                                      Exp:
-                                      <Countdown date={item.enddate} renderer={renderer}/>
-                                    </IonNote>
-                                </IonCol>
-                                <IonCol>
-                                    <IonNote>£{item.price}</IonNote>
-                                </IonCol>
-                              </IonRow>
-                            </IonGrid> */}
-                          
                           </div>
                         </IonCardContent>
-                        {/* <IonRow no-padding>
-                          <IonCol>
-                            {isAuthenticated &&
-                              (isFavourite(item._id) ? (
-                                <IonButton
-                                  expand="full"
-                                  fill="clear"
-                                  color="danger"
-                                  size="small"
-                                  onClick={() => {
-                                    dispatch(
-                                      toggleFavourite(item._id, CurrentUser._id)
-                                    );
-                                  }}
-                                >
-                                  <IonIcon slot="start" icon={star}></IonIcon>
-                                </IonButton>
-                              ) : (
-                                <IonButton
-                                  expand="full"
-                                  fill="clear"
-                                  color="danger"
-                                  size="small"
-                                  onClick={() => {
-                                    dispatch(
-                                      toggleFavourite(item._id, CurrentUser._id)
-                                    );
-                                  }}
-                                >
-                                  <IonIcon
-                                    slot="start"
-                                    icon={starOutline}
-                                  ></IonIcon>
-                                </IonButton>
-                              ))}
-                          </IonCol>
-                          <IonCol>
-                            <IonButton
-                              expand="full"
-                              fill="clear"
-                              color="danger"
-                              size="small"
-                            >
-                              <IonIcon slot="end" icon={shareSocial}></IonIcon>
-                            </IonButton>
-                          </IonCol>
-                        
-                        </IonRow>
-                       */}
                       </IonCard>
                     </IonCol>
                   ))}
@@ -434,78 +348,23 @@ const Listings: React.FC<Props> = ({ history }) => {
                             <div>
                               <IonLabel>{item.title}</IonLabel>
                               <IonGrid>
-                              <IonRow>
-                                <IonCol>
+                                <IonRow>
+                                  <IonCol>
                                     <IonNote>
                                       Exp:
-                                      <Countdown date={item.enddate} renderer={renderer}/>
+                                      <Countdown
+                                        date={item.enddate}
+                                        renderer={renderer}
+                                      />
                                     </IonNote>
-                                </IonCol>
-                                <IonCol>
+                                  </IonCol>
+                                  <IonCol>
                                     <IonNote>£{item.price}</IonNote>
-                                </IonCol>
-                              </IonRow>
-                            </IonGrid>
+                                  </IonCol>
+                                </IonRow>
+                              </IonGrid>
                             </div>
                           </IonCardContent>
-                          {/* <IonRow no-padding>
-                            <IonCol>
-                              {isAuthenticated &&
-                                (isFavourite(item._id) ? (
-                                  <IonButton
-                                    expand="full"
-                                    fill="clear"
-                                    color="danger"
-                                    size="small"
-                                    onClick={() => {
-                                      dispatch(
-                                        toggleFavourite(
-                                          item._id,
-                                          CurrentUser._id
-                                        )
-                                      );
-                                    }}
-                                  >
-                                    <IonIcon slot="start" icon={star}></IonIcon>
-                                  </IonButton>
-                                ) : (
-                                  <IonButton
-                                    expand="full"
-                                    fill="clear"
-                                    color="danger"
-                                    size="small"
-                                    onClick={() => {
-                                      //event.stopPropagation();
-                                      dispatch(
-                                        toggleFavourite(
-                                          item._id,
-                                          CurrentUser._id
-                                        )
-                                      );
-                                    }}
-                                  >
-                                    <IonIcon
-                                      slot="start"
-                                      icon={starOutline}
-                                    ></IonIcon>
-                                  </IonButton>
-                                ))}
-                            </IonCol>
-                            <IonCol>
-                              <IonButton
-                                expand="full"
-                                fill="clear"
-                                color="danger"
-                                size="small"
-                              >
-                                <IonIcon
-                                  slot="end"
-                                  icon={shareSocial}
-                                ></IonIcon>
-                              </IonButton>
-                            </IonCol>
-                          </IonRow>
-                         */}
                         </IonCard>
                       </IonCol>
                     ))}
@@ -520,7 +379,7 @@ const Listings: React.FC<Props> = ({ history }) => {
             color="white"
             className="button-custom button-icon button-sm button-brand"
             onClick={() => {
-              window.location.reload(false);
+              window.location.reload();
             }}
           >
             <IonIcon icon={reload} slot="icon-only" />
