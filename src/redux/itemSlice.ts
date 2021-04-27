@@ -5,14 +5,13 @@ import { UserModel } from "./userType";
 import axios from "./api-ref";
 import { setIsLoading } from "./appSlice";
 
-
-const initialState: ItemModel = { 
-  items: [], 
-  selectedItem: undefined, 
-  userOtherItems: [], 
-  itemUser: undefined, 
+const initialState: ItemModel = {
+  items: [],
+  selectedItem: undefined,
+  userOtherItems: [],
+  itemUser: undefined,
   myItems: [],
-  searchText:  ""
+  searchText: "",
 };
 
 const itemsSlice = createSlice({
@@ -33,8 +32,11 @@ const itemsSlice = createSlice({
     },
     loadItems(state, action: PayloadAction<Item[]>) {
       if (state.searchText) {
-        state.items = action.payload.filter(s => s.title.toLowerCase().indexOf(state.searchText.toLowerCase()) > -1);
-      }else{
+        state.items = action.payload.filter(
+          (s) =>
+            s.title.toLowerCase().indexOf(state.searchText.toLowerCase()) > -1
+        );
+      } else {
         state.items.length = 0;
         for (let item in action.payload) {
           state.items.push(action.payload[item]);
@@ -61,18 +63,15 @@ const itemsSlice = createSlice({
     },
     updateItemViews(state, action: PayloadAction<Item>) {
       // console.log("action.payload.views: "+ action.payload.views);
-      state = { 
-        ...state, 
-        items: state.items.map(
-            (item, i) => {
-              if(item._id === action.payload._id){
-                  item.views = action.payload.views;
-              }
-              return item
-            }
-        )
-     }
-
+      state = {
+        ...state,
+        items: state.items.map((item, i) => {
+          if (item._id === action.payload._id) {
+            item.views = action.payload.views;
+          }
+          return item;
+        }),
+      };
     },
   },
 });
@@ -92,77 +91,93 @@ export const removeItem = (id: string): AppThunk => async (
   //         console.log(">_>->_>->_>" + JSON.stringify(err));
   //     });
 };
-export const addItem = (text: string): AppThunk => async (
+export const addItem = (item: Item): AppThunk => async (
   dispatch: AppDispatch
 ) => {
-  // const userId = localStorage.getItem('userId');
-  // const newTodo: Todo = {
-  //     completed: false,
-  //     dated: new Date().toDateString(),
-  //     text: text
-  // }
-  // axios
-  //     .post("/NewTodos/" + userId + ".json", newTodo)
-  //     .then((response) => {
-  //         //console.log(JSON.stringify(response));
-  //         newTodo.id = response.data.name;
-  //         dispatch(todoSlice.actions.addTodo(newTodo))
-  //     })
-  //     .catch((err) => {
-  //         console.log(">_>->_>->_>" + JSON.stringify(err));
-  //     });
+  axios
+    .post("items/", item)
+    .then((response) => {
+      console.log(JSON.stringify(response));
+      // dispatch(itemsSlice.actions.addItem(response.data as Item));
+    })
+    .catch((err) => {
+      console.log(">_>->_>->_>" + JSON.stringify(err));
+    });
 };
 export const loadItems = (): AppThunk => async (dispatch: AppDispatch) => {
   setIsLoading(true);
-  axios.get("items")
-        .then((res) => {
-          dispatch(itemsSlice.actions.loadItems(res.data as Item[]));
-          setIsLoading(false);
-        })
-        .catch((err) => {setIsLoading(false);});
+  axios
+    .get("items")
+    .then((res) => {
+      dispatch(itemsSlice.actions.loadItems(res.data as Item[]));
+      setIsLoading(false);
+    })
+    .catch((err) => {
+      setIsLoading(false);
+    });
 };
-export const loadUserOtherItems = (userItemIds: String[]): AppThunk => async (dispatch: AppDispatch) => {
+export const loadUserOtherItems = (userItemIds: String[]): AppThunk => async (
+  dispatch: AppDispatch
+) => {
   setIsLoading(true);
   let UserItems: Item[] = [];
-  axios.get("items").then((res) => {
-          const items = res.data as Item[]
-          items.map((item)=>{
-            for(var i=0;  i < userItemIds.length;i++){
-                  if(item._id===userItemIds[i]){
-                      UserItems.push(item);
-                  }
-            }
-          });
-          // console.log("UserItems: "+ UserItems);
-          dispatch(itemsSlice.actions.loadUserOtherItems(UserItems));
-          setIsLoading(false);
-        }).catch((err) => {console.log(err);setIsLoading(false);});
+  axios
+    .get("items")
+    .then((res) => {
+      const items = res.data as Item[];
+      items.map((item) => {
+        for (var i = 0; i < userItemIds.length; i++) {
+          if (item._id === userItemIds[i]) {
+            UserItems.push(item);
+          }
+        }
+      });
+      // console.log("UserItems: "+ UserItems);
+      dispatch(itemsSlice.actions.loadUserOtherItems(UserItems));
+      setIsLoading(false);
+    })
+    .catch((err) => {
+      console.log(err);
+      setIsLoading(false);
+    });
 };
-export const loadMyItems = (userId: String): AppThunk => async (dispatch: AppDispatch) => {
+export const loadMyItems = (userId: String): AppThunk => async (
+  dispatch: AppDispatch
+) => {
   setIsLoading(true);
-  axios.get("items/user/"+userId).then((res) => {
-          const items = res.data as Item[];
-          dispatch(itemsSlice.actions.loadMyItems(items));
-          setIsLoading(false);
-        }).catch((err) => {console.log(err); setIsLoading(false);});
+  axios
+    .get("items/user/" + userId)
+    .then((res) => {
+      const items = res.data as Item[];
+      dispatch(itemsSlice.actions.loadMyItems(items));
+      setIsLoading(false);
+    })
+    .catch((err) => {
+      console.log(err);
+      setIsLoading(false);
+    });
 };
-export const setSelectItem = (selectedItem: Item): AppThunk => async (dispatch: AppDispatch) => {
+export const setSelectItem = (selectedItem: Item): AppThunk => async (
+  dispatch: AppDispatch
+) => {
   setIsLoading(true);
-  axios.get("users/ItemUser/" + selectedItem.userId).then((res) => {
-          var itemUser = res.data as UserModel;
-          dispatch(itemsSlice.actions.setItemUser(itemUser));
-          dispatch(loadUserOtherItems(itemUser.listedItems));
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.log(error);
-          setIsLoading(false);
-        });
+  axios
+    .get("users/ItemUser/" + selectedItem.userId)
+    .then((res) => {
+      var itemUser = res.data as UserModel;
+      dispatch(itemsSlice.actions.setItemUser(itemUser));
+      dispatch(loadUserOtherItems(itemUser.listedItems));
+      setIsLoading(false);
+    })
+    .catch((error) => {
+      console.log(error);
+      setIsLoading(false);
+    });
   dispatch(itemsSlice.actions.setSelectedItem(selectedItem));
 };
-export const updateItemViews = (itemId: string): 
-AppThunk => async (dispatch: AppDispatch) => {
-  
+export const updateItemViews = (itemId: string): AppThunk => async (
+  dispatch: AppDispatch
+) => {
   axios
     .put("items/views/" + itemId)
     .then((res) => {

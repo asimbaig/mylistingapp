@@ -56,14 +56,15 @@ export function usePhotoGallery() {
       source: CameraSource.Camera,
       quality: 100,
     });
-
-    const fileName = new Date().getTime() + "." + cameraPhoto.format;
+    if(cameraPhoto){
+      const fileName = new Date().getTime() + "." + cameraPhoto.format;
 
     const savedFileImage = await savePicture(cameraPhoto, fileName);
 
-    const newPhotos = [savedFileImage, ...photos];
-    setPhotos(newPhotos);
-    set(PHOTO_STORAGE, JSON.stringify(newPhotos));
+    // const newPhotos = [savedFileImage, ...photos];
+    // setPhotos(newPhotos);
+    // set(PHOTO_STORAGE, JSON.stringify(newPhotos));
+    }
   };
 
   const savePicture = async (

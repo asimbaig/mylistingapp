@@ -15,6 +15,7 @@ const initialState: AuthModel = {
     email: "",
     displayname: "",
     role: "",
+    mainImage:"",
     profileImages: [],
     listedItems: [],
     address: "",

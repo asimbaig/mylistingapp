@@ -5,6 +5,7 @@ export interface UserModel {
   email: string;
   displayname: string;
   role: string;
+  mainImage: string;
   profileImages: PhotoModel[];
   listedItems: string[];
   address: string;

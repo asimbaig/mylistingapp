@@ -9,16 +9,16 @@ export interface ItemModel {
 }
 
 export interface Item {
-  _id: string;
-    title: string;
-    description: string;
-    category: string;
-    subcategory: string;
-    price: number;
-    condition: string;
-    item_images: string[];
-    startdate: string;
-    enddate: string;
+  _id?: string;
+  title: string;
+  description: string;
+  category: string;
+  subcategory: string;
+  price: number;
+  condition: string;
+  item_images: string[];
+  startdate: string;
+  enddate: string;
   isactive: boolean;
   views: number;
   likes: string[];

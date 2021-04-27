@@ -92,7 +92,7 @@ const Listings: React.FC<Props> = ({ history }) => {
     (state: RootState) => state.auth.user?.favourites
   );
   const filterArray = (items: Item[], favoriteIds: string[]) => {
-    const filteredItems = items.filter((i) => favoriteIds.indexOf(i._id) > -1);
+    const filteredItems = items.filter((i) => favoriteIds.indexOf(i._id!) > -1);
     return filteredItems;
   };
 
@@ -209,7 +209,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                 className="scroll-item matches-item"
                 key={item._id + "toppicks"}
                 onClick={() => {
-                  dispatch(updateItemViews(item._id));
+                  dispatch(updateItemViews(item._id!));
                   onClickItem(item);
                 }}
               >
@@ -262,7 +262,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                       >
                         <IonCardContent
                           onClick={() => {
-                            dispatch(updateItemViews(item._id));
+                            dispatch(updateItemViews(item._id!));
                             onClickItem(item);
                           }}
                           style={{

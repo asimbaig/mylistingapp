@@ -14,7 +14,7 @@ import {
   IonItemOption,
   IonFab,IonModal
 } from "@ionic/react";
-import { trash, reloadCircle, add } from "ionicons/icons";
+import { trash, create, add } from "ionicons/icons";
 import "./MyListings.scss";
 import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
@@ -87,7 +87,7 @@ const MyListings: React.FC<Props> = () => {
                     color="success"
                     onClick={() => console.log("item 1")}
                   >
-                    <IonIcon slot="icon-only" icon={reloadCircle} />
+                    <IonIcon slot="icon-only" icon={create} />
                   </IonItemOption>
                 </IonItemOptions>
 

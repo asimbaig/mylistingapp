@@ -189,7 +189,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                           size="small"
                           onClick={() => {
                             dispatch(
-                              toggleFavourite(selectedItem._id, CurrentUser._id)
+                              toggleFavourite(selectedItem._id!, CurrentUser._id)
                             );
                           }}
                         >
@@ -203,7 +203,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                           size="small"
                           onClick={() => {
                             dispatch(
-                              toggleFavourite(selectedItem._id, CurrentUser._id)
+                              toggleFavourite(selectedItem._id!, CurrentUser._id)
                             );
                           }}
                         >
