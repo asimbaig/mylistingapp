@@ -12,7 +12,7 @@ import {
   IonItem,
   IonItemOptions,
   IonItemOption,
-  IonFab,
+  IonFab,IonModal
 } from "@ionic/react";
 import { trash, reloadCircle, add } from "ionicons/icons";
 import "./MyListings.scss";
@@ -20,11 +20,14 @@ import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { Item } from "../../redux/itemType";
 import { setIsLoading } from "../../redux/appSlice";
+import ItemInputForm from "../ItemInputForm/ItemInputForm";
 
 type Props = {};
 
 const MyListings: React.FC<Props> = () => {
+  const [isInputFormOpen, setIsInputFormOpen] = useState(false);
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
   const mylistings = useSelector((state: RootState) => state.listings.myItems);
 
@@ -41,7 +44,7 @@ const MyListings: React.FC<Props> = () => {
         <div className="boost-promotion">MY LISTINGS</div>
 
         <IonList>
-          {!isLoading &&
+          {isAuthenticated && !isLoading &&
             mylistings &&
             mylistings.map((item, index) => (
               <IonItemSliding key={index} style={{ marginBottom: "5px" }}>
@@ -50,11 +53,6 @@ const MyListings: React.FC<Props> = () => {
                     <IonRow>
                       <IonCol>
                         {item.item_images && item.item_images.length > 0 ? (
-                          // <img
-                          //   src={item.item_images[0]}
-                          //   alt=""
-                          //   style={{ width: "100%", height: "220px" }}
-                          // />
                           <div
                             className="slide-img background-img"
                             style={{
@@ -63,11 +61,6 @@ const MyListings: React.FC<Props> = () => {
                             }}
                           />
                         ) : (
-                          // <img
-                          //   src="./assets/images/itemnophoto.jpg"
-                          //   alt=""
-                          //   style={{ width: "100%", height: "220px" }}
-                          // />
                           <div
                             className="slide-img background-img"
                             style={{
@@ -108,17 +101,25 @@ const MyListings: React.FC<Props> = () => {
                 </IonItemOptions>
               </IonItemSliding>
             ))}
+            {!isAuthenticated && 
+              <div style={{width:"100%", textAlign:"center"}}>Please Login to view this content</div>
+            }
         </IonList>
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
           <IonButton
             color="white"
             className="button-custom button-icon button-sm button-brand"
-            onClick={() => console.log(false)}
+            onClick={() => setIsInputFormOpen(true)}
           >
             <IonIcon icon={add} slot="icon-only" />
           </IonButton>
         </IonFab>
       </IonContent>
+      <IonModal isOpen={isInputFormOpen}>
+        <ItemInputForm
+          onClose={() => setIsInputFormOpen(false)}
+        />
+      </IonModal>
     </IonPage>
   );
 };

@@ -164,6 +164,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
               )}
               <IonGrid>
                 <IonRow>
+                  {isAuthenticated &&
                   <IonCol>
                     <IonButton
                       expand="full"
@@ -177,8 +178,9 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                       <IonIcon slot="start" icon={mail}></IonIcon>
                     </IonButton>
                   </IonCol>
+                  }
+                  {isAuthenticated &&
                   <IonCol>
-                    {isAuthenticated &&
                       (isFavourite(selectedItem._id) ? (
                         <IonButton
                           expand="full"
@@ -210,8 +212,9 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                             icon={thumbsUpOutline}
                           ></IonIcon>
                         </IonButton>
-                      ))}
+                      ))
                   </IonCol>
+                  }
                   <IonCol>
                     <IonButton
                       expand="full"
@@ -247,7 +250,8 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                       )}
                     </IonAvatar>
                     <IonNote color="primary">{ItemUser?.displayname}</IonNote>
-                    {isFavUser(ItemUser._id) ? (
+                    {isAuthenticated &&
+                    (isFavUser(ItemUser._id) ? (
                       <IonButton
                         expand="full"
                         fill="clear"
@@ -275,7 +279,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                       >
                         <IonIcon slot="start" icon={thumbsUpOutline}></IonIcon>
                       </IonButton>
-                    )}
+                    ))}
                   </IonCardHeader>
                   <IonCardContent>
                     {OtherUserItems && OtherUserItems.length > 0 && (

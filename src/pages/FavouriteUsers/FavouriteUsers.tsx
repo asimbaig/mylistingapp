@@ -70,6 +70,7 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
   const favUsers = useSelector(
     (state: RootState) => state.auth.favUserProfiles
   );
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   const [cardHeight, setCardHeight] = useState(window.innerHeight);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -153,154 +154,160 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
   return (
     <IonPage>
       <IonContent className="matches-page">
-        <div className="safe-area-bottom">
-          <IonGrid>
-            <IonRow id="profilecards">
-              {favUsers.map((user: UserModel, itemIndex: number) => (
-                <IonCol
-                  key={itemIndex}
-                  id={"profilecard" + itemIndex}
-                  style={{ position: "absolute", top: "0", left: "0" }}
-                >
-                  <IonCard
-                    style={{
-                      width: `100%`,
-                      height: `${cardHeight}px`,
-                      margin: "auto",
-                    }}
+        {isAuthenticated &&
+            <div className="safe-area-bottom">
+            <IonGrid>
+              <IonRow id="profilecards">
+                {favUsers.map((user: UserModel, itemIndex: number) => (
+                  <IonCol
+                    key={itemIndex}
+                    id={"profilecard" + itemIndex}
+                    style={{ position: "absolute", top: "0", left: "0" }}
                   >
-                    <IonCardContent
-                      // onClick={() => onClickItem(item)}
+                    <IonCard
                       style={{
-                        padding: "0",
-                        cursor: "pointer",
+                        width: `100%`,
+                        height: `${cardHeight}px`,
+                        margin: "auto",
                       }}
                     >
-                      <div
+                      <IonCardContent
+                        // onClick={() => onClickItem(item)}
                         style={{
-                          backgroundImage: `url('${
-                            user.profileImages.length > 0
-                              ? (imgBaseUrl + user.profileImages[0].filename)
-                              : "./assets/images/usernophoto.jpg"
-                          }')`,
-                          backgroundColor: "#cccccc",
-                          height: `${cardHeight}px`,
-                          backgroundPosition: "center",
-                          backgroundRepeat: "no-repeat",
-                          backgroundSize: "cover",
-                          // position: "relative"
+                          padding: "0",
+                          cursor: "pointer",
                         }}
                       >
-                        <div className="overlay-navigation">
-                          <div
-                            className="navi navi-left"
-                            style={{
-                              color: "#fff",
-                              fontSize: "50px",
-                              textAlign: "left",
-                            }}
-                            onClick={() => {
-                              // setTotalUsers(totalUsers - 1);
-                              handleRemoveUser(-1, "profilecard" + itemIndex);
-                            }}
-                          >
-                            {/* <IonIcon slot="start" icon={chevronBack} /> */}
-                          </div>
-                          <div
-                            className="navi navi-right"
-                            style={{
-                              color: "#fff",
-                              fontSize: "30px",
-                              textAlign: "right",
-                            }}
-                            onClick={() => {
-                              // setTotalUsers(totalUsers - 1);
-                              handleRemoveUser(1, "profilecard" + itemIndex);
-                            }}
-                          >
-                            <IonIcon
-                              slot="end"
-                              style={{ color: "black" }}
-                              icon={closeCircle}
-                            />
+                        <div
+                          style={{
+                            backgroundImage: `url('${
+                              user.profileImages.length > 0
+                                ? (imgBaseUrl + user.profileImages[0].filename)
+                                : "./assets/images/usernophoto.jpg"
+                            }')`,
+                            backgroundColor: "#cccccc",
+                            height: `${cardHeight}px`,
+                            backgroundPosition: "center",
+                            backgroundRepeat: "no-repeat",
+                            backgroundSize: "cover",
+                            // position: "relative"
+                          }}
+                        >
+                          <div className="overlay-navigation">
+                            <div
+                              className="navi navi-left"
+                              style={{
+                                color: "#fff",
+                                fontSize: "50px",
+                                textAlign: "left",
+                              }}
+                              onClick={() => {
+                                // setTotalUsers(totalUsers - 1);
+                                handleRemoveUser(-1, "profilecard" + itemIndex);
+                              }}
+                            >
+                              {/* <IonIcon slot="start" icon={chevronBack} /> */}
+                            </div>
+                            <div
+                              className="navi navi-right"
+                              style={{
+                                color: "#fff",
+                                fontSize: "30px",
+                                textAlign: "right",
+                              }}
+                              onClick={() => {
+                                // setTotalUsers(totalUsers - 1);
+                                handleRemoveUser(1, "profilecard" + itemIndex);
+                              }}
+                            >
+                              <IonIcon
+                                slot="end"
+                                style={{ color: "black" }}
+                                icon={closeCircle}
+                              />
+                            </div>
                           </div>
                         </div>
-                      </div>
-
-                      <div className="card-caption">
-                        <IonRow className="ion-justify-content-center ion-align-items-center">
-                          <IonCol>
-                            <div className="card-title">
-                              <span className="card-user-name">
-                                {user.displayname}
-                              </span>
-                              {/* <span className="icon-verified">
-                <IonIcon icon={checkmarkOutline} />
-              </span> */}
-                            </div>
-
-                            {
-                              <div className="card-user-info">
-                                <div>
-                                  <IonIcon icon={ellipse} color="success" />
-                                  Join: {user.joinDate.substring(0, 10)}
-                                </div>
-                                <div>
-                                  <IonIcon icon={ellipse} color="success" />
-                                  Last Active:{" "}
-                                  {user.lastActive.substring(0, 10)}
-                                </div>
-                                <div>
-                                  <IonIcon icon={briefcaseOutline} />
-                                  Listed Items: {user.listedItems.length}
-                                </div>
-                                <div>
-                                  <IonIcon icon={locationOutline} />
-                                  21 miles away
-                                </div>
+  
+                        <div className="card-caption">
+                          <IonRow className="ion-justify-content-center ion-align-items-center">
+                            <IonCol>
+                              <div className="card-title">
+                                <span className="card-user-name">
+                                  {user.displayname}
+                                </span>
+                                {/* <span className="icon-verified">
+                  <IonIcon icon={checkmarkOutline} />
+                </span> */}
                               </div>
-                            }
-                          </IonCol>
-                          <IonCol size="auto">
-                            <IonIcon
-                              className="button-info"
-                              icon={informationCircle}
-                              onClick={() => {
-                                dispatch(loadUserOtherItems(user.listedItems));
-                                setSelectedProfile(user);
-                                setIsProfileOpen(!isProfileOpen);
-                              }}
-                            />
-                          </IonCol>
-                        </IonRow>
-                      </div>
-
-                      {/* <img
-                            src={item.item_images[0]}
-                            alt=""
-                            style={{ width: `100%`, height: `${cardHeight}px` }}
-                            onClick={() => console.log("profilecard" + itemIndex)}
-                          /> */}
-                    </IonCardContent>
-                  </IonCard>
-                </IonCol>
-              ))}
-            </IonRow>
-          </IonGrid>
-        </div>
-        {
-          <IonFab vertical="top" horizontal="start" slot="fixed">
-            <IonButton
-              color="white"
-              className="button-custom button-icon button-sm button-brand"
-              onClick={() => {
-                window.location.reload(false);
-              }}
-            >
-              <IonIcon icon={reload} slot="icon-only" />
-            </IonButton>
-          </IonFab>
+  
+                              {
+                                <div className="card-user-info">
+                                  <div>
+                                    <IonIcon icon={ellipse} color="success" />
+                                    Join: {user.joinDate.substring(0, 10)}
+                                  </div>
+                                  <div>
+                                    <IonIcon icon={ellipse} color="success" />
+                                    Last Active:{" "}
+                                    {user.lastActive.substring(0, 10)}
+                                  </div>
+                                  <div>
+                                    <IonIcon icon={briefcaseOutline} />
+                                    Listed Items: {user.listedItems.length}
+                                  </div>
+                                  <div>
+                                    <IonIcon icon={locationOutline} />
+                                    21 miles away
+                                  </div>
+                                </div>
+                              }
+                            </IonCol>
+                            <IonCol size="auto">
+                              <IonIcon
+                                className="button-info"
+                                icon={informationCircle}
+                                onClick={() => {
+                                  dispatch(loadUserOtherItems(user.listedItems));
+                                  setSelectedProfile(user);
+                                  setIsProfileOpen(!isProfileOpen);
+                                }}
+                              />
+                            </IonCol>
+                          </IonRow>
+                        </div>
+  
+                        {/* <img
+                              src={item.item_images[0]}
+                              alt=""
+                              style={{ width: `100%`, height: `${cardHeight}px` }}
+                              onClick={() => console.log("profilecard" + itemIndex)}
+                            /> */}
+                      </IonCardContent>
+                    </IonCard>
+                  </IonCol>
+                ))}
+              </IonRow>
+            </IonGrid>
+          </div>
         }
+        {!isAuthenticated && <div style={{width:"100%", textAlign:"center"}}>Please Login to view this content</div>}
+        
+        {isAuthenticated && 
+          <IonFab vertical="top" horizontal="start" slot="fixed">
+          <IonButton
+            color="white"
+            className="button-custom button-icon button-sm button-brand"
+            onClick={() => {
+              window.location.reload(false);
+            }}
+          >
+            <IonIcon icon={reload} slot="icon-only" />
+          </IonButton>
+        </IonFab>
+      
+        }
+          
       </IonContent>
       <IonModal isOpen={isProfileOpen} swipeToClose>
         <Profile

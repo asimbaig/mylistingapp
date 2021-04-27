@@ -20,6 +20,7 @@ type Props = {
 
 const ChatStreams: React.FC<Props> = ({ history }) => {
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const msgFromUserProfiles = useSelector(
     (state: RootState) => state.auth.msgFromUserProfiles
   );
@@ -34,44 +35,47 @@ const ChatStreams: React.FC<Props> = ({ history }) => {
   return (
     <IonPage>
       <IonContent className="matches-page">
-        <div className="safe-area-bottom">
-            <div>
-              <div>
-                <div className="list-header">
-                  <IonText color="primary">
-                    <strong>Messages</strong>
-                  </IonText>
-                </div>
-                <div className="message-list">
-                  {msgFromUserProfiles.map((user, index) => (
-                    <IonRow
-                      className="ion-align-items-center"
-                      key={user._id + index}
-                      onClick={() => {
-                        dispatch(setSelectedChatUser(user));
-                        goToChat(user._id);
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <IonCol size="auto">
-                        <IonAvatar>
-                          <img
-                            src={imgBaseUrl + user.profileImages[0].filename}
-                            alt=""
-                          />
-                        </IonAvatar>
-                      </IonCol>
-                      <IonCol className="message-item-text">
-                        <div>
-                          <div className="user-name">{user.displayname}</div>
-                        </div>
-                      </IonCol>
-                    </IonRow>
-                  ))}
-                </div>
-              </div>
-            </div>
+        {isAuthenticated &&
+          <div className="safe-area-bottom">
+          <div className="list-header">
+            <IonText color="primary">
+              <strong>Messages</strong>
+            </IonText>
+          </div>
+          <div className="message-list">
+            {msgFromUserProfiles.map((user, index) => (
+              <IonRow
+                className="ion-align-items-center"
+                key={user._id + index}
+                onClick={() => {
+                  dispatch(setSelectedChatUser(user));
+                  goToChat(user._id);
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                <IonCol size="auto">
+                  <IonAvatar>
+                    <img
+                      src={imgBaseUrl + user.profileImages[0].filename}
+                      alt=""
+                    />
+                  </IonAvatar>
+                </IonCol>
+                <IonCol className="message-item-text">
+                  <div>
+                    <div className="user-name">{user.displayname}</div>
+                  </div>
+                </IonCol>
+              </IonRow>
+            ))}
+          </div>
         </div>
+      
+        }
+        {!isAuthenticated && 
+          <div style={{width:"100%", textAlign:"center"}}>Please Login to view this content</div>
+        }
+        
       </IonContent>
     </IonPage>
   );

@@ -1,0 +1,80 @@
+.profile-edit-page {
+  .photos-edit {
+    padding: 4px;
+
+    .photo-item {
+      position: relative;
+
+      &.no-photo .photo-image {
+        border: 2px dashed rgba(var(--ion-color-medium-rgb), .7);
+      }
+    }
+
+    .photo-image {
+      background-color: var(--ion-color-light-shade);
+      border-radius: 6px;
+      height: 0;
+      padding-top: 150%;
+    }
+
+    .photo-button {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      background-color: var(--ion-color-light);
+      box-shadow: 0 2px 6px 0 rgba(112,125,134,0.14);
+      border-radius: 999em;
+      width: 28px;
+      height: 28px;
+      font-size: 18px;
+      text-align: center;
+      padding-top: 5px;
+
+      ion-icon {
+        color: var(--ion-color-primary);
+      }
+
+      &.photo-button-invert {
+        background: linear-gradient(to top right, var(--color-tinder-stop1) 0%, var(--color-tinder-stop2) 100%)!important;
+        ion-icon {
+          color: var(--ion-color-white);
+        }
+      }
+    }
+  }
+
+  .list-custom.last-child {
+    margin-bottom: 200px;
+  }
+
+  .preview-container {
+    padding: 8px 8px 36px;
+  }
+
+  .text-sm {
+    font-size: var(--font-size-sm);
+  }
+
+  .card-border {
+    border-radius: var(--swipe-card-border-radius);
+    overflow: hidden;
+
+    &.rotate-right {
+      animation: rotateRight 250ms ease-in-out;
+    }
+
+    &.rotate-left {
+      animation: rotateLeft 250ms ease-in-out;
+    }
+  }
+
+  @keyframes rotateRight {
+    from {transform: perspective(1000px) rotateY(4deg)}
+    to {transform: perspective(1000px) rotateY(0deg)}
+  }
+
+  @keyframes rotateLeft {
+    from {transform: perspective(1000px) rotateY(-4deg)}
+    to {transform: perspective(1000px) rotateY(0deg)}
+  }
+}

@@ -131,6 +131,7 @@ const App: React.FC = () => {
             </IonTabButton>}
             <IonTabButton tab="chatstreams" href="/chatstreams">
               <IonIcon icon={chatbubbles} />
+              <IonBadge color="primary">10</IonBadge>
             </IonTabButton>
             {isAuthenticated && 
               <IonTabButton tab="me" href="/me">

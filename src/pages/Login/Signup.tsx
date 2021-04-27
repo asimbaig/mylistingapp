@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButtons, IonMenuButton, IonRow, IonCol, IonButton, IonList, IonItem, IonLabel, IonInput, IonText } from '@ionic/react';
+import React, { useState } from 'react';
+import { IonContent, IonPage, IonRow, IonCol, IonButton, IonList, IonItem, IonLabel, IonInput, IonText } from '@ionic/react';
 import './Login.scss';
 import "./Landing.scss";
 
@@ -14,9 +14,6 @@ const Signup: React.FC<Props> = ({history}) => {
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
-  // useEffect(()=>{
-  //   console.log("SignUp............");
-  // },[]);
   const signup = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
@@ -36,16 +33,7 @@ const Signup: React.FC<Props> = ({history}) => {
 
   return (
     <IonPage id="signup-page">
-      {/* <IonHeader>
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonMenuButton></IonMenuButton>
-          </IonButtons>
-          <IonTitle>Signup</IonTitle>
-        </IonToolbar>
-      </IonHeader> */}
       <IonContent forceOverscroll={false} className="landing-page bg-gradient">
-
         <div className="login-logo">
           <img src="assets/img/appicon.svg" alt="Ionic logo" />
         </div>
@@ -83,10 +71,8 @@ const Signup: React.FC<Props> = ({history}) => {
               </p>
             </IonText>}
           </IonList>
-
           <IonRow>
             <IonCol>
-              {/* <IonButton type="submit" expand="block">Create</IonButton> */}
               <IonButton
               type="submit"
               expand="block"
@@ -95,8 +81,7 @@ const Signup: React.FC<Props> = ({history}) => {
               shape="round"
               className="button-facebook button-landing"
             >
-              {/* <IonIcon slot="start" icon={logInOutline} size="small" /> */}
-              CREATE
+              SIGNUP
             </IonButton>
             </IonCol>
           </IonRow>
