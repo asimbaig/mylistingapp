@@ -35,6 +35,7 @@ import { useSelector, useDispatch } from "react-redux";
 import "swiper/swiper.scss";
 import "swiper/components/effect-flip/effect-flip.scss";
 import { Item } from "../../redux/itemType";
+import { PhotoModel } from "../../redux/photoType";
 import { setSelectItem } from "../../redux/itemSlice";
 import { toggleFavUsers, toggleFavourite } from "../../redux/authSlice";
 import { imgBaseUrl } from "../../redux/api-ref";
@@ -44,12 +45,18 @@ import {
   modalLeaveZoomIn,
 } from "../../animations/animations";
 
+let placeHolderItemPhoto: PhotoModel = {
+  file_id: "60887ac4014be60015d3c9c1",
+  filename: "86b27f95d6f85147e8ac12616f841238.jpg",
+  uploadDate: new Date("2021-04-27T20:57:40.930Z")
+};
+
 type Props = {
   history: any;
 };
 const ListingDetails: React.FC<Props> = ({ history }) => {
   const dispatch = useDispatch();
-  const [slideImages, setSlideImages] = useState<string[]>([]);
+  const [slideImages, setSlideImages] = useState<PhotoModel[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const [isSendMsgOpen, setIsSendMsgOpen] = useState(false);
@@ -71,17 +78,11 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
   useEffect(() => {
     if (selectedItem?.item_images.length === 0) {
       setSlideImages(
-        [
-          "./assets/images/itemnophoto.jpg",
-          "./assets/images/itemnophoto.jpg",
-        ].reverse()
+        [placeHolderItemPhoto,placeHolderItemPhoto].reverse()
       );
     } else if (selectedItem?.item_images.length === 1) {
       setSlideImages(
-        [
-          ...selectedItem.item_images,
-          "./assets/images/itemnophoto.jpg",
-        ].reverse()
+        [...selectedItem.item_images, placeHolderItemPhoto].reverse()
       );
     } else {
       setSlideImages([...selectedItem?.item_images!].reverse());
@@ -181,7 +182,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                   }
                   {isAuthenticated &&
                   <IonCol>
-                      (isFavourite(selectedItem._id) ? (
+                      {isFavourite(selectedItem._id!) ? (
                         <IonButton
                           expand="full"
                           fill="clear"
@@ -212,7 +213,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                             icon={thumbsUpOutline}
                           ></IonIcon>
                         </IonButton>
-                      ))
+                      )}
                   </IonCol>
                   }
                   <IonCol>
@@ -246,7 +247,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                           alt=""
                         />
                       ) : (
-                        <img src="./assets/images/usernophoto.jpg" alt="" />
+                        <img src={imgBaseUrl+"9407f5725354bc7c651f916351f836fc.jpg"} alt="" />
                       )}
                     </IonAvatar>
                     <IonNote color="primary">{ItemUser?.displayname}</IonNote>
@@ -295,10 +296,10 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                             <IonAvatar>
                               {otherItem.item_images &&
                               otherItem.item_images.length > 0 ? (
-                                <img src={otherItem.item_images[0]} alt="" />
+                                <img src={imgBaseUrl+otherItem.item_images[0].filename} alt="" />
                               ) : (
                                 <img
-                                  src="./assets/images/itemnophoto.jpg"
+                                  src={imgBaseUrl+"86b27f95d6f85147e8ac12616f841238.jpg"}
                                   alt=""
                                 />
                               )}
@@ -352,7 +353,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
           onClose={() => setIsSendMsgOpen(false)}
           itemImage={
             selectedItem!.item_images.length > 0
-              ? selectedItem!.item_images[0]
+              ? selectedItem!.item_images[0].filename!
               : "./assets/images/itemnophoto.jpg"
           }
           itemUser={ItemUser!}

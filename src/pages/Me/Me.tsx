@@ -39,23 +39,24 @@ const Me: React.FC<Props> = ({ history }) => {
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
   const [isProfileEditOpen, setIsProfileEditOpen] = useState<boolean>(false);
   const [isSpecialModelOpen, setIsSpecialModelOpen] = useState<boolean>(false);
+  const [mainProfileImage, setMainProfileImage] = useState<string>();
   const user = USERS[3];
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
   const loggedin_User = useSelector((state: RootState) => state.auth.user);
-  // const msg: MsgModel = {
-  //   text: "My Message 2",
-  //   fromUser: "607616f3908e524b6cc195e8",
-  //   fromUserImg: "./assets/images/user1.jpg",
-  //   dateTime: new Date(),
-  //   isRead: false
-  // };
-  // useEffect(() => {
-  //   //console.log(JSON.stringify(loggedin_User));
-  // }, []);
-  //const logout = () => {}
+
+  useEffect(()=>{
+    if(loggedin_User.mainImage){
+      setMainProfileImage(loggedin_User.mainImage);
+    }else if(loggedin_User?.profileImages && loggedin_User?.profileImages.length > 0){
+      setMainProfileImage(loggedin_User?.profileImages[0].filename);
+    }else{
+      setMainProfileImage("9407f5725354bc7c651f916351f836fc.jpg");
+    }
+  },[loggedin_User]);
+  
   const handleViewSettings = () => {
     setIsSettingsOpen(true);
   };
@@ -82,7 +83,19 @@ const Me: React.FC<Props> = ({ history }) => {
           <div className="section-upper">
             <div className="me-header" onClick={handleViewProfile}>
               <IonAvatar className="avatar">
-                {loggedin_User?.profileImages &&
+                {mainProfileImage &&
+                  <img
+                  src={imgBaseUrl + mainProfileImage}
+                  alt=""
+                />
+                }
+                {/* {loggedin_User.mainImage && 
+                  <img
+                  src={imgBaseUrl + loggedin_User.mainImage}
+                  alt=""
+                />
+                }
+                {!loggedin_User.mainImage && loggedin_User?.profileImages &&
                 loggedin_User?.profileImages.length > 0 ? (
                   <img
                     src={imgBaseUrl + loggedin_User?.profileImages[0].filename}
@@ -90,7 +103,7 @@ const Me: React.FC<Props> = ({ history }) => {
                   />
                 ) : (
                   <img src="./assets/images/usernophoto.jpg" alt="" />
-                )}
+                )} */}
               </IonAvatar>
               <div>
                 <span className="me-title">{loggedin_User?.displayname}</span>

@@ -45,6 +45,7 @@ import {
 import { setIsLoading } from "../../redux/appSlice";
 import Countdown from "react-countdown";
 import TopPicksItems from "../../components/TopPicksItems/TopPicksItems";
+import {imgBaseUrl} from "../../redux/api-ref"; 
 
 type Props = {
   history: any;
@@ -273,7 +274,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                         >
                           {item.item_images && item.item_images.length > 0 ? (
                             <img
-                              src={item.item_images[0]}
+                              src={imgBaseUrl + item.item_images[0].filename}
                               alt=""
                               style={{
                                 width: `${cardWidth}px`,
@@ -282,7 +283,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                             />
                           ) : (
                             <img
-                              src="./assets/images/itemnophoto.jpg"
+                              src={imgBaseUrl+"86b27f95d6f85147e8ac12616f841238.jpg"}
                               alt=""
                               style={{
                                 width: `${cardWidth}px`,
@@ -328,7 +329,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                           >
                             {item.item_images && item.item_images.length > 0 ? (
                               <img
-                                src={item.item_images[0]}
+                                src={imgBaseUrl+item.item_images[0].filename}
                                 alt=""
                                 style={{
                                   width: `${cardWidth}px`,
@@ -337,7 +338,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                               />
                             ) : (
                               <img
-                                src="./assets/images/itemnophoto.jpg"
+                                src={imgBaseUrl+"86b27f95d6f85147e8ac12616f841238.jpg"}
                                 alt=""
                                 style={{
                                   width: `${cardWidth}px`,

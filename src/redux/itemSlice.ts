@@ -4,6 +4,7 @@ import { Item, ItemModel } from "./itemType";
 import { UserModel } from "./userType";
 import axios from "./api-ref";
 import { setIsLoading } from "./appSlice";
+import { PhotoModel } from "./photoType";
 
 const initialState: ItemModel = {
   items: [],
@@ -20,6 +21,7 @@ const itemsSlice = createSlice({
   reducers: {
     addItem(state, action: PayloadAction<Item>) {
       state.items.push(action.payload);
+      state.myItems.push(action.payload);
     },
     removeTodo(state, action: PayloadAction<string>) {
       var index = state.items.findIndex((item) => item._id === action.payload);
@@ -61,6 +63,10 @@ const itemsSlice = createSlice({
     setSearchText(state, action: PayloadAction<string>) {
       state.searchText = action.payload;
     },
+    updateItem(state, action: PayloadAction<Item>) {
+      let itemIndex = state.items.findIndex((item => item._id === action.payload._id));
+      state.items[itemIndex] = action.payload;
+    },
     updateItemViews(state, action: PayloadAction<Item>) {
       // console.log("action.payload.views: "+ action.payload.views);
       state = {
@@ -97,8 +103,8 @@ export const addItem = (item: Item): AppThunk => async (
   axios
     .post("items/", item)
     .then((response) => {
-      console.log(JSON.stringify(response));
-      // dispatch(itemsSlice.actions.addItem(response.data as Item));
+      //console.log(JSON.stringify(response));
+      dispatch(itemsSlice.actions.addItem(response.data as Item));
     })
     .catch((err) => {
       console.log(">_>->_>->_>" + JSON.stringify(err));
@@ -185,5 +191,20 @@ export const updateItemViews = (itemId: string): AppThunk => async (
       // console.log("View Updated: "+res.data.views);
     })
     .catch((err) => {});
+};
+export const deleteItemImage = (
+  photo: PhotoModel,
+  itemId: string
+): AppThunk => async (dispatch: AppDispatch) => {
+  setIsLoading(true);
+  axios
+    .post("items/deleteItemImage/" + itemId, photo)
+    .then((res) => {
+      dispatch(itemsSlice.actions.updateItem(res.data as Item));
+      setIsLoading(false);
+    })
+    .catch((err) => {
+      setIsLoading(false);
+    });
 };
 export default itemsSlice.reducer;

@@ -24,6 +24,7 @@ import { UserModel } from "../../redux/userType";
 import { Item } from "../../redux/itemType";
 import { RootState } from "../../redux/rootReducer";
 import { useSelector } from "react-redux";
+import { imgBaseUrl } from "../../redux/api-ref";
 
 type Props = {
   user: UserModel;
@@ -105,7 +106,12 @@ const Profile: React.FC<Props> = ({ user, onClose }) => {
                   style={{ cursor: "pointer" }}
                 >
                   <IonAvatar>
-                    <img src={otherItem.item_images[0]} alt="" />
+                    {otherItem && otherItem.item_images.length > 0 && 
+                    <img src={imgBaseUrl+otherItem.item_images[0]!.filename} alt="" />
+                    }
+                    {otherItem && otherItem.item_images.length===0 && 
+                    <img src={imgBaseUrl+"86b27f95d6f85147e8ac12616f841238.jpg"} alt="" />
+                    }
                   </IonAvatar>
                   <IonLabel>
                     <h2>{otherItem.title}</h2>

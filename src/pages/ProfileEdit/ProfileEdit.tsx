@@ -25,7 +25,7 @@ import {
 } from "@ionic/react";
 import {
   close,
-  add,
+  add,checkmarkOutline,
   logoSnapchat,
   logoInstagram,
   logoRss,
@@ -38,7 +38,7 @@ import { usePhotoGallery, Photo } from "../../hooks/usePhotoGallery";
 import { UserModel } from "../../redux/userType";
 import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
-import { updateUserImages, deleteUserImage } from "../../redux/authSlice";
+import { updateUserImages, deleteUserImage, updateMainImage } from "../../redux/authSlice";
 import {imgBaseUrl} from "../../redux/api-ref"; 
 import { deletePhotoById } from "../../services/photoService";
 
@@ -151,6 +151,15 @@ const ProfileEdit: React.FC<Props> = ({ user, onClose }) => {
                             backgroundImage: `url(${imgBaseUrl + photo.filename})`,
                           }}
                         />
+                        <span className={(photo.filename===CurrentUser.mainImage) ? "verified-button": "not-verified-button"}>
+                          <IonIcon 
+                            icon={checkmarkOutline} 
+                            onClick={() => {
+                              dispatch(updateMainImage(photo.filename!, CurrentUser._id));
+                            }}
+                            style={{ cursor: "pointer" }}
+                            />
+                        </span>
                         <div className="photo-button">
                           <IonIcon
                             icon={close}

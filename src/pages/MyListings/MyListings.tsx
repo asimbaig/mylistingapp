@@ -21,6 +21,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Item } from "../../redux/itemType";
 import { setIsLoading } from "../../redux/appSlice";
 import ItemInputForm from "../ItemInputForm/ItemInputForm";
+import {imgBaseUrl} from "../../redux/api-ref"; 
 
 type Props = {};
 
@@ -56,7 +57,7 @@ const MyListings: React.FC<Props> = () => {
                           <div
                             className="slide-img background-img"
                             style={{
-                              backgroundImage: `url('${item.item_images[0]}')`,
+                              backgroundImage: `url('${imgBaseUrl+item.item_images[0].filename}')`,
                               height: "200px",
                             }}
                           />

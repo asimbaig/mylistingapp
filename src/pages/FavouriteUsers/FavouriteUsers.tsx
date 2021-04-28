@@ -40,7 +40,7 @@ import {
   // options,
   // search,
   // close,
-  informationCircle,
+  informationCircle,checkmarkOutline,
   closeCircle,
 } from "ionicons/icons";
 import "./Listings.scss";
@@ -88,7 +88,7 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
   // }, [totalUsers]);
 
   useEffect(() => {
-    console.log("In Gesture...");
+    // console.log("In Gesture...");
     loadUser();
     // setTotalUsers(favUsers.length);
   }, [favUsers]);
@@ -236,9 +236,9 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
                                 <span className="card-user-name">
                                   {user.displayname}
                                 </span>
-                                {/* <span className="icon-verified">
-                  <IonIcon icon={checkmarkOutline} />
-                </span> */}
+                                <span className="icon-verified">
+                                    <IonIcon icon={checkmarkOutline} />
+                                </span>
                               </div>
   
                               {

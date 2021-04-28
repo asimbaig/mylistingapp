@@ -149,6 +149,22 @@ export const toggleFavUsers = (
       setIsLoading(false);
     });
 };
+export const updateMainImage = (
+  mainImage: string,
+  userId: string
+): AppThunk => async (dispatch: AppDispatch) => {
+  setIsLoading(true);
+  //console.log("updateMainImage: ",mainImage, userId);
+  axios
+    .post("users/updateMainImage/" + userId, { mainImage: mainImage })
+    .then((res) => {
+      dispatch(authSlice.actions.setUser(res.data as UserModel));
+      setIsLoading(false);
+    })
+    .catch((err) => {
+      setIsLoading(false);
+    });
+};
 export const changePassword = (
   email: string,
   newPassword: string

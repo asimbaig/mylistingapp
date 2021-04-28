@@ -27,7 +27,7 @@ const ChatStreams: React.FC<Props> = ({ history }) => {
   const currentUser = useSelector((state: RootState) => state.auth.user);
 
   const goToChat = (otherUserId: string) => {
-    console.log("gotochat");
+    // console.log("gotochat");
     dispatch(FromUsersMsgs(currentUser, otherUserId));
     history.push("/chat");
   };

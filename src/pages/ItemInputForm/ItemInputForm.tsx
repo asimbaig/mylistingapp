@@ -106,7 +106,7 @@ const ItemInputForm: React.FC<Props> = ({ onClose }) => {
 
   const CurrentUser = useSelector((state: RootState) => state.auth.user);
   const { takePhoto, returnPhoto } = usePhotoGallery();
-  const [itemPhotos, setItemPhotos] = useState<PhotoModel[]>();
+  const [itemPhotos, setItemPhotos] = useState<PhotoModel[]>([]);
   const [title, setTitle] = useState<string>();
   const [description, setDescription] = useState<string>();
   const [price, setPrice] = useState<number>();
@@ -129,9 +129,7 @@ const ItemInputForm: React.FC<Props> = ({ onClose }) => {
 
   useEffect(() => {
     if (returnPhoto) {
-      if (itemPhotos && itemPhotos?.length < 3) {
-        setItemPhotos([...itemPhotos, returnPhoto]);
-      }
+        setItemPhotos([...itemPhotos!, returnPhoto]);
     }
   }, [returnPhoto]);
 
@@ -158,10 +156,11 @@ const ItemInputForm: React.FC<Props> = ({ onClose }) => {
         subcategory: subCategoryValue!,
         price: price!,
         condition: condition!,
-        item_images: [],
+        item_images: itemPhotos!,
         startdate: startDate!,
         enddate: addDays(startDate!, 7).toString(),
         isactive: true,
+        isapproved: false,
         views: 0,
         likes: [],
         location: { latitude: 0, longitude: 0 },
@@ -175,11 +174,11 @@ const ItemInputForm: React.FC<Props> = ({ onClose }) => {
     }
   };
   const formsValidationCheck = () => {
-    // if (!itemPhotos || itemPhotos.length === 0) {
-    //   setToastMsg("Please upload atleast one image!!");
-    //   setShowToast(true);
-    //   return false;
-    // }
+    if (!itemPhotos || itemPhotos.length === 0) {
+      setToastMsg("Please upload atleast one image!!");
+      setShowToast(true);
+      return false;
+    }
     if (!categoryValue) {
       setToastMsg("Please select a category for this listing");
       setShowToast(true);
@@ -255,6 +254,7 @@ const ItemInputForm: React.FC<Props> = ({ onClose }) => {
                         className="photo-item"
                         key={"photo" + index}
                       >
+                        
                         <div
                           className="photo-image background-img"
                           style={{

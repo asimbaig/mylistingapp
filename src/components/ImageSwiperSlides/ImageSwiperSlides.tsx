@@ -18,9 +18,11 @@ import {
   modalEnterZoomOut,
   modalLeaveZoomIn,
 } from "../../animations/animations";
+import { PhotoModel } from "../../redux/photoType";
+import { imgBaseUrl } from "../../redux/api-ref";
 
 type Props = {
-  images: any[]
+  images: PhotoModel[]
 }
 
 const ImageSwiperSlides: React.FC<Props> = ({ images }) => {
@@ -49,16 +51,16 @@ const ImageSwiperSlides: React.FC<Props> = ({ images }) => {
         className="slides"
         >
         {loadSwiper && images &&
-          images.map((imgUrl, index) => {
+          images.map((img, index) => {
             return (
               <SwiperSlide
                 key={index}
                 onClick={() => {
-                  setSelectedPhoto(imgUrl);
+                  setSelectedPhoto(imgBaseUrl+img.filename);
                   setShowModal(true);
                 }}
               >
-                <div className="slide-img background-img" style={{ backgroundImage: `url('${ imgUrl }')` }} />
+                <div className="slide-img background-img" style={{ backgroundImage: `url('${ imgBaseUrl+img.filename }')` }} />
               </SwiperSlide>
             );
           })}

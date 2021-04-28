@@ -1,4 +1,5 @@
 import { UserModel } from "./userType";
+import { PhotoModel } from "./photoType";
 export interface ItemModel {
   items: Item[];
   selectedItem?: Item;
@@ -16,10 +17,11 @@ export interface Item {
   subcategory: string;
   price: number;
   condition: string;
-  item_images: string[];
+  item_images: PhotoModel[];
   startdate: string;
   enddate: string;
   isactive: boolean;
+  isapproved:boolean;
   views: number;
   likes: string[];
   location: { latitude: number; longitude: number };

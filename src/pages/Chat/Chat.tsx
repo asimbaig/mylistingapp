@@ -37,7 +37,7 @@ const Chat: React.FC<Props> = () => {
   });
 
   const handleSubmitMessage = (data: any) => {
-    console.log("data.message:" + data.message);
+    // console.log("data.message:" + data.message);
 
     const msg: MsgModel = {
       text: data.message,
