@@ -7,6 +7,7 @@ import {
 } from 'ionicons/icons';
 import './TopPicksItems.scss';
 import { Item } from "../../redux/itemType";
+import {imgBaseUrl} from "../../redux/api-ref"; 
 // import { RootState } from "../../redux/rootReducer";
 // import { useSelector, useDispatch } from "react-redux";
 
@@ -19,9 +20,9 @@ type Props = {
 const TopPicksItems: React.FC<Props> = ({ size, customSize, item }) => {
   // const listings = useSelector((state: RootState) => state.listings.items);
   // const randomIndex = Math.floor(Math.random() * (listings.length - 1));
-  const imageUrl = `${ item.item_images[0] ? item.item_images[0] : "./assets/images/itemnophoto.jpg" }`;
+  const imageUrl = `${ item.item_images[0] ? item.item_images[0].filename : "86b27f95d6f85147e8ac12616f841238.jpg" }`;
   const styles = {
-    backgroundImage: `url(${ imageUrl })`,
+    backgroundImage: `url(${imgBaseUrl + imageUrl })`,
     cursor: "pointer"
   } as React.CSSProperties;
   let classes = 'item';

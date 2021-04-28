@@ -105,14 +105,27 @@ const Profile: React.FC<Props> = ({ user, onClose }) => {
                   // onClick={() => onClickItem(otherItem)}
                   style={{ cursor: "pointer" }}
                 >
-                  <IonAvatar>
+                  {/* <IonAvatar>
                     {otherItem && otherItem.item_images.length > 0 && 
                     <img src={imgBaseUrl+otherItem.item_images[0]!.filename} alt="" />
                     }
                     {otherItem && otherItem.item_images.length===0 && 
                     <img src={imgBaseUrl+"86b27f95d6f85147e8ac12616f841238.jpg"} alt="" />
                     }
-                  </IonAvatar>
+                  </IonAvatar> */}
+                  <div
+                              className="sideitem"
+                              style={{
+                                backgroundImage: `url(${
+                                  imgBaseUrl +
+                                  (otherItem.item_images &&
+                                  otherItem.item_images.length > 0
+                                    ? otherItem.item_images[0].filename
+                                    : "86b27f95d6f85147e8ac12616f841238.jpg")
+                                })`,
+                                cursor: "pointer",
+                              }}
+                            />
                   <IonLabel>
                     <h2>{otherItem.title}</h2>
                     <IonNote>Expires: {otherItem.enddate}</IonNote>

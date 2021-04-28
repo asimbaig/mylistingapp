@@ -48,7 +48,7 @@ import {
 let placeHolderItemPhoto: PhotoModel = {
   file_id: "60887ac4014be60015d3c9c1",
   filename: "86b27f95d6f85147e8ac12616f841238.jpg",
-  uploadDate: new Date("2021-04-27T20:57:40.930Z")
+  uploadDate: new Date("2021-04-27T20:57:40.930Z"),
 };
 
 type Props = {
@@ -77,9 +77,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
   );
   useEffect(() => {
     if (selectedItem?.item_images.length === 0) {
-      setSlideImages(
-        [placeHolderItemPhoto,placeHolderItemPhoto].reverse()
-      );
+      setSlideImages([placeHolderItemPhoto, placeHolderItemPhoto].reverse());
     } else if (selectedItem?.item_images.length === 1) {
       setSlideImages(
         [...selectedItem.item_images, placeHolderItemPhoto].reverse()
@@ -87,8 +85,8 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
     } else {
       setSlideImages([...selectedItem?.item_images!].reverse());
     }
-  },[selectedItem]);
-  
+  }, [selectedItem]);
+
   const isFavUser = (currentfavuserId: string) => {
     if (favUsers) {
       var index = favUsers.findIndex((fuid) => fuid === currentfavuserId);
@@ -165,23 +163,23 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
               )}
               <IonGrid>
                 <IonRow>
-                  {isAuthenticated &&
-                  <IonCol>
-                    <IonButton
-                      expand="full"
-                      fill="clear"
-                      color="danger"
-                      size="small"
-                      onClick={() => {
-                        setIsSendMsgOpen(true);
-                      }}
-                    >
-                      <IonIcon slot="start" icon={mail}></IonIcon>
-                    </IonButton>
-                  </IonCol>
-                  }
-                  {isAuthenticated &&
-                  <IonCol>
+                  {isAuthenticated && (
+                    <IonCol>
+                      <IonButton
+                        expand="full"
+                        fill="clear"
+                        color="danger"
+                        size="small"
+                        onClick={() => {
+                          setIsSendMsgOpen(true);
+                        }}
+                      >
+                        <IonIcon slot="start" icon={mail}></IonIcon>
+                      </IonButton>
+                    </IonCol>
+                  )}
+                  {isAuthenticated && (
+                    <IonCol>
                       {isFavourite(selectedItem._id!) ? (
                         <IonButton
                           expand="full"
@@ -190,7 +188,10 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                           size="small"
                           onClick={() => {
                             dispatch(
-                              toggleFavourite(selectedItem._id!, CurrentUser._id)
+                              toggleFavourite(
+                                selectedItem._id!,
+                                CurrentUser._id
+                              )
                             );
                           }}
                         >
@@ -204,7 +205,10 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                           size="small"
                           onClick={() => {
                             dispatch(
-                              toggleFavourite(selectedItem._id!, CurrentUser._id)
+                              toggleFavourite(
+                                selectedItem._id!,
+                                CurrentUser._id
+                              )
                             );
                           }}
                         >
@@ -214,8 +218,8 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                           ></IonIcon>
                         </IonButton>
                       )}
-                  </IonCol>
-                  }
+                    </IonCol>
+                  )}
                   <IonCol>
                     <IonButton
                       expand="full"
@@ -247,40 +251,48 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                           alt=""
                         />
                       ) : (
-                        <img src={imgBaseUrl+"9407f5725354bc7c651f916351f836fc.jpg"} alt="" />
+                        <img
+                          src={
+                            imgBaseUrl + "9407f5725354bc7c651f916351f836fc.jpg"
+                          }
+                          alt=""
+                        />
                       )}
                     </IonAvatar>
                     <IonNote color="primary">{ItemUser?.displayname}</IonNote>
                     {isAuthenticated &&
-                    (isFavUser(ItemUser._id) ? (
-                      <IonButton
-                        expand="full"
-                        fill="clear"
-                        color="danger"
-                        size="small"
-                        onClick={() => {
-                          dispatch(
-                            toggleFavUsers(ItemUser._id, CurrentUser._id)
-                          );
-                        }}
-                      >
-                        <IonIcon slot="start" icon={thumbsUp}></IonIcon>
-                      </IonButton>
-                    ) : (
-                      <IonButton
-                        expand="full"
-                        fill="clear"
-                        color="danger"
-                        size="small"
-                        onClick={(event) => {
-                          dispatch(
-                            toggleFavUsers(ItemUser._id, CurrentUser._id)
-                          );
-                        }}
-                      >
-                        <IonIcon slot="start" icon={thumbsUpOutline}></IonIcon>
-                      </IonButton>
-                    ))}
+                      (isFavUser(ItemUser._id) ? (
+                        <IonButton
+                          expand="full"
+                          fill="clear"
+                          color="danger"
+                          size="small"
+                          onClick={() => {
+                            dispatch(
+                              toggleFavUsers(ItemUser._id, CurrentUser._id)
+                            );
+                          }}
+                        >
+                          <IonIcon slot="start" icon={thumbsUp}></IonIcon>
+                        </IonButton>
+                      ) : (
+                        <IonButton
+                          expand="full"
+                          fill="clear"
+                          color="danger"
+                          size="small"
+                          onClick={(event) => {
+                            dispatch(
+                              toggleFavUsers(ItemUser._id, CurrentUser._id)
+                            );
+                          }}
+                        >
+                          <IonIcon
+                            slot="start"
+                            icon={thumbsUpOutline}
+                          ></IonIcon>
+                        </IonButton>
+                      ))}
                   </IonCardHeader>
                   <IonCardContent>
                     {OtherUserItems && OtherUserItems.length > 0 && (
@@ -293,17 +305,39 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                             onClick={() => onClickItem(otherItem)}
                             style={{ cursor: "pointer" }}
                           >
-                            <IonAvatar>
+                            {/* <IonAvatar>
                               {otherItem.item_images &&
                               otherItem.item_images.length > 0 ? (
-                                <img src={imgBaseUrl+otherItem.item_images[0].filename} alt="" />
+                                <img
+                                  src={
+                                    imgBaseUrl +
+                                    otherItem.item_images[0].filename
+                                  }
+                                  alt=""
+                                />
                               ) : (
                                 <img
-                                  src={imgBaseUrl+"86b27f95d6f85147e8ac12616f841238.jpg"}
+                                  src={
+                                    imgBaseUrl +
+                                    "86b27f95d6f85147e8ac12616f841238.jpg"
+                                  }
                                   alt=""
                                 />
                               )}
-                            </IonAvatar>
+                            </IonAvatar> */}
+                            <div
+                              className="sideitem"
+                              style={{
+                                backgroundImage: `url(${
+                                  imgBaseUrl +
+                                  (otherItem.item_images &&
+                                  otherItem.item_images.length > 0
+                                    ? otherItem.item_images[0].filename
+                                    : "86b27f95d6f85147e8ac12616f841238.jpg")
+                                })`,
+                                cursor: "pointer",
+                              }}
+                            />
                             <IonLabel>
                               <h2>{otherItem.title}</h2>
                               <IonNote>Expires: {otherItem.enddate}</IonNote>

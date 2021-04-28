@@ -21,12 +21,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { Item } from "../../redux/itemType";
 import { setIsLoading } from "../../redux/appSlice";
 import ItemInputForm from "../ItemInputForm/ItemInputForm";
+import ItemEditForm from "../ItemEditForm/ItemEditForm";
 import {imgBaseUrl} from "../../redux/api-ref"; 
 
 type Props = {};
 
 const MyListings: React.FC<Props> = () => {
   const [isInputFormOpen, setIsInputFormOpen] = useState(false);
+  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+  const [editItem, setEditItem] = useState<Item>();
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
@@ -86,7 +89,10 @@ const MyListings: React.FC<Props> = () => {
                 <IonItemOptions side="start">
                   <IonItemOption
                     color="success"
-                    onClick={() => console.log("item 1")}
+                    onClick={() => {
+                      setEditItem(item);
+                      setIsEditFormOpen(true);
+                    }}
                   >
                     <IonIcon slot="icon-only" icon={create} />
                   </IonItemOption>
@@ -119,6 +125,12 @@ const MyListings: React.FC<Props> = () => {
       <IonModal isOpen={isInputFormOpen}>
         <ItemInputForm
           onClose={() => setIsInputFormOpen(false)}
+        />
+      </IonModal>
+      <IonModal isOpen={isEditFormOpen}>
+        <ItemEditForm
+          currentItem={editItem!}
+          onClose={() => setIsEditFormOpen(false)}
         />
       </IonModal>
     </IonPage>
