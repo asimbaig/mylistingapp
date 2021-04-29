@@ -73,7 +73,7 @@ const ChatStreams: React.FC<Props> = ({ history }) => {
       
         }
         {!isAuthenticated && 
-          <div style={{width:"100%", textAlign:"center"}}>Please Login to view this content</div>
+          <div className="login-heading">PLEASE LOGIN</div>
         }
         
       </IonContent>

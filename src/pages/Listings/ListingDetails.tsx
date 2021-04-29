@@ -58,6 +58,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
   const dispatch = useDispatch();
   const [slideImages, setSlideImages] = useState<PhotoModel[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [itemUserImage, setItemUserImage] = useState("");
 
   const [isSendMsgOpen, setIsSendMsgOpen] = useState(false);
   const isAuthenticated = useSelector(
@@ -75,6 +76,15 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
   const userFavourites = useSelector(
     (state: RootState) => state.auth.user?.favourites
   );
+  useEffect(() => {
+    if(ItemUser?.mainImage){
+      setItemUserImage(ItemUser?.mainImage!);
+    }else if(ItemUser?.profileImages && ItemUser?.profileImages.length>0){
+      setItemUserImage(ItemUser?.profileImages[0].filename!);
+    }else{
+      setItemUserImage("9407f5725354bc7c651f916351f836fc.jpg");
+    }
+  }, [ItemUser]);
   useEffect(() => {
     if (selectedItem?.item_images.length === 0) {
       setSlideImages([placeHolderItemPhoto, placeHolderItemPhoto].reverse());
@@ -244,20 +254,9 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                 <IonCard>
                   <IonCardHeader>
                     <IonAvatar>
-                      {ItemUser.profileImages &&
-                      ItemUser.profileImages.length > 0 ? (
-                        <img
-                          src={imgBaseUrl + ItemUser.profileImages[0].filename}
-                          alt=""
-                        />
-                      ) : (
-                        <img
-                          src={
-                            imgBaseUrl + "9407f5725354bc7c651f916351f836fc.jpg"
-                          }
-                          alt=""
-                        />
-                      )}
+                      {itemUserImage && 
+                        <img src={ imgBaseUrl + itemUserImage } alt=""/>
+                      }
                     </IonAvatar>
                     <IonNote color="primary">{ItemUser?.displayname}</IonNote>
                     {isAuthenticated &&

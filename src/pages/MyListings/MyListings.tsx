@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import {
   IonPage,
@@ -29,19 +30,23 @@ type Props = {};
 const MyListings: React.FC<Props> = () => {
   const [isInputFormOpen, setIsInputFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
-  const [editItem, setEditItem] = useState<Item>();
+  const [editItem, setEditItem] = useState<Item|undefined>();
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
   const mylistings = useSelector((state: RootState) => state.listings.myItems);
-
+  
   useEffect(() => {
     dispatch(setIsLoading(true));
     setTimeout(() => {
       dispatch(setIsLoading(false));
     }, 1500);
   }, []);
-
+  // useEffect(() => {
+  //   if(isEditFormOpen)
+  //     setEditItem(undefined);
+  // }, [isEditFormOpen]);
+  
   return (
     <IonPage>
       <IonContent className="highlights-page">
@@ -130,7 +135,10 @@ const MyListings: React.FC<Props> = () => {
       <IonModal isOpen={isEditFormOpen}>
         <ItemEditForm
           currentItem={editItem!}
-          onClose={() => setIsEditFormOpen(false)}
+          onClose={() => {
+            setIsEditFormOpen(false);
+            //setEditItem(undefined);
+          }}
         />
       </IonModal>
     </IonPage>

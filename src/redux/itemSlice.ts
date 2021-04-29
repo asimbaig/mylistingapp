@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk, AppDispatch } from "./store";
 import { Item, ItemModel } from "./itemType";
@@ -9,6 +10,7 @@ import { PhotoModel } from "./photoType";
 const initialState: ItemModel = {
   items: [],
   selectedItem: undefined,
+  editItem: undefined,
   userOtherItems: [],
   itemUser: undefined,
   myItems: [],
@@ -31,6 +33,9 @@ const itemsSlice = createSlice({
     },
     setSelectedItem(state, action: PayloadAction<Item>) {
       state.selectedItem = action.payload;
+    },
+    setEditItem(state, action: PayloadAction<Item>) {
+      state.editItem = action.payload;
     },
     loadItems(state, action: PayloadAction<Item[]>) {
       if (state.searchText) {
@@ -66,6 +71,8 @@ const itemsSlice = createSlice({
     updateItem(state, action: PayloadAction<Item>) {
       let itemIndex = state.items.findIndex((item => item._id === action.payload._id));
       state.items[itemIndex] = action.payload;
+      let myitemIndex = state.myItems.findIndex((item => item._id === action.payload._id));
+      state.myItems[myitemIndex] = action.payload;
     },
     updateItemViews(state, action: PayloadAction<Item>) {
       // console.log("action.payload.views: "+ action.payload.views);
@@ -83,7 +90,7 @@ const itemsSlice = createSlice({
 });
 
 export const { setSearchText } = itemsSlice.actions;
-
+export const { setEditItem } = itemsSlice.actions;
 export const removeItem = (id: string): AppThunk => async (
   dispatch: AppDispatch
 ) => {
@@ -105,6 +112,18 @@ export const addItem = (item: Item): AppThunk => async (
     .then((response) => {
       //console.log(JSON.stringify(response));
       dispatch(itemsSlice.actions.addItem(response.data as Item));
+    })
+    .catch((err) => {
+      console.log(">_>->_>->_>" + JSON.stringify(err));
+    });
+};
+export const editItem = (item: Item): AppThunk => async (
+  dispatch: AppDispatch
+) => {
+  axios
+    .put("items/"+item._id, item)
+    .then((response) => {
+      dispatch(itemsSlice.actions.updateItem(response.data as Item));
     })
     .catch((err) => {
       console.log(">_>->_>->_>" + JSON.stringify(err));

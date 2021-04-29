@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState, useRef } from "react";
 import {
   IonHeader,
@@ -39,13 +41,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { imgBaseUrl } from "../../redux/api-ref";
 import { deletePhotoById } from "../../services/photoService";
 import { PickerColumn } from "@ionic/core";
-import { addItem } from "../../redux/itemSlice";
+import { editItem } from "../../redux/itemSlice";
 import { addDays } from "../../utils/utils";
 
 type Props = {
   currentItem: Item;
   onClose: () => void;
 };
+let Categories: String[] = ["Services","Home","Jobs", "Property", "Pets"];
 const DayColumn = {
   name: "Category",
   options: [
@@ -110,29 +113,26 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
   const [itemPhotos, setItemPhotos] = useState<PhotoModel[]>(
     currentItem.item_images
   );
-  const [title, setTitle] = useState<string>(currentItem.title);
-  const [description, setDescription] = useState<string>(
-    currentItem.description
-  );
-  const [price, setPrice] = useState<number>(currentItem.price);
-  const [condition, setCondition] = useState<string>(currentItem.condition);
+  const [title, setTitle] = useState(currentItem.title);
+  const [description, setDescription] = useState(currentItem.description);
+  const [price, setPrice] = useState(currentItem.price);
+  const [condition, setCondition] = useState(currentItem.condition);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  const [categoryValue, setCategoryValue] = useState<number | undefined>();
-  const [categoryText, setCategoryText] = useState<string | undefined>(
-    currentItem.category
-  );
-  const [subCategoryValue, setSubCategoryValue] = useState<
-    string | undefined
-  >();
-  const [subCategoryText, setSubCategoryText] = useState<string | undefined>(
-    currentItem.subcategory
-  );
+  // const [categoryValue, setCategoryValue] = useState(Categories.indexOf(currentItem.category));
+  // const [categoryText, setCategoryText] = useState(currentItem.category);
+  // const [subCategoryValue, setSubCategoryValue] = useState(currentItem.subcategory);
+  // const [subCategoryText, setSubCategoryText] = useState(currentItem.subcategory);
+  const [categoryValue, setCategoryValue] = useState(Categories.indexOf(currentItem.category));
+  const [categoryText, setCategoryText] = useState();
+  const [subCategoryValue, setSubCategoryValue] = useState();
+  const [subCategoryText, setSubCategoryText] = useState();
+
   const [isSubCategoryOpen, setIsSubCategoryOpen] = useState(false);
-  const [subCategory, setSubCategory] = useState<PickerColumn>();
+  const [subCategory, setSubCategory] = useState<PickerColumn>(SubDayColumn[Categories.indexOf(currentItem.category)]);
   const [imageSlotsAvailable, setImageSlotsAvailable] = useState(
     TotalImageSlots - (itemPhotos ? itemPhotos?.length! : 0)
   );
-  const [startDate, setStartDate] = useState<string>(currentItem.startdate);
+  const [startDate, setStartDate] = useState(currentItem.startdate);
   const [showToast, setShowToast] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
 
@@ -144,9 +144,8 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
 
   useEffect(() => {
     setSubCategoryValue(undefined);
-    setSubCategoryText(undefined);
     if (categoryValue) {
-      setSubCategory(SubDayColumn[categoryValue]);
+      setSubCategory(SubDayColumn[categoryValue!]);
     }
   }, [categoryValue]);
 
@@ -159,6 +158,7 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
   const onSave = () => {
     if (formsValidationCheck()) {
       let newItem: Item = {
+        _id: currentItem._id,
         title: title!,
         description: description!,
         category: categoryText!,
@@ -173,10 +173,10 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
         views: 0,
         likes: [],
         location: { latitude: 0, longitude: 0 },
-        relist_count: 0,
+        relist_count: currentItem.relist_count + 1,
         userId: CurrentUser._id,
       };
-      dispatch(addItem(newItem));
+      dispatch(editItem(newItem));
       onClose();
     } else {
       return;
@@ -188,11 +188,11 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
       setShowToast(true);
       return false;
     }
-    if (!categoryValue) {
-      setToastMsg("Please select a category for this listing");
-      setShowToast(true);
-      return false;
-    }
+    // if (!categoryValue) {
+    //   setToastMsg("Please select a category for this listing");
+    //   setShowToast(true);
+    //   return false;
+    // }
     if (!subCategoryValue) {
       setToastMsg("Please select a sub category for this listing");
       setShowToast(true);
@@ -357,7 +357,7 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
                 >
                   <IonNote>
                     {" "}
-                    Select {subCategoryText ? ": " + subCategoryText : ""}
+                    Select {subCategoryText ? (": " + subCategoryText) : ""}
                   </IonNote>
                   <IonPicker
                     isOpen={isSubCategoryOpen}
@@ -390,7 +390,7 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
               </IonListHeader>
               <IonItem lines="none">
                 <IonInput
-                  value={currentItem.title}
+                  value={title}
                   onIonChange={(e) => setTitle(e.detail.value as string)}
                   maxlength={100}
                 />
@@ -406,7 +406,7 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
               </IonListHeader>
               <IonItem lines="none">
                 <IonTextarea
-                  value={currentItem.description}
+                  value={description}
                   rows={3}
                   onIonChange={(e) => setDescription(e.detail.value as string)}
                   maxlength={500}
@@ -425,7 +425,7 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
               </IonListHeader>
               <IonItem lines="none">
                 <IonInput
-                  value={currentItem.price}
+                  value={price}
                   type="number"
                   onIonChange={(e) =>
                     setPrice(e.detail.value ? parseInt(e.detail.value!) : 0)
@@ -435,7 +435,7 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
             </IonList>
             <IonList>
               <IonRadioGroup
-                value={currentItem.condition}
+                value={condition}
                 onIonChange={(e) => setCondition(e.detail.value)}
               >
                 <IonListHeader>
@@ -469,7 +469,7 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
                   min={new Date().getFullYear().toString()}
                   max={(new Date().getFullYear() + 1).toString()}
                   onIonChange={(e) => setStartDate(e.detail.value!)}
-                  value={currentItem.startdate}
+                  value={startDate}
                 ></IonDatetime>
                 <IonNote slot="end">Will be listed for 7 days</IonNote>
               </IonItem>

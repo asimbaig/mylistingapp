@@ -180,11 +180,11 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
                       >
                         <div
                           style={{
-                            backgroundImage: `url('${
-                              user.profileImages.length > 0
+                            backgroundImage: `url('${ user.mainImage ? 
+                              (imgBaseUrl+user.mainImage) : 
+                                (user.profileImages.length > 0
                                 ? (imgBaseUrl + user.profileImages[0].filename)
-                                : "./assets/images/usernophoto.jpg"
-                            }')`,
+                                : (imgBaseUrl + "9407f5725354bc7c651f916351f836fc.jpg"))}')`,
                             backgroundColor: "#cccccc",
                             height: `${cardHeight}px`,
                             backgroundPosition: "center",
@@ -291,7 +291,7 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
             </IonGrid>
           </div>
         }
-        {!isAuthenticated && <div style={{width:"100%", textAlign:"center"}}>Please Login to view this content</div>}
+        {!isAuthenticated && <div className="login-heading">PLEASE LOGIN</div>}
         
         {isAuthenticated && 
           <IonFab vertical="top" horizontal="start" slot="fixed">

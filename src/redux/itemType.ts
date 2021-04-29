@@ -3,6 +3,7 @@ import { PhotoModel } from "./photoType";
 export interface ItemModel {
   items: Item[];
   selectedItem?: Item;
+  editItem?: Item;
   userOtherItems: Item[];
   itemUser?: UserModel;
   myItems: Item[];
