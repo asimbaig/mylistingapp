@@ -13,7 +13,8 @@ import {
   IonItem,
   IonItemOptions,
   IonItemOption,
-  IonFab,IonModal
+  IonFab,
+  IonModal,
 } from "@ionic/react";
 import { trash, create, add } from "ionicons/icons";
 import "./MyListings.scss";
@@ -23,19 +24,21 @@ import { Item } from "../../redux/itemType";
 import { setIsLoading } from "../../redux/appSlice";
 import ItemInputForm from "../ItemInputForm/ItemInputForm";
 import ItemEditForm from "../ItemEditForm/ItemEditForm";
-import {imgBaseUrl} from "../../redux/api-ref"; 
+import { imgBaseUrl } from "../../redux/api-ref";
 
 type Props = {};
 
 const MyListings: React.FC<Props> = () => {
   const [isInputFormOpen, setIsInputFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
-  const [editItem, setEditItem] = useState<Item|undefined>();
+  const [editItem, setEditItem] = useState<Item | undefined>();
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
   const mylistings = useSelector((state: RootState) => state.listings.myItems);
-  
+
   useEffect(() => {
     dispatch(setIsLoading(true));
     setTimeout(() => {
@@ -46,14 +49,15 @@ const MyListings: React.FC<Props> = () => {
   //   if(isEditFormOpen)
   //     setEditItem(undefined);
   // }, [isEditFormOpen]);
-  
+
   return (
     <IonPage>
       <IonContent className="highlights-page">
         <div className="boost-promotion">MY LISTINGS</div>
 
         <IonList>
-          {isAuthenticated && !isLoading &&
+          {isAuthenticated &&
+            !isLoading &&
             mylistings &&
             mylistings.map((item, index) => (
               <IonItemSliding key={index} style={{ marginBottom: "5px" }}>
@@ -65,7 +69,9 @@ const MyListings: React.FC<Props> = () => {
                           <div
                             className="slide-img background-img"
                             style={{
-                              backgroundImage: `url('${imgBaseUrl+item.item_images[0].filename}')`,
+                              backgroundImage: `url('${
+                                imgBaseUrl + item.item_images[0].filename
+                              }')`,
                               height: "200px",
                             }}
                           />
@@ -113,9 +119,11 @@ const MyListings: React.FC<Props> = () => {
                 </IonItemOptions>
               </IonItemSliding>
             ))}
-            {!isAuthenticated && 
-              <div style={{width:"100%", textAlign:"center"}}>Please Login to view this content</div>
-            }
+          {!isAuthenticated && (
+            <div style={{ width: "100%", textAlign: "center" }}>
+              Please Login to view this content
+            </div>
+          )}
         </IonList>
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
           <IonButton
@@ -127,12 +135,10 @@ const MyListings: React.FC<Props> = () => {
           </IonButton>
         </IonFab>
       </IonContent>
-      <IonModal isOpen={isInputFormOpen}>
-        <ItemInputForm
-          onClose={() => setIsInputFormOpen(false)}
-        />
+      <IonModal isOpen={isInputFormOpen} backdropDismiss={false}>
+        <ItemInputForm onClose={() => setIsInputFormOpen(false)} />
       </IonModal>
-      <IonModal isOpen={isEditFormOpen}>
+      <IonModal isOpen={isEditFormOpen} backdropDismiss={false}>
         <ItemEditForm
           currentItem={editItem!}
           onClose={() => {

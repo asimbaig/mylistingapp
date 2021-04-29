@@ -144,7 +144,11 @@
       right: 0;
       bottom: 0;
       left: 0;
-      background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5) 10%, rgba(40, 50, 60, 0.1) 50%);
+      background-image: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.5) 10%,
+        rgba(40, 50, 60, 0.1) 50%
+      );
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
@@ -201,17 +205,16 @@
   }
 }
 .login-heading {
-    background-image: url('login-heading.jpg');
-    background-repeat: repeat;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-top: 45%;
-    font-size: 80px;
-    text-align: center;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-family: 'Steelfish Rg', 'helvetica neue',
-    helvetica, arial, sans-serif;
-    font-weight: 800;
-    -webkit-font-smoothing: antialiased;
-  }
+  background-image: url("login-heading.jpg");
+  background-repeat: repeat;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: 30%;
+  font-size: 80px;
+  text-align: center;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-family: "Steelfish Rg", "helvetica neue", helvetica, arial, sans-serif;
+  font-weight: 800;
+  -webkit-font-smoothing: antialiased;
+}

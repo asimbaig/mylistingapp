@@ -40,7 +40,8 @@ import {
   // options,
   // search,
   // close,
-  informationCircle,checkmarkOutline,
+  informationCircle,
+  checkmarkOutline,
   closeCircle,
 } from "ionicons/icons";
 import "./Listings.scss";
@@ -56,7 +57,7 @@ import // modalEnterZoomOut,
 "../../animations/animations";
 import { setIsLoading } from "../../redux/appSlice";
 import Profile from "../Profile/Profile";
-import {imgBaseUrl} from "../../redux/api-ref"; 
+import { imgBaseUrl } from "../../redux/api-ref";
 
 type Props = {
   history: any;
@@ -70,7 +71,9 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
   const favUsers = useSelector(
     (state: RootState) => state.auth.favUserProfiles
   );
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
 
   const [cardHeight, setCardHeight] = useState(window.innerHeight);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -110,21 +113,21 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
           },
           onMove: (ev) => {
             // card!.style.transform = `translateX(${ev.deltaX}px) translateY(${ev.deltaY}px)`;
-            card!.style.transform = `translateX(${ev.deltaX}px) translateY(${ev.deltaY}px) rotate(${
-              ev.deltaX / 30
-            }deg)`;
+            card!.style.transform = `translateX(${ev.deltaX}px) translateY(${
+              ev.deltaY
+            }px) rotate(${ev.deltaX / 30}deg)`;
           },
           onEnd: (ev) => {
             //console.log(">>>>>> "+ev.deltaX);
             // var parenrRow = document.getElementById("profilecards");
             card!.style.transition = ".5s east-out";
-            if (ev.deltaX > windowWidth/3) {
+            if (ev.deltaX > windowWidth / 3) {
               // console.log("R:" + ev.deltaX);
               // parenrRow!.removeChild(card!);
               // console.log("totalUsers: " + totalUsers);
               // setTotalUsers(totalUsers - 1);
               handleRemoveUser(0, "profilecard" + i);
-            } else if (ev.deltaX < -windowWidth/3) {
+            } else if (ev.deltaX < -windowWidth / 3) {
               // console.log("L:" + ev.deltaX);
               // console.log("totalUsers: " + totalUsers);
               // setTotalUsers(totalUsers - 1);
@@ -154,8 +157,8 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
   return (
     <IonPage>
       <IonContent className="matches-page">
-        {isAuthenticated &&
-            <div className="safe-area-bottom">
+        {isAuthenticated && (
+          <div className="safe-area-bottom">
             <IonGrid>
               <IonRow id="profilecards">
                 {favUsers.map((user: UserModel, itemIndex: number) => (
@@ -180,11 +183,14 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
                       >
                         <div
                           style={{
-                            backgroundImage: `url('${ user.mainImage ? 
-                              (imgBaseUrl+user.mainImage) : 
-                                (user.profileImages.length > 0
-                                ? (imgBaseUrl + user.profileImages[0].filename)
-                                : (imgBaseUrl + "9407f5725354bc7c651f916351f836fc.jpg"))}')`,
+                            backgroundImage: `url('${
+                              user.mainImage
+                                ? imgBaseUrl + user.mainImage
+                                : user.profileImages.length > 0
+                                ? imgBaseUrl + user.profileImages[0].filename
+                                : imgBaseUrl +
+                                  "9407f5725354bc7c651f916351f836fc.jpg"
+                            }')`,
                             backgroundColor: "#cccccc",
                             height: `${cardHeight}px`,
                             backgroundPosition: "center",
@@ -202,8 +208,8 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
                                 textAlign: "left",
                               }}
                               onClick={() => {
-                                // setTotalUsers(totalUsers - 1);
-                                handleRemoveUser(-1, "profilecard" + itemIndex);
+                                console.log("Left Click...");
+                                //handleRemoveUser(-1, "profilecard" + itemIndex);
                               }}
                             >
                               {/* <IonIcon slot="start" icon={chevronBack} /> */}
@@ -216,19 +222,28 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
                                 textAlign: "right",
                               }}
                               onClick={() => {
+                                console.log("Right Click...");
                                 // setTotalUsers(totalUsers - 1);
-                                handleRemoveUser(1, "profilecard" + itemIndex);
+                                //handleRemoveUser(1, "profilecard" + itemIndex);
                               }}
                             >
                               <IonIcon
                                 slot="end"
-                                style={{ color: "black" }}
+                                style={{ color: "red" }}
                                 icon={closeCircle}
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  console.log("Cross Click...");
+                                  handleRemoveUser(
+                                    -1,
+                                    "profilecard" + itemIndex
+                                  );
+                                }}
                               />
                             </div>
                           </div>
                         </div>
-  
+
                         <div className="card-caption">
                           <IonRow className="ion-justify-content-center ion-align-items-center">
                             <IonCol>
@@ -237,10 +252,10 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
                                   {user.displayname}
                                 </span>
                                 <span className="icon-verified">
-                                    <IonIcon icon={checkmarkOutline} />
+                                  <IonIcon icon={checkmarkOutline} />
                                 </span>
                               </div>
-  
+
                               {
                                 <div className="card-user-info">
                                   <div>
@@ -268,7 +283,9 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
                                 className="button-info"
                                 icon={informationCircle}
                                 onClick={() => {
-                                  dispatch(loadUserOtherItems(user.listedItems));
+                                  dispatch(
+                                    loadUserOtherItems(user.listedItems)
+                                  );
                                   setSelectedProfile(user);
                                   setIsProfileOpen(!isProfileOpen);
                                 }}
@@ -276,7 +293,7 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
                             </IonCol>
                           </IonRow>
                         </div>
-  
+
                         {/* <img
                               src={item.item_images[0]}
                               alt=""
@@ -290,24 +307,22 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
               </IonRow>
             </IonGrid>
           </div>
-        }
+        )}
         {!isAuthenticated && <div className="login-heading">PLEASE LOGIN</div>}
-        
-        {isAuthenticated && 
+
+        {isAuthenticated && (
           <IonFab vertical="top" horizontal="start" slot="fixed">
-          <IonButton
-            color="white"
-            className="button-custom button-icon button-sm button-brand"
-            onClick={() => {
-              window.location.reload(false);
-            }}
-          >
-            <IonIcon icon={reload} slot="icon-only" />
-          </IonButton>
-        </IonFab>
-      
-        }
-          
+            <IonButton
+              color="white"
+              className="button-custom button-icon button-sm button-brand"
+              onClick={() => {
+                window.location.reload(false);
+              }}
+            >
+              <IonIcon icon={reload} slot="icon-only" />
+            </IonButton>
+          </IonFab>
+        )}
       </IonContent>
       <IonModal isOpen={isProfileOpen} swipeToClose>
         <Profile

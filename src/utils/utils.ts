@@ -73,8 +73,14 @@ export const updateObject = (oldObject: any, updatedProperties: any) => {
     ...updatedProperties,
   };
 };
-export const addDays = (date:string, days:number) =>{
-  const copy = new Date(date)
-  copy.setDate(copy.getDate() + days)
-  return copy
-}
+export const addDays = (date: string, days: number) => {
+  const copy = new Date(date);
+  copy.setDate(copy.getDate() + days);
+  return copy;
+};
+export const createGroups = (arr: any, numGroups: number) => {
+  const perGroup = Math.ceil(arr.length / numGroups);
+  return new Array(numGroups)
+    .fill("")
+    .map((_, i) => arr.slice(i * perGroup, (i + 1) * perGroup));
+};

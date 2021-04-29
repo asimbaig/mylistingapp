@@ -118,14 +118,10 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
   const [price, setPrice] = useState(currentItem.price);
   const [condition, setCondition] = useState(currentItem.condition);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  // const [categoryValue, setCategoryValue] = useState(Categories.indexOf(currentItem.category));
-  // const [categoryText, setCategoryText] = useState(currentItem.category);
-  // const [subCategoryValue, setSubCategoryValue] = useState(currentItem.subcategory);
-  // const [subCategoryText, setSubCategoryText] = useState(currentItem.subcategory);
   const [categoryValue, setCategoryValue] = useState(Categories.indexOf(currentItem.category));
-  const [categoryText, setCategoryText] = useState();
-  const [subCategoryValue, setSubCategoryValue] = useState();
-  const [subCategoryText, setSubCategoryText] = useState();
+  const [categoryText, setCategoryText] = useState(currentItem.category);
+  const [subCategoryValue, setSubCategoryValue] = useState(currentItem.subcategory);
+  const [subCategoryText, setSubCategoryText] = useState(currentItem.subcategory);
 
   const [isSubCategoryOpen, setIsSubCategoryOpen] = useState(false);
   const [subCategory, setSubCategory] = useState<PickerColumn>(SubDayColumn[Categories.indexOf(currentItem.category)]);
@@ -137,13 +133,29 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
   const [toastMsg, setToastMsg] = useState("");
 
   useEffect(() => {
+    setItemPhotos(currentItem.item_images);
+    setTitle(currentItem.title);
+    setDescription(currentItem.description);
+    setPrice(currentItem.price);
+    setCondition(currentItem.condition);
+    setCategoryValue(Categories.indexOf(currentItem.category));
+    setCategoryText(currentItem.category);
+    setSubCategoryValue(currentItem.subcategory);
+    setSubCategoryText(currentItem.subcategory);
+    setSubCategory(SubDayColumn[Categories.indexOf(currentItem.category)]);
+    setImageSlotsAvailable(TotalImageSlots - (itemPhotos ? itemPhotos?.length! : 0));
+    setStartDate(currentItem.startdate);
+
+  }, [currentItem]);
+
+  useEffect(() => {
     if (returnPhoto) {
       setItemPhotos([...itemPhotos!, returnPhoto]);
     }
   }, [returnPhoto]);
 
   useEffect(() => {
-    setSubCategoryValue(undefined);
+    //setSubCategoryValue(undefined);
     if (categoryValue) {
       setSubCategory(SubDayColumn[categoryValue!]);
     }

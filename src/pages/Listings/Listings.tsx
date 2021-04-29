@@ -294,7 +294,22 @@ const Listings: React.FC<Props> = ({ history }) => {
 
                           <div>
                             <IonLabel>{item.title}</IonLabel>
-                            <IonNote>{item.userId}</IonNote>
+                            <IonGrid>
+                                <IonRow>
+                                  <IonCol>
+                                    <IonNote>
+                                      Exp:
+                                      <Countdown
+                                        date={item.enddate}
+                                        renderer={renderer}
+                                      />
+                                    </IonNote>
+                                  </IonCol>
+                                  <IonCol>
+                                    <IonNote>£{item.price}</IonNote>
+                                  </IonCol>
+                                </IonRow>
+                              </IonGrid>
                           </div>
                         </IonCardContent>
                       </IonCard>
