@@ -77,11 +77,11 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
     (state: RootState) => state.auth.user?.favourites
   );
   useEffect(() => {
-    if(ItemUser?.mainImage){
+    if (ItemUser?.mainImage) {
       setItemUserImage(ItemUser?.mainImage!);
-    }else if(ItemUser?.profileImages && ItemUser?.profileImages.length>0){
+    } else if (ItemUser?.profileImages && ItemUser?.profileImages.length > 0) {
       setItemUserImage(ItemUser?.profileImages[0].filename!);
-    }else{
+    } else {
       setItemUserImage("9407f5725354bc7c651f916351f836fc.jpg");
     }
   }, [ItemUser]);
@@ -150,7 +150,12 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
               {selectedItem && selectedItem.item_images && (
                 <ImageSwiperSlides images={slideImages} />
               )}
-              <div className="stamp stamp-like">SOLD</div>
+              {selectedItem.status && selectedItem.status === "sold" && (
+                <div className="stamp stamp-sold">SOLD</div>
+              )}
+              {selectedItem.status && selectedItem.status === "pending" && (
+                <div className="stamp stamp-pending">PENDING</div>
+              )}
               <IonFab vertical="bottom" horizontal="end" edge slot="fixed">
                 <IonButton
                   color="white"
@@ -255,9 +260,9 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                 <IonCard>
                   <IonCardHeader>
                     <IonAvatar>
-                      {itemUserImage && 
-                        <img src={ imgBaseUrl + itemUserImage } alt=""/>
-                      }
+                      {itemUserImage && (
+                        <img src={imgBaseUrl + itemUserImage} alt="" />
+                      )}
                     </IonAvatar>
                     <IonNote color="primary">{ItemUser?.displayname}</IonNote>
                     {isAuthenticated &&

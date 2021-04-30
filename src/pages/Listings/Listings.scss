@@ -217,8 +217,7 @@
 // ion-slides {
 //   height: 100%;
 // }
-ion-col
-{
+ion-col {
   padding: 1px;
 }
 .listing-card-caption {
@@ -228,14 +227,19 @@ ion-col
   right: 0;
   padding: 8px;
   z-index: 200;
-  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.7) 10%, rgba(40, 50, 60, 0.7) 100%);
+  background-image: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.7) 10%,
+    rgba(40, 50, 60, 0.7) 100%
+  );
   color: #fff;
-  border-radius: 0 0 var(--swipe-card-border-radius) var(--swipe-card-border-radius);
+  border-radius: 0 0 var(--swipe-card-border-radius)
+    var(--swipe-card-border-radius);
   text-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
 }
 .stamp {
   position: absolute;
-  top: 20px;
+  top: 25px;
   right: 10px;
   z-index: 500;
   font-size: 20px;
@@ -252,12 +256,59 @@ ion-col
   text-shadow: 0 2px 6px rgba(112, 125, 134, 0.14);
   will-change: opacity;
 
-  &.stamp-like {
+  &.stamp-sold {
     right: initial;
     left: 10px;
     color: green;
     border-color: green;
     transform: rotate(-15deg);
     letter-spacing: 3px;
+  }
+  &.stamp-pending {
+    right: initial;
+    left: 10px;
+    color: red;
+    border-color: red;
+    transform: rotate(-15deg);
+    letter-spacing: 3px;
+  }
+}
+.verified-button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 600;
+  background-color: var(--ion-color-dark);
+  box-shadow: 0 2px 6px 0 rgba(112, 125, 134, 0.14);
+  border-radius: 999em;
+  width: 23px;
+  height: 23px;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  padding-top: 5px;
+
+  ion-icon {
+    color: var(--ion-color-success);
+  }
+}
+.not-verified-button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 600;
+  background-color: var(--ion-color-dark);
+  box-shadow: 0 2px 6px 0 rgba(112, 125, 134, 0.14);
+  border-radius: 999em;
+  width: 23px;
+  height: 23px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+  text-align: center;
+  padding-top: 5px;
+
+  ion-icon {
+    color: var(--ion-color-light);
   }
 }

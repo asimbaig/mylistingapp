@@ -10,14 +10,8 @@ import "swiper/swiper.scss";
 import "swiper/components/effect-cube/effect-cube.scss";
 import "swiper/components/scrollbar/scrollbar.scss";
 
-import FullScreenModal from "../FullScreenModal/FullScreenModal";
-
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { EffectCube, Scrollbar } from "swiper";
-import {
-  modalEnterZoomOut,
-  modalLeaveZoomIn,
-} from "../../animations/animations";
 import { PhotoModel } from "../../redux/photoType";
 import { imgBaseUrl } from "../../redux/api-ref";
 
@@ -45,7 +39,6 @@ const MainListingImgSwiper: React.FC<Props> = ({ images }) => {
         grabCursor={true} 
         preloadImages={true} 
         scrollbar
-        className="slides"
         >
         {loadSwiper && images &&
           images.map((img, index) => {

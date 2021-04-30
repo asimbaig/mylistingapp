@@ -27,7 +27,13 @@ import {
   IonCheckbox,
   IonText,
 } from "@ionic/react";
-import { reload, options, search, close } from "ionicons/icons";
+import {
+  reload,
+  options,
+  search,
+  close,
+  checkmarkOutline,
+} from "ionicons/icons";
 import "./Listings.scss";
 import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
@@ -38,6 +44,7 @@ import {
   loadItems,
   updateItemViews,
 } from "../../redux/itemSlice";
+import { toggleFavourite } from "../../redux/authSlice";
 import {
   modalEnterZoomOut,
   modalLeaveZoomIn,
@@ -45,7 +52,7 @@ import {
 import { setIsLoading } from "../../redux/appSlice";
 import Countdown from "react-countdown";
 import TopPicksItems from "../../components/TopPicksItems/TopPicksItems";
-import {imgBaseUrl} from "../../redux/api-ref"; 
+import { imgBaseUrl } from "../../redux/api-ref";
 import MainListingImgSwiper from "../../components/MainListingImgSwiper/MainListingImgSwiper";
 
 type Props = {
@@ -85,7 +92,7 @@ const Listings: React.FC<Props> = ({ history }) => {
   const dispatch = useDispatch();
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
   const listings = useSelector((state: RootState) => state.listings.items);
-
+  const CurrentUser = useSelector((state: RootState) => state.auth.user);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
@@ -177,7 +184,16 @@ const Listings: React.FC<Props> = ({ history }) => {
       history.push("/listingdetails");
     }, 1000);
   };
-
+  const isFavourite = (currentItemId: string) => {
+    if (userFavourites) {
+      var index = userFavourites.findIndex((fid) => fid === currentItemId);
+      if (index && index > -1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
   return (
     <IonPage>
       <IonHeader className="header-custom">
@@ -192,7 +208,7 @@ const Listings: React.FC<Props> = ({ history }) => {
               <IonLabel>Listings</IonLabel>
             </IonSegmentButton>
             <IonSegmentButton value="FAVS">
-              <IonLabel>Favourites</IonLabel>
+              <IonLabel>Watching</IonLabel>
             </IonSegmentButton>
           </IonSegment>
         </IonToolbar>
@@ -251,7 +267,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                   </IonButton>
                 )}
               </IonButtons>
-              
+
               <IonGrid>
                 <IonRow id="cards">
                   {listings.map((item: Item, itemIndex: number) => (
@@ -275,77 +291,59 @@ const Listings: React.FC<Props> = ({ history }) => {
                           }}
                         >
                           {item && item.item_images && (
-                              <MainListingImgSwiper images={item.item_images} />
-                            )}
-                            <div className="listing-card-caption">
-                          <IonRow className="ion-justify-content-center ion-align-items-center">
-                            <IonCol>
-                            <div>
-                            <IonLabel>{item.title}</IonLabel>
-                            <IonGrid>
-                                <IonRow>
-                                  <IonCol>
-                                    <IonNote style={{color:"#fff"}}>
-                                      Exp:
-                                      <Countdown
-                                        date={item.enddate}
-                                        renderer={renderer}
-                                      />
-                                    </IonNote>
-                                  </IonCol>
-                                  <IonCol>
-                                    <IonNote style={{color:"#fff"}}>£{item.price}</IonNote>
-                                  </IonCol>
-                                </IonRow>
-                              </IonGrid>
-                          </div>
-                              
-                            </IonCol>
-                          </IonRow>
-                            
-                        </div>
-                        <div className="stamp stamp-like">SOLD</div>
-
-                          {/* {item.item_images && item.item_images.length > 0 ? (
-                            <img
-                              src={imgBaseUrl + item.item_images[0].filename}
-                              alt=""
-                              style={{
-                                width: `${cardWidth}px`,
-                                height: "180px",
+                            <MainListingImgSwiper images={item.item_images} />
+                          )}
+                          <span
+                            className={
+                              isFavourite(item._id!)
+                                ? "verified-button"
+                                : "not-verified-button"
+                            }
+                          >
+                            <IonIcon
+                              icon={checkmarkOutline}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                dispatch(
+                                  toggleFavourite(item._id!, CurrentUser._id)
+                                );
                               }}
+                              style={{ cursor: "pointer" }}
                             />
-                          ) : (
-                            <img
-                              src={imgBaseUrl+"86b27f95d6f85147e8ac12616f841238.jpg"}
-                              alt=""
-                              style={{
-                                width: `${cardWidth}px`,
-                                height: "180px",
-                              }}
-                            />
-                          )} */}
-
-                          {/* <div>
-                            <IonLabel>{item.title}</IonLabel>
-                            <IonGrid>
-                                <IonRow>
-                                  <IonCol>
-                                    <IonNote>
-                                      Exp:
-                                      <Countdown
-                                        date={item.enddate}
-                                        renderer={renderer}
-                                      />
-                                    </IonNote>
-                                  </IonCol>
-                                  <IonCol>
-                                    <IonNote>£{item.price}</IonNote>
-                                  </IonCol>
-                                </IonRow>
-                              </IonGrid>
+                          </span>
+                          <div className="listing-card-caption">
+                            <IonRow className="ion-justify-content-center ion-align-items-center">
+                              <IonCol>
+                                <div>
+                                  <IonLabel>{item.title}</IonLabel>
+                                  <IonGrid>
+                                    <IonRow>
+                                      <IonCol>
+                                        <IonNote style={{ color: "#fff" }}>
+                                          Exp:
+                                          <Countdown
+                                            date={item.enddate}
+                                            renderer={renderer}
+                                          />
+                                        </IonNote>
+                                      </IonCol>
+                                      <IonCol>
+                                        <IonNote style={{ color: "#fff" }}>
+                                          £{item.price}
+                                        </IonNote>
+                                      </IonCol>
+                                    </IonRow>
+                                  </IonGrid>
+                                </div>
+                              </IonCol>
+                            </IonRow>
                           </div>
-                         */}
+                          {item.status && item.status === "sold" && (
+                            <div className="stamp stamp-sold">SOLD</div>
+                          )}
+                          {item.status && item.status === "pending" && (
+                            <div className="stamp stamp-pending">PENDING</div>
+                          )}
                         </IonCardContent>
                       </IonCard>
                     </IonCol>
@@ -370,51 +368,70 @@ const Listings: React.FC<Props> = ({ history }) => {
                           }}
                         >
                           <IonCardContent
-                            onClick={() => onClickItem(item)}
+                            onClick={() => {
+                              dispatch(updateItemViews(item._id!));
+                              onClickItem(item);
+                            }}
                             style={{
                               padding: "0",
                               cursor: "pointer",
                               textAlign: "center",
                             }}
                           >
-                            {item.item_images && item.item_images.length > 0 ? (
-                              <img
-                                src={imgBaseUrl+item.item_images[0].filename}
-                                alt=""
-                                style={{
-                                  width: `${cardWidth}px`,
-                                  height: "180px",
-                                }}
-                              />
-                            ) : (
-                              <img
-                                src={imgBaseUrl+"86b27f95d6f85147e8ac12616f841238.jpg"}
-                                alt=""
-                                style={{
-                                  width: `${cardWidth}px`,
-                                  height: "180px",
-                                }}
-                              />
+                            {item && item.item_images && (
+                              <MainListingImgSwiper images={item.item_images} />
                             )}
-                            <div>
-                              <IonLabel>{item.title}</IonLabel>
-                              <IonGrid>
-                                <IonRow>
-                                  <IonCol>
-                                    <IonNote>
-                                      Exp:
-                                      <Countdown
-                                        date={item.enddate}
-                                        renderer={renderer}
-                                      />
-                                    </IonNote>
-                                  </IonCol>
-                                  <IonCol>
-                                    <IonNote>£{item.price}</IonNote>
-                                  </IonCol>
-                                </IonRow>
-                              </IonGrid>
+                            <span
+                              className={
+                                isFavourite(item._id!)
+                                  ? "verified-button"
+                                  : "not-verified-button"
+                              }
+                            >
+                              <IonIcon
+                                icon={checkmarkOutline}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  dispatch(
+                                    toggleFavourite(item._id!, CurrentUser._id)
+                                  );
+                                }}
+                                style={{ cursor: "pointer" }}
+                              />
+                            </span>
+                            <div className="listing-card-caption">
+                              <IonRow className="ion-justify-content-center ion-align-items-center">
+                                <IonCol>
+                                  <div>
+                                    <IonLabel>{item.title}</IonLabel>
+                                    <IonGrid>
+                                      <IonRow>
+                                        <IonCol>
+                                          <IonNote style={{ color: "#fff" }}>
+                                            Exp:
+                                            <Countdown
+                                              date={item.enddate}
+                                              renderer={renderer}
+                                            />
+                                          </IonNote>
+                                        </IonCol>
+                                        <IonCol>
+                                          <IonNote style={{ color: "#fff" }}>
+                                            £{item.price}
+                                          </IonNote>
+                                        </IonCol>
+                                      </IonRow>
+                                    </IonGrid>
+                                  </div>
+                                </IonCol>
+                              </IonRow>
                             </div>
+                            {item.status && item.status === "sold" && (
+                              <div className="stamp stamp-sold">SOLD</div>
+                            )}
+                            {item.status && item.status === "pending" && (
+                              <div className="stamp stamp-pending">PENDING</div>
+                            )}
                           </IonCardContent>
                         </IonCard>
                       </IonCol>
