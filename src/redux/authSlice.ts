@@ -116,6 +116,30 @@ export const login = (email: string, password: string): AppThunk => async (
       setIsLoading(false);
     });
 };
+export const signup = (email: string, password: string): AppThunk => async (
+  dispatch: AppDispatch
+) => {
+  setIsLoading(true);
+  const authData = {
+    email: email,
+    password: password,
+  };
+  axios
+    .post("auth/signup", authData)
+    .then((response) => {
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userId", response.data.userId);
+      localStorage.setItem("displayname", response.data.displayname);
+      localStorage.setItem("expiresAt", response.data.expiresAt);
+      dispatch(authSlice.actions.login(true));
+      loadCurrentuserData(dispatch, response.data.userId, response.data.token);
+      //dispatch(loadMyItems(response.data.userId));
+    })
+    .catch((err) => {
+      console.log(err);
+      setIsLoading(false);
+    });
+};
 export const changeEmail = (newEmail: string): AppThunk => async (
   dispatch: AppDispatch
 ) => {};

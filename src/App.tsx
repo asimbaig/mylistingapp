@@ -53,6 +53,7 @@ import Me from "../src/pages/Me/Me";
 import MyListings from "../src/pages/MyListings/MyListings";
 import ChatStreams from "./pages/ChatStreams/ChatStreams";
 import Chat from "../src/pages/Chat/Chat";
+import MainListings from "../src/pages/Listings/MainListings";
 import Listings from "../src/pages/Listings/Listings";
 import ListingDetails from "../src/pages/Listings/ListingDetails";
 import Login from "../src/pages/Login/Login";
@@ -112,7 +113,7 @@ const App: React.FC = () => {
             </Route>
           </IonRouterOutlet>
 
-          <IonTabBar slot="top" className="tabs-page tab-bar-no-border">
+          <IonTabBar slot="bottom" className="tabs-page tab-bar-no-border">
 
             <IonTabButton tab="listings" href="/listings">
               <IonIcon icon={grid} />

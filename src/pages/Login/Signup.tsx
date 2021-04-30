@@ -2,31 +2,34 @@ import React, { useState } from 'react';
 import { IonContent, IonPage, IonRow, IonCol, IonButton, IonList, IonItem, IonLabel, IonInput, IonText } from '@ionic/react';
 import './Login.scss';
 import "./Landing.scss";
+import { signup } from "../../redux/authSlice";
+import { RootState } from "../../redux/rootReducer";
+import { useSelector, useDispatch } from "react-redux";
 
 type Props = {
   history: any;
 };
 const Signup: React.FC<Props> = ({history}) => {
-
-  const [username, setUsername] = useState('');
+  const dispatch = useDispatch();
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [usernameError, setUsernameError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
-  const signup = async (e: React.FormEvent) => {
+  const SignupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
-    if(!username) {
-      setUsernameError(true);
+    if(!email) {
+      setEmailError(true);
     }
     if(!password) {
       setPasswordError(true);
     }
 
-    if(username && password) {
-      // await setIsLoggedIn(true);
-      // await setUsernameAction(username);
+    dispatch(signup(email, password));
+    if(email && password && isAuthenticated) {
       history.push('/');
     }
   };
@@ -38,19 +41,19 @@ const Signup: React.FC<Props> = ({history}) => {
           <img src="assets/img/appicon.svg" alt="Ionic logo" />
         </div>
 
-        <form noValidate onSubmit={signup}>
+        <form noValidate onSubmit={SignupSubmit}>
           <IonList>
             <IonItem>
               <IonLabel position="stacked" color="primary">Email</IonLabel>
-              <IonInput name="username" type="text" value={username} spellCheck={false} autocapitalize="off" onIonChange={e => {
-                setUsername(e.detail.value!);
-                setUsernameError(false);
+              <IonInput name="username" type="text" value={email} spellCheck={false} autocapitalize="off" onIonChange={e => {
+                setEmail(e.detail.value!);
+                setEmailError(false);
               }}
                 required>
               </IonInput>
             </IonItem>
 
-            {formSubmitted && usernameError && <IonText color="danger">
+            {formSubmitted && emailError && <IonText color="danger">
               <p className="ion-padding-start">
                 Email is required
               </p>

@@ -73,8 +73,9 @@ const ChatStreams: React.FC<Props> = ({ history }) => {
       
         }
         {!isAuthenticated && 
-          <div className="login-heading">PLEASE LOGIN</div>
-        }
+        <div className="login-heading">
+          <a href="/login">PLEASE LOGIN</a>
+        </div>}
         
       </IonContent>
     </IonPage>

@@ -2,13 +2,7 @@
 import React, { useState, useEffect } from "react";
 import {
   IonPage,
-  // IonHeader,
-  // IonToolbar,
-  // IonSegment,
-  // IonSegmentButton,
-  // IonLabel,
   IonContent,
-  // IonSearchbar,
   IonIcon,
   IonRow,
   IonCol,
@@ -16,30 +10,15 @@ import {
   IonGrid,
   IonCard,
   IonCardContent,
-  // IonItem,
-  // IonNote,
   createGesture,
   IonFab,
   IonModal,
-  // IonButtons,
-  // IonModal,
-  // IonList,
-  // IonItemDivider,
-  // IonCheckbox,
 } from "@ionic/react";
 import {
-  //shareSocial,
   ellipse,
   briefcaseOutline,
   locationOutline,
-  // chevronBack,
-  // chevronForward,
-  // starOutline,
-  // star,
   reload,
-  // options,
-  // search,
-  // close,
   informationCircle,
   checkmarkOutline,
   closeCircle,
@@ -48,13 +27,8 @@ import "./Listings.scss";
 import "./FavouriteUsers.scss";
 import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
-//import { Item } from "../../redux/itemType";
 import { UserModel } from "../../redux/userType";
-//import { setSelectItem, setSearchText, loadItems } from "../../redux/itemSlice";
 import { loadUserOtherItems } from "../../redux/itemSlice";
-import // modalEnterZoomOut,
-// modalLeaveZoomIn,
-"../../animations/animations";
 import { setIsLoading } from "../../redux/appSlice";
 import Profile from "../Profile/Profile";
 import { imgBaseUrl } from "../../redux/api-ref";
@@ -67,7 +41,6 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
   const windowWidth = window.innerWidth;
   const dispatch = useDispatch();
   //const isLoading = useSelector((state: RootState) => state.app.isLoading);
-  // const listings = useSelector((state: RootState) => state.listings.items);
   const favUsers = useSelector(
     (state: RootState) => state.auth.favUserProfiles
   );
@@ -86,25 +59,18 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
     }, 1500);
   }, []);
 
-  // useEffect(() => {
-  //   console.log("totalUsers:** " + totalUsers);
-  // }, [totalUsers]);
-
   useEffect(() => {
-    // console.log("In Gesture...");
     loadUser();
-    // setTotalUsers(favUsers.length);
   }, [favUsers]);
 
   useEffect(() => {
-    //console.log("Height: "+ (window.innerHeight - (window.innerHeight * .10)));
     setCardHeight(window.innerHeight - window.innerHeight * 0.1);
   }, [window.innerHeight]);
 
   const loadUser = () => {
     if (favUsers.length > 0) {
       for (let i = 0; i < favUsers.length; i++) {
-        const card = document.getElementById("profilecard" + i); //drawerRef.current[i];
+        const card = document.getElementById("profilecard" + i);
         const gesture = createGesture({
           el: card!,
           gestureName: "swipeoutprofile",
@@ -112,25 +78,15 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
             card!.style.transition = "none";
           },
           onMove: (ev) => {
-            // card!.style.transform = `translateX(${ev.deltaX}px) translateY(${ev.deltaY}px)`;
             card!.style.transform = `translateX(${ev.deltaX}px) translateY(${
               ev.deltaY
             }px) rotate(${ev.deltaX / 30}deg)`;
           },
           onEnd: (ev) => {
-            //console.log(">>>>>> "+ev.deltaX);
-            // var parenrRow = document.getElementById("profilecards");
             card!.style.transition = ".5s east-out";
             if (ev.deltaX > windowWidth / 3) {
-              // console.log("R:" + ev.deltaX);
-              // parenrRow!.removeChild(card!);
-              // console.log("totalUsers: " + totalUsers);
-              // setTotalUsers(totalUsers - 1);
               handleRemoveUser(0, "profilecard" + i);
             } else if (ev.deltaX < -windowWidth / 3) {
-              // console.log("L:" + ev.deltaX);
-              // console.log("totalUsers: " + totalUsers);
-              // setTotalUsers(totalUsers - 1);
               handleRemoveUser(0, "profilecard" + i);
             } else {
               card!.style.transform = ``;
@@ -145,15 +101,10 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
   const handleRemoveUser = (pos: number, id: string) => {
     let parentRow = document.getElementById("profilecards");
     let card = document.getElementById(id);
-    // card!.style.transition = ".5s east-out";
-    // card!.style.transform = `translateX(${windowWidth}px) rotate(${(windowWidth)/30}deg)`;
     if (card) {
       parentRow!.removeChild(card!);
     }
   };
-  // const   handleToggleProfile = () => {
-  //     setIsProfileOpen(!isProfileOpen);
-  // };
   return (
     <IonPage>
       <IonContent className="matches-page">
@@ -175,7 +126,6 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
                       }}
                     >
                       <IonCardContent
-                        // onClick={() => onClickItem(item)}
                         style={{
                           padding: "0",
                           cursor: "pointer",
@@ -196,7 +146,6 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
                             backgroundPosition: "center",
                             backgroundRepeat: "no-repeat",
                             backgroundSize: "cover",
-                            // position: "relative"
                           }}
                         >
                           <div className="overlay-navigation">
@@ -209,11 +158,8 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
                               }}
                               onClick={() => {
                                 console.log("Left Click...");
-                                //handleRemoveUser(-1, "profilecard" + itemIndex);
                               }}
-                            >
-                              {/* <IonIcon slot="start" icon={chevronBack} /> */}
-                            </div>
+                            ></div>
                             <div
                               className="navi navi-right"
                               style={{
@@ -223,8 +169,6 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
                               }}
                               onClick={() => {
                                 console.log("Right Click...");
-                                // setTotalUsers(totalUsers - 1);
-                                //handleRemoveUser(1, "profilecard" + itemIndex);
                               }}
                             >
                               <IonIcon
@@ -293,13 +237,6 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
                             </IonCol>
                           </IonRow>
                         </div>
-
-                        {/* <img
-                              src={item.item_images[0]}
-                              alt=""
-                              style={{ width: `100%`, height: `${cardHeight}px` }}
-                              onClick={() => console.log("profilecard" + itemIndex)}
-                            /> */}
                       </IonCardContent>
                     </IonCard>
                   </IonCol>
@@ -308,7 +245,11 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
             </IonGrid>
           </div>
         )}
-        {!isAuthenticated && <div className="login-heading">PLEASE LOGIN</div>}
+        {!isAuthenticated && (
+          <div className="login-heading">
+            <a href="/login">PLEASE LOGIN</a>
+          </div>
+        )}
 
         {isAuthenticated && (
           <IonFab vertical="top" horizontal="start" slot="fixed">

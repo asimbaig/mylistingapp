@@ -1,4 +1,4 @@
-// import { Task } from '../features/calendar/types';
+import { Item } from '../redux/itemType';
 
 export const formatCountDownTime = (time: any) => {
   return `${time.hours}  :  ${time.minutes}  :  ${time.seconds}`;
@@ -78,7 +78,7 @@ export const addDays = (date: string, days: number) => {
   copy.setDate(copy.getDate() + days);
   return copy;
 };
-export const createGroups = (arr: any, numGroups: number) => {
+export const createGroups = (arr: Item[], numGroups: number) => {
   const perGroup = Math.ceil(arr.length / numGroups);
   return new Array(numGroups)
     .fill("")

@@ -121,7 +121,8 @@ const MyListings: React.FC<Props> = () => {
             ))}
           {!isAuthenticated && (
             <div style={{ width: "100%", textAlign: "center" }}>
-              Please Login to view this content
+              <div>Please Login to view this content</div>
+              <div><a href="/login">Login</a></div>
             </div>
           )}
         </IonList>
