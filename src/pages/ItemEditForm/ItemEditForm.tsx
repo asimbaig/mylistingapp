@@ -48,7 +48,7 @@ type Props = {
   currentItem: Item;
   onClose: () => void;
 };
-let Categories: String[] = ["Services","Home","Jobs", "Property", "Pets"];
+let Categories: String[] = ["Services", "Home", "Jobs", "Property", "Pets"];
 const DayColumn = {
   name: "Category",
   options: [
@@ -117,14 +117,25 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
   const [description, setDescription] = useState(currentItem.description);
   const [price, setPrice] = useState(currentItem.price);
   const [condition, setCondition] = useState(currentItem.condition);
+  const [status, setStatus] = useState<string>(
+    currentItem.status ? currentItem.status : "active"
+  );
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  const [categoryValue, setCategoryValue] = useState(Categories.indexOf(currentItem.category));
+  const [categoryValue, setCategoryValue] = useState(
+    Categories.indexOf(currentItem.category)
+  );
   const [categoryText, setCategoryText] = useState(currentItem.category);
-  const [subCategoryValue, setSubCategoryValue] = useState(currentItem.subcategory);
-  const [subCategoryText, setSubCategoryText] = useState(currentItem.subcategory);
+  const [subCategoryValue, setSubCategoryValue] = useState(
+    currentItem.subcategory
+  );
+  const [subCategoryText, setSubCategoryText] = useState(
+    currentItem.subcategory
+  );
 
   const [isSubCategoryOpen, setIsSubCategoryOpen] = useState(false);
-  const [subCategory, setSubCategory] = useState<PickerColumn>(SubDayColumn[Categories.indexOf(currentItem.category)]);
+  const [subCategory, setSubCategory] = useState<PickerColumn>(
+    SubDayColumn[Categories.indexOf(currentItem.category)]
+  );
   const [imageSlotsAvailable, setImageSlotsAvailable] = useState(
     TotalImageSlots - (itemPhotos ? itemPhotos?.length! : 0)
   );
@@ -143,9 +154,10 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
     setSubCategoryValue(currentItem.subcategory);
     setSubCategoryText(currentItem.subcategory);
     setSubCategory(SubDayColumn[Categories.indexOf(currentItem.category)]);
-    setImageSlotsAvailable(TotalImageSlots - (itemPhotos ? itemPhotos?.length! : 0));
+    setImageSlotsAvailable(
+      TotalImageSlots - (itemPhotos ? itemPhotos?.length! : 0)
+    );
     setStartDate(currentItem.startdate);
-
   }, [currentItem]);
 
   useEffect(() => {
@@ -187,6 +199,7 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
         location: { latitude: 0, longitude: 0 },
         relist_count: currentItem.relist_count + 1,
         userId: CurrentUser._id,
+        status: status,
       };
       dispatch(editItem(newItem));
       onClose();
@@ -369,7 +382,7 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
                 >
                   <IonNote>
                     {" "}
-                    Select {subCategoryText ? (": " + subCategoryText) : ""}
+                    Select {subCategoryText ? ": " + subCategoryText : ""}
                   </IonNote>
                   <IonPicker
                     isOpen={isSubCategoryOpen}
@@ -485,6 +498,31 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
                 ></IonDatetime>
                 <IonNote slot="end">Will be listed for 7 days</IonNote>
               </IonItem>
+            </IonList>
+            <IonList>
+              <IonRadioGroup
+                value={status}
+                onIonChange={(e) => setStatus(e.detail.value)}
+              >
+                <IonListHeader>
+                  <IonLabel>STATUS</IonLabel>
+                </IonListHeader>
+
+                <IonItem>
+                  <IonLabel>Active</IonLabel>
+                  <IonRadio slot="start" value="active" />
+                </IonItem>
+
+                <IonItem>
+                  <IonLabel>Pending</IonLabel>
+                  <IonRadio slot="start" value="pending" />
+                </IonItem>
+
+                <IonItem>
+                  <IonLabel>Sold</IonLabel>
+                  <IonRadio slot="start" value="sold" />
+                </IonItem>
+              </IonRadioGroup>
             </IonList>
           </div>
         </div>

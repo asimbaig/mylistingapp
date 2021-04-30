@@ -46,6 +46,7 @@ import { setIsLoading } from "../../redux/appSlice";
 import Countdown from "react-countdown";
 import TopPicksItems from "../../components/TopPicksItems/TopPicksItems";
 import {imgBaseUrl} from "../../redux/api-ref"; 
+import MainListingImgSwiper from "../../components/MainListingImgSwiper/MainListingImgSwiper";
 
 type Props = {
   history: any;
@@ -99,7 +100,7 @@ const Listings: React.FC<Props> = ({ history }) => {
 
   useEffect(() => {
     if (windowWidth <= 375) {
-      setCardWidth(160);
+      setCardWidth(170);
     } else {
       setCardWidth(200);
     }
@@ -112,37 +113,37 @@ const Listings: React.FC<Props> = ({ history }) => {
     }, 1500);
   }, []);
 
-  useEffect(() => {
-    if (listings && listings.length > 0) {
-      for (let i = 0; i < listings.length; i++) {
-        const card = document.getElementById("card" + i);
-        const gesture = createGesture({
-          el: card!,
-          gestureName: "swipeout",
-          onStart: (ev) => {
-            card!.style.transition = "none";
-          },
-          onMove: (ev) => {
-            card!.style.transform = `translateX(${ev.deltaX}px) translateY(${
-              ev.deltaY
-            }px) rotate(${ev.deltaX / 20}deg)`;
-          },
-          onEnd: (ev) => {
-            var parenrRow = document.getElementById("cards");
-            card!.style.transition = ".5s east-out";
-            if (ev.deltaX > windowWidth / 3) {
-              parenrRow!.removeChild(card!);
-            } else if (ev.deltaX < -windowWidth / 3) {
-              parenrRow!.removeChild(card!);
-            } else {
-              card!.style.transform = ``;
-            }
-          },
-        });
-        gesture.enable(true);
-      }
-    }
-  }, [listings]);
+  // useEffect(() => {
+  //   if (listings && listings.length > 0) {
+  //     for (let i = 0; i < listings.length; i++) {
+  //       const card = document.getElementById("card" + i);
+  //       const gesture = createGesture({
+  //         el: card!,
+  //         gestureName: "swipeout",
+  //         onStart: (ev) => {
+  //           card!.style.transition = "none";
+  //         },
+  //         onMove: (ev) => {
+  //           card!.style.transform = `translateX(${ev.deltaX}px) translateY(${
+  //             ev.deltaY
+  //           }px) rotate(${ev.deltaX / 20}deg)`;
+  //         },
+  //         onEnd: (ev) => {
+  //           var parenrRow = document.getElementById("cards");
+  //           card!.style.transition = ".5s east-out";
+  //           if (ev.deltaX > windowWidth / 3) {
+  //             parenrRow!.removeChild(card!);
+  //           } else if (ev.deltaX < -windowWidth / 3) {
+  //             parenrRow!.removeChild(card!);
+  //           } else {
+  //             card!.style.transform = ``;
+  //           }
+  //         },
+  //       });
+  //       gesture.enable(true);
+  //     }
+  //   }
+  // }, [listings]);
 
   useEffect(() => {
     if (listings && userFavourites) {
@@ -273,7 +274,39 @@ const Listings: React.FC<Props> = ({ history }) => {
                             textAlign: "center",
                           }}
                         >
-                          {item.item_images && item.item_images.length > 0 ? (
+                          {item && item.item_images && (
+                              <MainListingImgSwiper images={item.item_images} />
+                            )}
+                            <div className="listing-card-caption">
+                          <IonRow className="ion-justify-content-center ion-align-items-center">
+                            <IonCol>
+                            <div>
+                            <IonLabel>{item.title}</IonLabel>
+                            <IonGrid>
+                                <IonRow>
+                                  <IonCol>
+                                    <IonNote style={{color:"#fff"}}>
+                                      Exp:
+                                      <Countdown
+                                        date={item.enddate}
+                                        renderer={renderer}
+                                      />
+                                    </IonNote>
+                                  </IonCol>
+                                  <IonCol>
+                                    <IonNote style={{color:"#fff"}}>£{item.price}</IonNote>
+                                  </IonCol>
+                                </IonRow>
+                              </IonGrid>
+                          </div>
+                              
+                            </IonCol>
+                          </IonRow>
+                            
+                        </div>
+                        <div className="stamp stamp-like">SOLD</div>
+
+                          {/* {item.item_images && item.item_images.length > 0 ? (
                             <img
                               src={imgBaseUrl + item.item_images[0].filename}
                               alt=""
@@ -291,9 +324,9 @@ const Listings: React.FC<Props> = ({ history }) => {
                                 height: "180px",
                               }}
                             />
-                          )}
+                          )} */}
 
-                          <div>
+                          {/* <div>
                             <IonLabel>{item.title}</IonLabel>
                             <IonGrid>
                                 <IonRow>
@@ -312,6 +345,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                                 </IonRow>
                               </IonGrid>
                           </div>
+                         */}
                         </IonCardContent>
                       </IonCard>
                     </IonCol>

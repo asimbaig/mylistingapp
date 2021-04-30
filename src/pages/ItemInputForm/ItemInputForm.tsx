@@ -111,6 +111,7 @@ const ItemInputForm: React.FC<Props> = ({ onClose }) => {
   const [description, setDescription] = useState<string>();
   const [price, setPrice] = useState<number>();
   const [condition, setCondition] = useState<string>();
+  const [status, setStatus] = useState<string>("active");
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [categoryValue, setCategoryValue] = useState<number | undefined>();
   const [categoryText, setCategoryText] = useState<string | undefined>();
@@ -129,7 +130,7 @@ const ItemInputForm: React.FC<Props> = ({ onClose }) => {
 
   useEffect(() => {
     if (returnPhoto) {
-        setItemPhotos([...itemPhotos!, returnPhoto]);
+      setItemPhotos([...itemPhotos!, returnPhoto]);
     }
   }, [returnPhoto]);
 
@@ -166,6 +167,7 @@ const ItemInputForm: React.FC<Props> = ({ onClose }) => {
         location: { latitude: 0, longitude: 0 },
         relist_count: 0,
         userId: CurrentUser._id,
+        status: status,
       };
       dispatch(addItem(newItem));
       onClose();
@@ -254,7 +256,6 @@ const ItemInputForm: React.FC<Props> = ({ onClose }) => {
                         className="photo-item"
                         key={"photo" + index}
                       >
-                        
                         <div
                           className="photo-image background-img"
                           style={{
@@ -461,6 +462,31 @@ const ItemInputForm: React.FC<Props> = ({ onClose }) => {
                 ></IonDatetime>
                 <IonNote slot="end">Will be listed for 7 days</IonNote>
               </IonItem>
+            </IonList>
+            <IonList>
+              <IonRadioGroup
+                value={status}
+                onIonChange={(e) => setStatus(e.detail.value)}
+              >
+                <IonListHeader>
+                  <IonLabel>STATUS</IonLabel>
+                </IonListHeader>
+
+                <IonItem>
+                  <IonLabel>Active</IonLabel>
+                  <IonRadio slot="start" value="active" />
+                </IonItem>
+
+                <IonItem>
+                  <IonLabel>Pending</IonLabel>
+                  <IonRadio slot="start" value="pending" />
+                </IonItem>
+
+                <IonItem>
+                  <IonLabel>Sold</IonLabel>
+                  <IonRadio slot="start" value="sold" />
+                </IonItem>
+              </IonRadioGroup>
             </IonList>
           </div>
         </div>

@@ -150,6 +150,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
               {selectedItem && selectedItem.item_images && (
                 <ImageSwiperSlides images={slideImages} />
               )}
+              <div className="stamp stamp-like">SOLD</div>
               <IonFab vertical="bottom" horizontal="end" edge slot="fixed">
                 <IonButton
                   color="white"

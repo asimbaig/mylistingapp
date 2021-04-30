@@ -32,6 +32,10 @@ import { loadUserOtherItems } from "../../redux/itemSlice";
 import { setIsLoading } from "../../redux/appSlice";
 import Profile from "../Profile/Profile";
 import { imgBaseUrl } from "../../redux/api-ref";
+import {
+  modalEnterZoomOut,
+  modalLeaveZoomIn,
+} from "../../animations/animations";
 
 type Props = {
   history: any;
@@ -265,7 +269,12 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
           </IonFab>
         )}
       </IonContent>
-      <IonModal isOpen={isProfileOpen} swipeToClose>
+      <IonModal
+        isOpen={isProfileOpen}
+        swipeToClose
+        enterAnimation={modalEnterZoomOut}
+        leaveAnimation={modalLeaveZoomIn}
+      >
         <Profile
           user={selectedProfile!}
           onClose={() => setIsProfileOpen(!isProfileOpen)}

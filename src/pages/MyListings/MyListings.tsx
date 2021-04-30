@@ -25,6 +25,10 @@ import { setIsLoading } from "../../redux/appSlice";
 import ItemInputForm from "../ItemInputForm/ItemInputForm";
 import ItemEditForm from "../ItemEditForm/ItemEditForm";
 import { imgBaseUrl } from "../../redux/api-ref";
+import {
+  modalEnterZoomOut,
+  modalLeaveZoomIn,
+} from "../../animations/animations";
 
 type Props = {};
 
@@ -85,13 +89,24 @@ const MyListings: React.FC<Props> = () => {
                         )}
                       </IonCol>
                       <IonCol>
-                        <h3>{item.title}</h3>
+                        <div
+                          style={{
+                            marginLeft: "5px",
+                            borderRadius: "25px",
+                            background: "#A9A9A9",
+                            padding: "10px",
+                            height: "100%",
+                            textAlign: "center",
+                          }}
+                        >
+                          <h3>{item.title}</h3>
 
-                        <p>£{item.price}</p>
+                          <div>Price : £{item.price}</div>
 
-                        <p>{item.enddate.substring(0, 16)}</p>
+                          <div>Expires on :{item.enddate.substring(0, 16)}</div>
 
-                        <p>Views: {item.views}</p>
+                          <div>Views : {item.views}</div>
+                        </div>
                       </IonCol>
                     </IonRow>
                   </IonGrid>
@@ -122,11 +137,18 @@ const MyListings: React.FC<Props> = () => {
           {!isAuthenticated && (
             <div style={{ width: "100%", textAlign: "center" }}>
               <div>Please Login to view this content</div>
-              <div><a href="/login">Login</a></div>
+              <div>
+                <a href="/login">Login</a>
+              </div>
             </div>
           )}
         </IonList>
-        <IonFab vertical="bottom" horizontal="end" slot="fixed">
+        <IonFab
+          vertical="top"
+          horizontal="end"
+          slot="fixed"
+          style={{ marginRight: "30px" }}
+        >
           <IonButton
             color="white"
             className="button-custom button-icon button-sm button-brand"
@@ -136,10 +158,20 @@ const MyListings: React.FC<Props> = () => {
           </IonButton>
         </IonFab>
       </IonContent>
-      <IonModal isOpen={isInputFormOpen} backdropDismiss={false}>
+      <IonModal
+        isOpen={isInputFormOpen}
+        backdropDismiss={false}
+        enterAnimation={modalEnterZoomOut}
+        leaveAnimation={modalLeaveZoomIn}
+      >
         <ItemInputForm onClose={() => setIsInputFormOpen(false)} />
       </IonModal>
-      <IonModal isOpen={isEditFormOpen} backdropDismiss={false}>
+      <IonModal
+        isOpen={isEditFormOpen}
+        backdropDismiss={false}
+        enterAnimation={modalEnterZoomOut}
+        leaveAnimation={modalLeaveZoomIn}
+      >
         <ItemEditForm
           currentItem={editItem!}
           onClose={() => {

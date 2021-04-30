@@ -22,10 +22,11 @@ export interface Item {
   startdate: string;
   enddate: string;
   isactive: boolean;
-  isapproved:boolean;
+  isapproved: boolean;
   views: number;
   likes: string[];
   location: { latitude: number; longitude: number };
   relist_count: number;
   userId: string;
+  status: string;
 }
