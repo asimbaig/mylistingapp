@@ -120,38 +120,6 @@ const Listings: React.FC<Props> = ({ history }) => {
     }, 1500);
   }, []);
 
-  // useEffect(() => {
-  //   if (listings && listings.length > 0) {
-  //     for (let i = 0; i < listings.length; i++) {
-  //       const card = document.getElementById("card" + i);
-  //       const gesture = createGesture({
-  //         el: card!,
-  //         gestureName: "swipeout",
-  //         onStart: (ev) => {
-  //           card!.style.transition = "none";
-  //         },
-  //         onMove: (ev) => {
-  //           card!.style.transform = `translateX(${ev.deltaX}px) translateY(${
-  //             ev.deltaY
-  //           }px) rotate(${ev.deltaX / 20}deg)`;
-  //         },
-  //         onEnd: (ev) => {
-  //           var parenrRow = document.getElementById("cards");
-  //           card!.style.transition = ".5s east-out";
-  //           if (ev.deltaX > windowWidth / 3) {
-  //             parenrRow!.removeChild(card!);
-  //           } else if (ev.deltaX < -windowWidth / 3) {
-  //             parenrRow!.removeChild(card!);
-  //           } else {
-  //             card!.style.transform = ``;
-  //           }
-  //         },
-  //       });
-  //       gesture.enable(true);
-  //     }
-  //   }
-  // }, [listings]);
-
   useEffect(() => {
     if (listings && userFavourites) {
       setFavItems(filterArray(listings, userFavourites));

@@ -53,7 +53,6 @@ import Me from "../src/pages/Me/Me";
 import MyListings from "../src/pages/MyListings/MyListings";
 import ChatStreams from "./pages/ChatStreams/ChatStreams";
 import Chat from "../src/pages/Chat/Chat";
-import MainListings from "../src/pages/Listings/MainListings";
 import Listings from "../src/pages/Listings/Listings";
 import ListingDetails from "../src/pages/Listings/ListingDetails";
 import Login from "../src/pages/Login/Login";
