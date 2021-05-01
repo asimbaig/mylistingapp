@@ -97,6 +97,7 @@ const MyListings: React.FC<Props> = () => {
                             padding: "10px",
                             height: "100%",
                             textAlign: "center",
+                            border: "5px dashed grey"
                           }}
                         >
                           <h3>{item.title}</h3>

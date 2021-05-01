@@ -24,7 +24,7 @@ const MainListingImgSwiper: React.FC<Props> = ({ images }) => {
   const [loadSwiper, setLoadSwiper] = useState(false);
   useEffect(() => {
     const interval = setInterval(() => {
-      setLoadSwiper(!loadSwiper);
+      setLoadSwiper(true);
     }, 300);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps

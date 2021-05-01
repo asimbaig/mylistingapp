@@ -43,6 +43,9 @@ import { deletePhotoById } from "../../services/photoService";
 import { PickerColumn } from "@ionic/core";
 import { editItem } from "../../redux/itemSlice";
 import { addDays } from "../../utils/utils";
+import GMap from "../../components/GMap/GMap";
+import { usePosition } from "use-position";
+import { Point } from "../../redux/pointType";
 
 type Props = {
   currentItem: Item;
@@ -107,57 +110,67 @@ let TotalImageSlots = 3;
 
 const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
   const dispatch = useDispatch();
+  const watch = true;
+  const { latitude, longitude } = usePosition(watch);
 
   const CurrentUser = useSelector((state: RootState) => state.auth.user);
   const { takePhoto, returnPhoto } = usePhotoGallery();
   const [itemPhotos, setItemPhotos] = useState<PhotoModel[]>(
-    currentItem.item_images
+    currentItem?.item_images
   );
-  const [title, setTitle] = useState(currentItem.title);
-  const [description, setDescription] = useState(currentItem.description);
-  const [price, setPrice] = useState(currentItem.price);
-  const [condition, setCondition] = useState(currentItem.condition);
+  const [title, setTitle] = useState(currentItem?.title);
+  const [description, setDescription] = useState(currentItem?.description);
+  const [price, setPrice] = useState(currentItem?.price);
+  const [condition, setCondition] = useState(currentItem?.condition);
   const [status, setStatus] = useState<string>(
-    currentItem.status ? currentItem.status : "active"
+    currentItem?.status ? currentItem?.status : "active"
   );
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [categoryValue, setCategoryValue] = useState(
-    Categories.indexOf(currentItem.category)
+    Categories.indexOf(currentItem?.category)
   );
-  const [categoryText, setCategoryText] = useState(currentItem.category);
+  const [categoryText, setCategoryText] = useState(currentItem?.category);
   const [subCategoryValue, setSubCategoryValue] = useState(
-    currentItem.subcategory
+    currentItem?.subcategory
   );
   const [subCategoryText, setSubCategoryText] = useState(
-    currentItem.subcategory
+    currentItem?.subcategory
   );
 
   const [isSubCategoryOpen, setIsSubCategoryOpen] = useState(false);
   const [subCategory, setSubCategory] = useState<PickerColumn>(
-    SubDayColumn[Categories.indexOf(currentItem.category)]
+    SubDayColumn[Categories.indexOf(currentItem?.category)]
   );
   const [imageSlotsAvailable, setImageSlotsAvailable] = useState(
     TotalImageSlots - (itemPhotos ? itemPhotos?.length! : 0)
   );
-  const [startDate, setStartDate] = useState(currentItem.startdate);
+  const [startDate, setStartDate] = useState(currentItem?.startdate);
   const [showToast, setShowToast] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
+  const [location, setLocation] = useState<Point | undefined>(
+    (currentItem?.location && (currentItem?.location.latitude!==0 && currentItem?.location.longitude!==0))
+      ? {
+          lat: currentItem?.location.latitude,
+          lng: currentItem?.location.longitude,
+        }
+      : undefined
+  );
 
   useEffect(() => {
-    setItemPhotos(currentItem.item_images);
-    setTitle(currentItem.title);
-    setDescription(currentItem.description);
-    setPrice(currentItem.price);
-    setCondition(currentItem.condition);
-    setCategoryValue(Categories.indexOf(currentItem.category));
-    setCategoryText(currentItem.category);
-    setSubCategoryValue(currentItem.subcategory);
-    setSubCategoryText(currentItem.subcategory);
-    setSubCategory(SubDayColumn[Categories.indexOf(currentItem.category)]);
+    setItemPhotos(currentItem?.item_images);
+    setTitle(currentItem?.title);
+    setDescription(currentItem?.description);
+    setPrice(currentItem?.price);
+    setCondition(currentItem?.condition);
+    setCategoryValue(Categories.indexOf(currentItem?.category));
+    setCategoryText(currentItem?.category);
+    setSubCategoryValue(currentItem?.subcategory);
+    setSubCategoryText(currentItem?.subcategory);
+    setSubCategory(SubDayColumn[Categories.indexOf(currentItem?.category)]);
     setImageSlotsAvailable(
       TotalImageSlots - (itemPhotos ? itemPhotos?.length! : 0)
     );
-    setStartDate(currentItem.startdate);
+    setStartDate(currentItem?.startdate);
   }, [currentItem]);
 
   useEffect(() => {
@@ -179,6 +192,11 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
     );
   }, [itemPhotos]);
 
+  useEffect(() => {
+    if (!location && latitude && longitude)
+      setLocation({ lat: latitude, lng: longitude });
+  }, [latitude, longitude]);
+
   const onSave = () => {
     if (formsValidationCheck()) {
       let newItem: Item = {
@@ -196,7 +214,7 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
         isapproved: false,
         views: 0,
         likes: [],
-        location: { latitude: 0, longitude: 0 },
+        location: { latitude: location?.lat!, longitude: location?.lng! },
         relist_count: currentItem.relist_count + 1,
         userId: CurrentUser._id,
         status: status,
@@ -523,6 +541,17 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
                   <IonRadio slot="start" value="sold" />
                 </IonItem>
               </IonRadioGroup>
+            </IonList>
+            <IonList className="list-custom">
+              <IonListHeader>
+                <IonLabel>LOCATION</IonLabel>
+              </IonListHeader>
+              {location && (
+                <GMap
+                  distanceCover={20}
+                  point={{ lat: location?.lat!, lng: location?.lng! }}
+                />
+              )}
             </IonList>
           </div>
         </div>

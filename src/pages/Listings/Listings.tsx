@@ -32,7 +32,7 @@ import {
   options,
   search,
   close,
-  checkmarkOutline,
+  checkmarkDone,
 } from "ionicons/icons";
 import "./Listings.scss";
 import { RootState } from "../../redux/rootReducer";
@@ -261,6 +261,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                           {item && item.item_images && (
                             <MainListingImgSwiper images={item.item_images} />
                           )}
+                          {isAuthenticated && 
                           <span
                             className={
                               isFavourite(item._id!)
@@ -269,7 +270,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                             }
                           >
                             <IonIcon
-                              icon={checkmarkOutline}
+                              icon={checkmarkDone}
                               onClick={(e) => {
                                 e.stopPropagation();
                                 dispatch(
@@ -278,7 +279,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                               }}
                               style={{ cursor: "pointer" }}
                             />
-                          </span>
+                          </span>}
                           <div className="listing-card-caption">
                             <IonRow className="ion-justify-content-center ion-align-items-center">
                               <IonCol>
@@ -349,6 +350,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                             {item && item.item_images && (
                               <MainListingImgSwiper images={item.item_images} />
                             )}
+                            {isAuthenticated && 
                             <span
                               className={
                                 isFavourite(item._id!)
@@ -357,7 +359,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                               }
                             >
                               <IonIcon
-                                icon={checkmarkOutline}
+                                icon={checkmarkDone}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   dispatch(
@@ -366,7 +368,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                                 }}
                                 style={{ cursor: "pointer" }}
                               />
-                            </span>
+                            </span>}
                             <div className="listing-card-caption">
                               <IonRow className="ion-justify-content-center ion-align-items-center">
                                 <IonCol>

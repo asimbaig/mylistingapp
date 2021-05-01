@@ -44,6 +44,7 @@ import {
   modalEnterZoomOut,
   modalLeaveZoomIn,
 } from "../../animations/animations";
+import GMap from "../../components/GMap/GMap";
 
 let placeHolderItemPhoto: PhotoModel = {
   file_id: "60887ac4014be60015d3c9c1",
@@ -254,7 +255,11 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
               <div className="profile-user-info">
                 <div className="info-item">{selectedItem?.description}</div>
               </div>
-
+              <hr/>
+              {/* {console.log(selectedItem?.location)} */}
+              {selectedItem && selectedItem.location &&
+                <GMap distanceCover={20} point={{lat:selectedItem?.location.latitude!, lng:selectedItem?.location.longitude!}}/>
+              }
               <hr />
               {ItemUser && (
                 <IonCard>

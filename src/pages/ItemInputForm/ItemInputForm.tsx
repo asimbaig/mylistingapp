@@ -41,6 +41,9 @@ import { deletePhotoById } from "../../services/photoService";
 import { PickerColumn } from "@ionic/core";
 import { addItem } from "../../redux/itemSlice";
 import { addDays } from "../../utils/utils";
+import GMap from "../../components/GMap/GMap";
+import { usePosition } from 'use-position';
+import { Point } from "../../redux/pointType";
 
 type Props = {
   onClose: () => void;
@@ -103,6 +106,8 @@ let TotalImageSlots = 3;
 
 const ItemInputForm: React.FC<Props> = ({ onClose }) => {
   const dispatch = useDispatch();
+  const watch = true;
+  const { latitude, longitude } = usePosition(watch);
 
   const CurrentUser = useSelector((state: RootState) => state.auth.user);
   const { takePhoto, returnPhoto } = usePhotoGallery();
@@ -127,6 +132,7 @@ const ItemInputForm: React.FC<Props> = ({ onClose }) => {
   const [startDate, setStartDate] = useState<string>();
   const [showToast, setShowToast] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
+  const [location, setLocation] = useState<Point>();
 
   useEffect(() => {
     if (returnPhoto) {
@@ -148,6 +154,11 @@ const ItemInputForm: React.FC<Props> = ({ onClose }) => {
     );
   }, [itemPhotos]);
 
+  useEffect(()=>{
+    if(latitude && longitude)
+    setLocation({ lat: latitude, lng: longitude });
+  },[latitude,longitude]);
+
   const onSave = () => {
     if (formsValidationCheck()) {
       let newItem: Item = {
@@ -164,7 +175,7 @@ const ItemInputForm: React.FC<Props> = ({ onClose }) => {
         isapproved: false,
         views: 0,
         likes: [],
-        location: { latitude: 0, longitude: 0 },
+        location: { latitude: location?.lat!, longitude: location?.lng! },
         relist_count: 0,
         userId: CurrentUser._id,
         status: status,
@@ -488,6 +499,15 @@ const ItemInputForm: React.FC<Props> = ({ onClose }) => {
                 </IonItem>
               </IonRadioGroup>
             </IonList>
+
+            <IonList className="list-custom">
+              <IonListHeader>
+                <IonLabel>LOCATION</IonLabel>
+              </IonListHeader>
+              {location &&
+                <GMap distanceCover={20} point={{ lat:location?.lat!, lng:location?.lng! }}/>
+              }
+            </IonList>      
           </div>
         </div>
         <IonToast
