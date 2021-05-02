@@ -25,14 +25,15 @@ import {
   IonList,
   IonItemDivider,
   IonCheckbox,
-  IonText,
+  IonText, IonRefresher, IonRefresherContent
 } from "@ionic/react";
+import { RefresherEventDetail } from '@ionic/core';
 import {
   reload,
   options,
   search,
   close,
-  checkmarkDone,
+  checkmarkDone,chevronDownCircleOutline 
 } from "ionicons/icons";
 import "./Listings.scss";
 import { RootState } from "../../redux/rootReducer";
@@ -52,7 +53,6 @@ import {
 import { setIsLoading } from "../../redux/appSlice";
 import Countdown from "react-countdown";
 import TopPicksItems from "../../components/TopPicksItems/TopPicksItems";
-import { imgBaseUrl } from "../../redux/api-ref";
 import MainListingImgSwiper from "../../components/MainListingImgSwiper/MainListingImgSwiper";
 
 type Props = {
@@ -106,9 +106,12 @@ const Listings: React.FC<Props> = ({ history }) => {
   };
 
   useEffect(() => {
-    if (windowWidth <= 375) {
+    if (windowWidth <= 360) {
       setCardWidth(170);
-    } else {
+    }else if (windowWidth <= 450) {
+      setCardWidth(180);
+    }  
+    else {
       setCardWidth(200);
     }
   }, []);
@@ -162,9 +165,12 @@ const Listings: React.FC<Props> = ({ history }) => {
       }
     }
   };
+  function doRefresh(event: CustomEvent<RefresherEventDetail>) {
+    window.location.reload();
+  }
   return (
     <IonPage>
-      <IonHeader className="header-custom">
+      <IonHeader className="header-custom" translucent>
         <IonToolbar className="toolbar-no-border toolbar-no-safe-area">
           <IonSegment
             className="segment-custom"
@@ -182,6 +188,13 @@ const Listings: React.FC<Props> = ({ history }) => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="matches-page">
+      <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
+        <IonRefresherContent
+          pullingIcon={chevronDownCircleOutline}
+          refreshingSpinner="circles"
+          refreshingText="Reloading Listings..">
+        </IonRefresherContent>
+      </IonRefresher>
         <div>
           <div className="list-header">
             <IonText color="primary">
@@ -243,7 +256,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                       <IonCard
                         style={{
                           width: `${cardWidth}px`,
-                          height: "250px",
+                          height: "230px",
                           margin: "auto",
                         }}
                       >
@@ -412,7 +425,7 @@ const Listings: React.FC<Props> = ({ history }) => {
           )}
         </div>
 
-        <IonFab vertical="bottom" horizontal="end" slot="fixed">
+        {/* <IonFab vertical="bottom" horizontal="end" slot="fixed">
           <IonButton
             color="white"
             className="button-custom button-icon button-sm button-brand"
@@ -422,7 +435,7 @@ const Listings: React.FC<Props> = ({ history }) => {
           >
             <IonIcon icon={reload} slot="icon-only" />
           </IonButton>
-        </IonFab>
+        </IonFab> */}
       </IonContent>
 
       <IonModal

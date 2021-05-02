@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 import { IonApp, IonRouterOutlet, setupConfig } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
@@ -61,6 +61,8 @@ import { loadItems } from "./redux/itemSlice";
 import { authCheckState } from "./redux/authSlice";
 import RippleLoader from "./components/RippleLoader/RippleLoader";
 import RedirectToLogin from "./pages/Settings/RedirectToLogin";
+import { IonAlert } from '@ionic/react';
+import { Plugins, Capacitor } from "@capacitor/core";
 
 // force the theme to iOS mode
 setupConfig({
@@ -71,8 +73,10 @@ setupConfig({
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
+  const { App } = Plugins;
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
+  const [showBackAlert, setShowBackAlert] = useState(false);
 
   useEffect(() => {
     // Restore Dark Mode preference from LocalStorage
@@ -81,8 +85,15 @@ const App: React.FC = () => {
 
   useEffect(() => {
     dispatch(authCheckState());
-    
     dispatch(loadItems());
+
+    if (Capacitor.isNative) {
+      App.addListener("backButton", (e) => {
+        if (window.location.pathname === "/listings") {
+          setShowBackAlert(true);
+        } 
+      });
+    }
   }, []);
 
   return (
@@ -151,6 +162,27 @@ const App: React.FC = () => {
           </IonTabBar>
         </IonTabs>
       </IonReactRouter>
+      <IonAlert
+          isOpen={showBackAlert}
+          header={'Please Confirm!'}
+          message={'Do you really want to exit our App?'}
+          buttons={[
+            {
+              text: 'Nope',
+              role: 'cancel',
+              cssClass: 'secondary',
+              handler: () => {}
+            },
+            {
+              text: 'Yeah',
+              handler: () => {
+                App.exitApp();
+              }
+            }
+          ]}
+          onDidDismiss={() => setShowBackAlert(false)}
+          cssClass='my-custom-class'
+        />
     </IonApp>
   );
 };

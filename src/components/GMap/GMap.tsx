@@ -29,7 +29,7 @@ type Props = {
             center: point,
             radius: (Math.ceil(1609.34*distanceCover)),//1609.34 meter = 1 mile
           });
-          console.log("Distance:: "+ JSON.stringify(google.maps));
+          // console.log("Distance:: "+ JSON.stringify(google.maps));
           //console.log("Distance:: "+ google.maps.geometry.spherical.computeDistanceBetween ({lat:51.857840,lng:-2.233520}, {lat:51.472590,lng:-2.529160}));
         }
       }, [point, map , distanceCover]);

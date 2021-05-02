@@ -14,7 +14,7 @@ import {
   IonItemOptions,
   IonItemOption,
   IonFab,
-  IonModal,
+  IonModal,IonText
 } from "@ionic/react";
 import { trash, create, add } from "ionicons/icons";
 import "./MyListings.scss";
@@ -100,12 +100,12 @@ const MyListings: React.FC<Props> = () => {
                             border: "5px dashed grey"
                           }}
                         >
-                          <h3>{item.title}</h3>
-
-                          <div>Price : £{item.price}</div>
-
-                          <div>Expires on :{item.enddate.substring(0, 16)}</div>
-
+                          <IonText>{item.title}</IonText>
+                          <br/>
+                          <IonText>Price : £{item.price}</IonText>
+                          <br/>
+                          <IonText>Expires on :{item.enddate.substring(0, 16)}</IonText>
+                          <br/>
                           <div>Views : {item.views}</div>
                         </div>
                       </IonCol>
