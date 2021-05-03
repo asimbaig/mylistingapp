@@ -16,22 +16,19 @@ import {
   IonGrid,
   IonCard,
   IonCardContent,
-  IonItem,
   IonNote,
-  IonFab,
   IonButtons,
   IonModal,
-  IonList,
-  IonItemDivider,
-  IonCheckbox,
-  IonText, IonRefresher, IonRefresherContent
+  IonText,
+  IonRefresher,
+  IonRefresherContent,
 } from "@ionic/react";
-import { RefresherEventDetail } from '@ionic/core';
+import { RefresherEventDetail } from "@ionic/core";
 import {
   options,
   search,
-  close,
-  checkmarkDone,chevronDownCircleOutline 
+  checkmarkDone,
+  chevronDownCircleOutline,
 } from "ionicons/icons";
 import "./Listings.scss";
 import { RootState } from "../../redux/rootReducer";
@@ -65,29 +62,6 @@ const Listings: React.FC<Props> = ({ history }) => {
   const [favItems, setFavItems] = useState<Item[]>();
   const [showSearchbar, setShowSearchbar] = useState<boolean>(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
-  // var listingFilter = {
-  //   Services: {
-  //     Plumber: true,
-  //     Electrician: true,
-  //     FoodDrink: true,
-  //     Transport: true,
-  //   },
-  //   Home: {
-  //     Appliances: true,
-  //     Tools: true,
-  //     Furniture: true,
-  //   },
-  //   Jobs: {
-  //     IT: true,
-  //     Marketing: true,
-  //     Management: true,
-  //   },
-  //   Property: {
-  //     Land: true,
-  //     Domestic: true,
-  //     Commercial: true,
-  //   },
-  // };
   const dispatch = useDispatch();
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
   const listings = useSelector((state: RootState) => state.listings.items);
@@ -107,10 +81,9 @@ const Listings: React.FC<Props> = ({ history }) => {
   useEffect(() => {
     if (windowWidth <= 360) {
       setCardWidth(170);
-    }else if (windowWidth <= 450) {
+    } else if (windowWidth <= 450) {
       setCardWidth(180);
-    }  
-    else {
+    } else {
       setCardWidth(200);
     }
   }, []);
@@ -140,7 +113,8 @@ const Listings: React.FC<Props> = ({ history }) => {
       // Render a countdown
       return (
         <span>
-          {props.days>0 ? (props.days+"d:"):""}{props.hours}:{props.minutes}:{props.seconds}
+          {props.days > 0 ? props.days + "d:" : ""}
+          {props.hours}:{props.minutes}:{props.seconds}
         </span>
       );
     }
@@ -187,13 +161,14 @@ const Listings: React.FC<Props> = ({ history }) => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="matches-page">
-      <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
-        <IonRefresherContent
-          pullingIcon={chevronDownCircleOutline}
-          refreshingSpinner="circles"
-          refreshingText="Reloading Listings..">
-        </IonRefresherContent>
-      </IonRefresher>
+        <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
+          <IonRefresherContent
+            pullingIcon={chevronDownCircleOutline}
+            refreshingSpinner="circles"
+            refreshingText="Reloading Listings.."
+          ></IonRefresherContent>
+        </IonRefresher>
+
         <div>
           <div className="list-header">
             <IonText color="primary">
@@ -219,132 +194,43 @@ const Listings: React.FC<Props> = ({ history }) => {
             ))}
           </div>
         </div>
-
-        <div className="safe-area-bottom">
-          {segmentView === "LIST" && (
-            <div>
-              {showSearchbar && (
-                <IonSearchbar
-                  showCancelButton="always"
-                  placeholder="Search"
-                  onIonChange={(e: CustomEvent) => {
-                    dispatch(setSearchText(e.detail.value));
-                    dispatch(loadItems());
-                  }}
-                  onIonCancel={() => setShowSearchbar(false)}
-                ></IonSearchbar>
-              )}
-
-              <IonButtons slot="end">
-                {!showSearchbar && (
-                  <IonButton onClick={() => setShowSearchbar(true)}>
-                    <IonIcon slot="icon-only" icon={search}></IonIcon>
-                  </IonButton>
+        {!isLoading && (
+          <div className="safe-area-bottom">
+            {segmentView === "LIST" && (
+              <div>
+                {showSearchbar && (
+                  <IonSearchbar
+                    showCancelButton="always"
+                    placeholder="Search"
+                    onIonChange={(e: CustomEvent) => {
+                      dispatch(setSearchText(e.detail.value));
+                      dispatch(loadItems());
+                    }}
+                    onIonCancel={() => setShowSearchbar(false)}
+                  ></IonSearchbar>
                 )}
-                {!showSearchbar && (
-                  <IonButton onClick={() => setShowFilterModal(true)}>
-                    <IonIcon icon={options} slot="icon-only" />
-                  </IonButton>
-                )}
-              </IonButtons>
 
-              <IonGrid>
-                <IonRow id="cards">
-                  {listings.map((item: Item, itemIndex: number) => (
-                    <IonCol key={itemIndex} id={"card" + itemIndex}>
-                      <IonCard
-                        style={{
-                          width: `${cardWidth}px`,
-                          height: "230px",
-                          margin: "auto",
-                        }}
-                      >
-                        <IonCardContent
-                          onClick={() => {
-                            dispatch(updateItemViews(item._id!));
-                            onClickItem(item);
-                          }}
-                          style={{
-                            padding: "0",
-                            cursor: "pointer",
-                            textAlign: "center",
-                          }}
-                        >
-                          {item && item.item_images && (
-                            <MainListingImgSwiper images={item.item_images} />
-                          )}
-                          {isAuthenticated && 
-                          <span
-                            className={
-                              isFavourite(item._id!)
-                                ? "verified-button"
-                                : "not-verified-button"
-                            }
-                          >
-                            <IonIcon
-                              icon={checkmarkDone}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                dispatch(
-                                  toggleFavourite(item._id!, CurrentUser._id)
-                                );
-                              }}
-                              style={{ cursor: "pointer" }}
-                            />
-                          </span>}
-                          <div className="listing-card-caption">
-                            <IonRow className="ion-justify-content-center ion-align-items-center">
-                              <IonCol>
-                                <div>
-                                  <IonLabel>{item.title}</IonLabel>
-                                  <IonGrid>
-                                    <IonRow>
-                                      <IonCol>
-                                        <IonNote style={{ color: "#fff" }}>
-                                          Exp:
-                                          <Countdown
-                                            date={item.enddate}
-                                            renderer={renderer}
-                                          />
-                                        </IonNote>
-                                      </IonCol>
-                                      <IonCol>
-                                        <IonNote style={{ color: "#fff" }}>
-                                          £{item.price}
-                                        </IonNote>
-                                      </IonCol>
-                                    </IonRow>
-                                  </IonGrid>
-                                </div>
-                              </IonCol>
-                            </IonRow>
-                          </div>
-                          {item.status && item.status === "sold" && (
-                            <div className="stamp stamp-sold">SOLD</div>
-                          )}
-                          {item.status && item.status === "pending" && (
-                            <div className="stamp stamp-pending">PENDING</div>
-                          )}
-                        </IonCardContent>
-                      </IonCard>
-                    </IonCol>
-                  ))}
-                </IonRow>
-              </IonGrid>
-            </div>
-          )}
+                <IonButtons slot="end">
+                  {!showSearchbar && (
+                    <IonButton onClick={() => setShowSearchbar(true)}>
+                      <IonIcon slot="icon-only" icon={search}></IonIcon>
+                    </IonButton>
+                  )}
+                  {!showSearchbar && (
+                    <IonButton onClick={() => setShowFilterModal(true)}>
+                      <IonIcon icon={options} slot="icon-only" />
+                    </IonButton>
+                  )}
+                </IonButtons>
 
-          {segmentView === "FAVS" && (
-            <div>
-              <IonGrid>
-                <IonRow>
-                  {favItems &&
-                    favItems!.map((item: Item, itemIndex: number) => (
-                      <IonCol key={itemIndex}>
+                <IonGrid>
+                  <IonRow id="cards">
+                    {listings.map((item: Item, itemIndex: number) => (
+                      <IonCol key={itemIndex} id={"card" + itemIndex}>
                         <IonCard
                           style={{
                             width: `${cardWidth}px`,
-                            height: "250px",
+                            height: "230px",
                             margin: "auto",
                           }}
                         >
@@ -362,35 +248,50 @@ const Listings: React.FC<Props> = ({ history }) => {
                             {item && item.item_images && (
                               <MainListingImgSwiper images={item.item_images} />
                             )}
-                            {isAuthenticated && 
-                            <span
-                              className={
-                                isFavourite(item._id!)
-                                  ? "verified-button"
-                                  : "not-verified-button"
-                              }
-                            >
-                              <IonIcon
-                                icon={checkmarkDone}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  dispatch(
-                                    toggleFavourite(item._id!, CurrentUser._id)
-                                  );
-                                }}
-                                style={{ cursor: "pointer" }}
-                              />
-                            </span>}
+                            {isAuthenticated && (
+                              <span
+                                className={
+                                  isFavourite(item._id!)
+                                    ? "verified-button"
+                                    : "not-verified-button"
+                                }
+                              >
+                                <IonIcon
+                                  icon={checkmarkDone}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    dispatch(
+                                      toggleFavourite(
+                                        item._id!,
+                                        CurrentUser._id
+                                      )
+                                    );
+                                  }}
+                                  style={{ cursor: "pointer" }}
+                                />
+                              </span>
+                            )}
                             <div className="listing-card-caption">
                               <IonRow className="ion-justify-content-center ion-align-items-center">
                                 <IonCol>
                                   <div>
                                     <IonLabel>{item.title}</IonLabel>
-                                    <IonGrid>
+                                    <IonGrid style={{ color: "#fff" }}>
                                       <IonRow>
                                         <IonCol>
-                                          <IonNote style={{ color: "#fff" }}>
-                                            Exp:
+                                        <IonNote>
+                                            Expire
+                                          </IonNote>
+                                        </IonCol>
+                                        <IonCol>
+                                        <IonNote>
+                                            Price
+                                          </IonNote>
+                                        </IonCol>
+                                      </IonRow>
+                                      <IonRow>
+                                        <IonCol>
+                                          <IonNote>
                                             <Countdown
                                               date={item.enddate}
                                               renderer={renderer}
@@ -398,7 +299,7 @@ const Listings: React.FC<Props> = ({ history }) => {
                                           </IonNote>
                                         </IonCol>
                                         <IonCol>
-                                          <IonNote style={{ color: "#fff" }}>
+                                          <IonNote>
                                             £{item.price}
                                           </IonNote>
                                         </IonCol>
@@ -418,23 +319,109 @@ const Listings: React.FC<Props> = ({ history }) => {
                         </IonCard>
                       </IonCol>
                     ))}
-                </IonRow>
-              </IonGrid>
-            </div>
-          )}
-        </div>
+                  </IonRow>
+                </IonGrid>
+              </div>
+            )}
 
-        {/* <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonButton
-            color="white"
-            className="button-custom button-icon button-sm button-brand"
-            onClick={() => {
-              window.location.reload();
-            }}
-          >
-            <IonIcon icon={reload} slot="icon-only" />
-          </IonButton>
-        </IonFab> */}
+            {segmentView === "FAVS" && (
+              <div>
+                <IonGrid>
+                  <IonRow>
+                    {favItems &&
+                      favItems!.map((item: Item, itemIndex: number) => (
+                        <IonCol key={itemIndex}>
+                          <IonCard
+                            style={{
+                              width: `${cardWidth}px`,
+                              height: "230px",
+                              margin: "auto",
+                            }}
+                          >
+                            <IonCardContent
+                              onClick={() => {
+                                dispatch(updateItemViews(item._id!));
+                                onClickItem(item);
+                              }}
+                              style={{
+                                padding: "0",
+                                cursor: "pointer",
+                                textAlign: "center",
+                              }}
+                            >
+                              {item && item.item_images && (
+                                <MainListingImgSwiper
+                                  images={item.item_images}
+                                />
+                              )}
+                              {isAuthenticated && (
+                                <span
+                                  className={
+                                    isFavourite(item._id!)
+                                      ? "verified-button"
+                                      : "not-verified-button"
+                                  }
+                                >
+                                  <IonIcon
+                                    icon={checkmarkDone}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      dispatch(
+                                        toggleFavourite(
+                                          item._id!,
+                                          CurrentUser._id
+                                        )
+                                      );
+                                    }}
+                                    style={{ cursor: "pointer" }}
+                                  />
+                                </span>
+                              )}
+                              <div className="listing-card-caption">
+                                <IonRow className="ion-justify-content-center ion-align-items-center">
+                                  <IonCol>
+                                    <div>
+                                      <IonLabel>{item.title}</IonLabel>
+                                      <IonGrid>
+                                        <IonRow>
+                                          <IonCol>
+                                            <IonNote style={{ color: "#fff" }}>
+                                              Exp:
+                                              <Countdown
+                                                date={item.enddate}
+                                                renderer={renderer}
+                                              />
+                                            </IonNote>
+                                          </IonCol>
+                                          <IonCol>
+                                            <IonNote style={{ color: "#fff" }}>
+                                              £{item.price}
+                                            </IonNote>
+                                          </IonCol>
+                                        </IonRow>
+                                      </IonGrid>
+                                    </div>
+                                  </IonCol>
+                                </IonRow>
+                              </div>
+                              {item.status && item.status === "sold" && (
+                                <div className="stamp stamp-sold">SOLD</div>
+                              )}
+                              {item.status && item.status === "pending" && (
+                                <div className="stamp stamp-pending">
+                                  PENDING
+                                </div>
+                              )}
+                            </IonCardContent>
+                          </IonCard>
+                        </IonCol>
+                      ))}
+                  </IonRow>
+                </IonGrid>
+              </div>
+            )}
+          </div>
+        )}
       </IonContent>
 
       <IonModal
@@ -443,133 +430,7 @@ const Listings: React.FC<Props> = ({ history }) => {
         enterAnimation={modalEnterZoomOut}
         leaveAnimation={modalLeaveZoomIn}
       >
-        <ListingFilters onClose={()=> setShowFilterModal(false)}/>
-        {/* <IonContent>
-          <div style={{ textAlign: "center" }}>
-            <h1>Filter</h1>
-          </div>
-
-          <IonList>
-            <IonItemDivider>Services</IonItemDivider>
-            <IonItem>
-              <IonLabel>Plumber</IonLabel>
-              <IonCheckbox
-                checked={listingFilter.Services.Plumber}
-                slot="end"
-                color="primary"
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel>Electrician</IonLabel>
-              <IonCheckbox
-                checked={listingFilter.Services.Electrician}
-                slot="end"
-                color="secondary"
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel>Food Drink</IonLabel>
-              <IonCheckbox
-                checked={listingFilter.Services.FoodDrink}
-                slot="end"
-                color="danger"
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel>Transport</IonLabel>
-              <IonCheckbox
-                checked={listingFilter.Services.Transport}
-                slot="end"
-                color="success"
-              />
-            </IonItem>
-            <IonItemDivider>Home</IonItemDivider>
-            <IonItem>
-              <IonLabel>Appliances</IonLabel>
-              <IonCheckbox
-                checked={listingFilter.Home.Appliances}
-                slot="end"
-                color="primary"
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel>Tools</IonLabel>
-              <IonCheckbox
-                checked={listingFilter.Home.Tools}
-                slot="end"
-                color="secondary"
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel>Furniture</IonLabel>
-              <IonCheckbox
-                checked={listingFilter.Home.Furniture}
-                slot="end"
-                color="danger"
-              />
-            </IonItem>
-            <IonItemDivider>Jobs</IonItemDivider>
-            <IonItem>
-              <IonLabel>IT</IonLabel>
-              <IonCheckbox
-                checked={listingFilter.Jobs.IT}
-                slot="end"
-                color="primary"
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel>Marketing</IonLabel>
-              <IonCheckbox
-                checked={listingFilter.Jobs.Marketing}
-                slot="end"
-                color="secondary"
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel>Management</IonLabel>
-              <IonCheckbox
-                checked={listingFilter.Jobs.Management}
-                slot="end"
-                color="danger"
-              />
-            </IonItem>
-            <IonItemDivider>Property</IonItemDivider>
-            <IonItem>
-              <IonLabel>Land</IonLabel>
-              <IonCheckbox
-                checked={listingFilter.Property.Land}
-                slot="end"
-                color="primary"
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel>Domestic</IonLabel>
-              <IonCheckbox
-                checked={listingFilter.Property.Domestic}
-                slot="end"
-                color="secondary"
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel>Commercial</IonLabel>
-              <IonCheckbox
-                checked={listingFilter.Property.Commercial}
-                slot="end"
-                color="danger"
-              />
-            </IonItem>
-          </IonList>
-          <IonFab vertical="bottom" horizontal="center" slot="fixed">
-            <IonButton
-              color="white"
-              className="button-custom button-icon button-sm button-brand"
-              onClick={() => setShowFilterModal(false)}
-            >
-              <IonIcon icon={close} slot="icon-only" />
-            </IonButton>
-          </IonFab>
-        </IonContent>
-       */}
+        <ListingFilters onClose={() => setShowFilterModal(false)} />
       </IonModal>
     </IonPage>
   );

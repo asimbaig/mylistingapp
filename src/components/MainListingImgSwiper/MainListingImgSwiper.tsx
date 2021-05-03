@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import {
-  IonModal, IonSlides, IonSlide
+  IonSlides, IonSlide
 } from '@ionic/react';
 import {
 

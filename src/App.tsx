@@ -45,7 +45,7 @@ import {
   chatbubbles,
   person,
   grid,
-  logIn,heartCircle, logOut
+  logIn,heartCircle
 } from "ionicons/icons";
 import "./App.scss";
 import FavouriteUsers from "./pages/FavouriteUsers/FavouriteUsers";
@@ -138,22 +138,17 @@ const App: React.FC = () => {
               className="color-gold"
             >
               <IonIcon icon={rose} />
-              <IonBadge color="primary">9</IonBadge>
+              <IonBadge color="danger">9</IonBadge>
             </IonTabButton>}
             <IonTabButton tab="chatstreams" href="/chatstreams">
               <IonIcon icon={chatbubbles} />
-              <IonBadge color="primary">10</IonBadge>
+              <IonBadge color="danger">10</IonBadge>
             </IonTabButton>
             {isAuthenticated && 
               <IonTabButton tab="me" href="/me">
                 <IonIcon icon={person} />
               </IonTabButton>
             }
-            {/* {isAuthenticated && 
-              <IonTabButton tab="logout" href="/logout">
-                <IonIcon icon={logOut} />
-              </IonTabButton>
-            } */}
             {!isAuthenticated && 
               <IonTabButton tab="login" href="/login">
                 <IonIcon icon={logIn} />

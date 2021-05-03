@@ -21,7 +21,7 @@ import {
   reload,
   informationCircle,
   checkmarkOutline,
-  closeCircle,
+  // closeCircle,
 } from "ionicons/icons";
 import "./Listings.scss";
 import "./FavouriteUsers.scss";
@@ -175,7 +175,7 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
                                 console.log("Right Click...");
                               }}
                             >
-                              <IonIcon
+                              {/* <IonIcon
                                 slot="end"
                                 style={{ color: "red" }}
                                 icon={closeCircle}
@@ -187,7 +187,7 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
                                     "profilecard" + itemIndex
                                   );
                                 }}
-                              />
+                              /> */}
                             </div>
                           </div>
                         </div>
