@@ -143,10 +143,8 @@ export const signup = (email: string, password: string): AppThunk => async (
 export const changeEmail = (newEmail: string): AppThunk => async (
   dispatch: AppDispatch
 ) => {};
-export const toggleFavourite = (
-  itemId: string,
-  userId: string
-): AppThunk => async (dispatch: AppDispatch) => {
+export const toggleFavourite = (itemId: string,userId: string): AppThunk => 
+async (dispatch: AppDispatch) => {
   setIsLoading(true);
   axios
     .post("users/updateFavs/" + userId, { itemId: itemId })
@@ -158,10 +156,8 @@ export const toggleFavourite = (
       setIsLoading(false);
     });
 };
-export const toggleFavUsers = (
-  favUserId: string,
-  userId: string
-): AppThunk => async (dispatch: AppDispatch) => {
+export const toggleFavUsers = (favUserId: string,userId: string): AppThunk => 
+async (dispatch: AppDispatch) => {
   setIsLoading(true);
   axios
     .post("users/updateFavUsers/" + userId, { userId: favUserId })
@@ -173,10 +169,8 @@ export const toggleFavUsers = (
       setIsLoading(false);
     });
 };
-export const updateMainImage = (
-  mainImage: string,
-  userId: string
-): AppThunk => async (dispatch: AppDispatch) => {
+export const updateMainImage = (mainImage: string,userId: string): AppThunk => 
+async (dispatch: AppDispatch) => {
   setIsLoading(true);
   //console.log("updateMainImage: ",mainImage, userId);
   axios
@@ -189,10 +183,8 @@ export const updateMainImage = (
       setIsLoading(false);
     });
 };
-export const changePassword = (
-  email: string,
-  newPassword: string
-): AppThunk => async (dispatch: AppDispatch) => {};
+export const changePassword = (email: string,newPassword: string): AppThunk => 
+async (dispatch: AppDispatch) => {};
 export const authCheckState = (): AppThunk => async (dispatch: AppDispatch) => {
   //setIsLoading(true);
   const token = localStorage.getItem("token");

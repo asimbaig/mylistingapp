@@ -12,14 +12,14 @@ import "swiper/components/scrollbar/scrollbar.scss";
 
 import { PhotoModel } from "../../redux/photoType";
 import { imgBaseUrl } from "../../redux/api-ref";
-
+import { guid } from "../../utils/utils";
 type Props = {
   images: PhotoModel[]
 }
 
 const MainListingImgSwiper: React.FC<Props> = ({ images }) => {
   const slideOpts = {
-    initialSlide: 1,
+    initialSlide: 0,
     speed: 400,
     scrollbar: true
   };
@@ -27,23 +27,12 @@ const MainListingImgSwiper: React.FC<Props> = ({ images }) => {
   if (images.length === 0) return null;
 
   return (
-    <div className="profile-image-slides">
-      <IonSlides pager={true} options={slideOpts}>
+    // <div className="profile-image-slides">
+      <IonSlides pager={true} options={slideOpts} key={guid()}>
         {images &&
           images.map((img, index) => {
             return (
-              // <IonSlide key={index}>
-              //   <div
-              //     style={{ 
-              //       height:"230px",
-              //       backgroundImage: `url('${imgBaseUrl + img.filename}')`,
-              //       backgroundPosition: "center",
-              //       backgroundRepeat: "no-repeat",
-              //       backgroundSize: "cover"
-              //     }}
-              //   />
-              // </IonSlide>
-              <IonSlide key={index}>
+              <IonSlide key={guid()+"-"+index}>
                 <div style={{height:"230px"}}>
                   <img src={ imgBaseUrl+img.filename } alt="" height="230px"></img>
                 </div>
@@ -51,7 +40,7 @@ const MainListingImgSwiper: React.FC<Props> = ({ images }) => {
             );
           })}
       </IonSlides>
-    </div>
+    // </div>
   );
 };
 

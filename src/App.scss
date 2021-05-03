@@ -1,43 +1,43 @@
-.tabs-page {
-  ion-tab-button {
-    .tab-icon-active {
-      display: none;
-    }
+// .tabs-page {
+//   ion-tab-button {
+//     .tab-icon-active {
+//       display: none;
+//     }
 
-    .tab-icon-inactive {
-      display: block;
-    }
+//     .tab-icon-inactive {
+//       display: block;
+//     }
 
-    &.tab-selected {
-      .tab-icon-active {
-        display: block;
-      }
+//     &.tab-selected {
+//       .tab-icon-active {
+//         display: block;
+//       }
 
-      .tab-icon-inactive {
-        display: none;
-      }
-    }
+//       .tab-icon-inactive {
+//         display: none;
+//       }
+//     }
 
-    &.color-gold {
-      &.tab-selected {
-        color: var(--color-button-gold) !important;
-      }
+//     &.color-gold {
+//       &.tab-selected {
+//         color: var(--color-button-gold) !important;
+//       }
 
-      ion-badge {
-        --ion-color-base: var(--color-button-gold) !important;
-      }
-    }
+//       ion-badge {
+//         --ion-color-base: var(--color-button-gold) !important;
+//       }
+//     }
 
-    .rotate-45 {
-      transform: rotate(45deg);
-    }
-  }
+//     .rotate-45 {
+//       transform: rotate(45deg);
+//     }
+//   }
 
-  ion-tabs {
-    padding-top: var(--ion-safe-area-top);
-  }
-}
+//   ion-tabs {
+//     padding-top: var(--ion-safe-area-top);
+//   }
+// }
 
-.tabs-top ion-tabs {
-  padding-top: var(--ion-safe-area-top);
-}
+// .tabs-top ion-tabs {
+//   padding-top: var(--ion-safe-area-top);
+// }

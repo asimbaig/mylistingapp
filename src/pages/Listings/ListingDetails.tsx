@@ -264,13 +264,21 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
               {ItemUser && (
                 <IonCard>
                   <IonCardHeader>
-                    <IonAvatar>
+                    <IonGrid>
+                      <IonRow>
+                        <IonCol style={{textAlign:"center"}}>
+                        <IonAvatar style={{margin:"auto"}}>
                       {itemUserImage && (
                         <img src={imgBaseUrl + itemUserImage} alt="" />
                       )}
                     </IonAvatar>
                     <IonNote color="primary">{ItemUser?.displayname}</IonNote>
-                    {isAuthenticated &&
+                        </IonCol>
+                        
+                      </IonRow>
+                      <IonRow>
+                      <IonCol>
+                        {isAuthenticated &&
                       (isFavUser(ItemUser._id) ? (
                         <IonButton
                           expand="full"
@@ -303,6 +311,11 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                           ></IonIcon>
                         </IonButton>
                       ))}
+                        </IonCol>   
+                      </IonRow>
+                    </IonGrid>
+                    
+                    
                   </IonCardHeader>
                   <IonCardContent>
                     {OtherUserItems && OtherUserItems.length > 0 && (

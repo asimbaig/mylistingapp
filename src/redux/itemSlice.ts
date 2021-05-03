@@ -6,6 +6,7 @@ import { UserModel } from "./userType";
 import axios from "./api-ref";
 import { setIsLoading } from "./appSlice";
 import { PhotoModel } from "./photoType";
+import { deletePhotoById } from "../services/photoService";
 
 const initialState: ItemModel = {
   items: [],
@@ -74,6 +75,15 @@ const itemsSlice = createSlice({
       let myitemIndex = state.myItems.findIndex((item => item._id === action.payload._id));
       state.myItems[myitemIndex] = action.payload;
     },
+    deleteItem(state, action: PayloadAction<Item>) {
+
+      // let itemIndex = state.items.findIndex((item => item._id === action.payload._id));
+      state.items = state.items.filter(item=>item._id!==action.payload._id);
+      state.myItems = state.myItems.filter(item=>item._id!==action.payload._id);
+      // let myitemIndex = state.myItems.findIndex((item => item._id === action.payload._id));
+      // state.myItems[myitemIndex] = action.payload;
+
+    },
     updateItemViews(state, action: PayloadAction<Item>) {
       // console.log("action.payload.views: "+ action.payload.views);
       state = {
@@ -130,15 +140,13 @@ export const editItem = (item: Item): AppThunk => async (
     });
 };
 export const loadItems = (): AppThunk => async (dispatch: AppDispatch) => {
-  setIsLoading(true);
+
   axios
     .get("items")
     .then((res) => {
       dispatch(itemsSlice.actions.loadItems(res.data as Item[]));
-      setIsLoading(false);
     })
     .catch((err) => {
-      setIsLoading(false);
     });
 };
 export const loadUserOtherItems = (userItemIds: String[]): AppThunk => async (
@@ -215,15 +223,25 @@ export const deleteItemImage = (
   photo: PhotoModel,
   itemId: string
 ): AppThunk => async (dispatch: AppDispatch) => {
-  setIsLoading(true);
   axios
     .post("items/deleteItemImage/" + itemId, photo)
     .then((res) => {
       dispatch(itemsSlice.actions.updateItem(res.data as Item));
-      setIsLoading(false);
     })
     .catch((err) => {
-      setIsLoading(false);
+    });
+};
+export const deleteItem = (item: Item): AppThunk => 
+async (dispatch: AppDispatch) => {
+  for(let i=0; i<item.item_images.length; i++){
+    deletePhotoById(item.item_images[i].file_id!);
+  }
+  axios
+    .delete("items/" + item._id)
+    .then((res) => {
+      dispatch(itemsSlice.actions.deleteItem(item));
+    })
+    .catch((err) => {
     });
 };
 export default itemsSlice.reducer;

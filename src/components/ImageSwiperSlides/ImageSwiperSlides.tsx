@@ -20,6 +20,7 @@ import {
 } from "../../animations/animations";
 import { PhotoModel } from "../../redux/photoType";
 import { imgBaseUrl } from "../../redux/api-ref";
+import { guid } from "../../utils/utils";
 
 type Props = {
   images: PhotoModel[]
@@ -43,6 +44,7 @@ const ImageSwiperSlides: React.FC<Props> = ({ images }) => {
   return (
     <div className="profile-image-slides">
       <Swiper 
+        key={guid()}
         effect="flip" 
         loop={true} 
         grabCursor={true} 
@@ -54,7 +56,7 @@ const ImageSwiperSlides: React.FC<Props> = ({ images }) => {
           images.map((img, index) => {
             return (
               <SwiperSlide
-                key={index}
+                key={guid()+index}
                 onClick={() => {
                   setSelectedPhoto(imgBaseUrl+img.filename);
                   setShowModal(true);

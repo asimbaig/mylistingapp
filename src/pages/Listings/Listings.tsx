@@ -18,7 +18,6 @@ import {
   IonCardContent,
   IonItem,
   IonNote,
-  createGesture,
   IonFab,
   IonButtons,
   IonModal,
@@ -29,7 +28,6 @@ import {
 } from "@ionic/react";
 import { RefresherEventDetail } from '@ionic/core';
 import {
-  reload,
   options,
   search,
   close,
@@ -54,6 +52,7 @@ import { setIsLoading } from "../../redux/appSlice";
 import Countdown from "react-countdown";
 import TopPicksItems from "../../components/TopPicksItems/TopPicksItems";
 import MainListingImgSwiper from "../../components/MainListingImgSwiper/MainListingImgSwiper";
+import ListingFilters from "../../components/ListingFilters/ListingFilters";
 
 type Props = {
   history: any;
@@ -66,29 +65,29 @@ const Listings: React.FC<Props> = ({ history }) => {
   const [favItems, setFavItems] = useState<Item[]>();
   const [showSearchbar, setShowSearchbar] = useState<boolean>(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
-  var listingFilter = {
-    Services: {
-      Plumber: true,
-      Electrician: true,
-      FoodDrink: true,
-      Transport: true,
-    },
-    Home: {
-      Appliances: true,
-      Tools: true,
-      Furniture: true,
-    },
-    Jobs: {
-      IT: true,
-      Marketing: true,
-      Management: true,
-    },
-    Property: {
-      Land: true,
-      Domestic: true,
-      Commercial: true,
-    },
-  };
+  // var listingFilter = {
+  //   Services: {
+  //     Plumber: true,
+  //     Electrician: true,
+  //     FoodDrink: true,
+  //     Transport: true,
+  //   },
+  //   Home: {
+  //     Appliances: true,
+  //     Tools: true,
+  //     Furniture: true,
+  //   },
+  //   Jobs: {
+  //     IT: true,
+  //     Marketing: true,
+  //     Management: true,
+  //   },
+  //   Property: {
+  //     Land: true,
+  //     Domestic: true,
+  //     Commercial: true,
+  //   },
+  // };
   const dispatch = useDispatch();
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
   const listings = useSelector((state: RootState) => state.listings.items);
@@ -130,7 +129,7 @@ const Listings: React.FC<Props> = ({ history }) => {
   }, [listings, userFavourites]);
 
   // Random component
-  const Completionist = () => <span>Expired!!</span>;
+  const Completionist = () => <span>Expired</span>;
 
   // Renderer callback with condition
   const renderer = (props: any) => {
@@ -141,7 +140,7 @@ const Listings: React.FC<Props> = ({ history }) => {
       // Render a countdown
       return (
         <span>
-          {props.days * 24 + props.hours}:{props.minutes}:{props.seconds}
+          {props.days>0 ? (props.days+"d:"):""}{props.hours}:{props.minutes}:{props.seconds}
         </span>
       );
     }
@@ -444,7 +443,8 @@ const Listings: React.FC<Props> = ({ history }) => {
         enterAnimation={modalEnterZoomOut}
         leaveAnimation={modalLeaveZoomIn}
       >
-        <IonContent>
+        <ListingFilters onClose={()=> setShowFilterModal(false)}/>
+        {/* <IonContent>
           <div style={{ textAlign: "center" }}>
             <h1>Filter</h1>
           </div>
@@ -569,6 +569,7 @@ const Listings: React.FC<Props> = ({ history }) => {
             </IonButton>
           </IonFab>
         </IonContent>
+       */}
       </IonModal>
     </IonPage>
   );

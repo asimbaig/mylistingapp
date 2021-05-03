@@ -41,70 +41,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { imgBaseUrl } from "../../redux/api-ref";
 import { deletePhotoById } from "../../services/photoService";
 import { PickerColumn } from "@ionic/core";
-import { editItem } from "../../redux/itemSlice";
+import { editItem, deleteItemImage } from "../../redux/itemSlice";
 import { addDays } from "../../utils/utils";
 import GMap from "../../components/GMap/GMap";
 import { usePosition } from "use-position";
 import { Point } from "../../redux/pointType";
+import { Categories, DayColumn, SubDayColumn} from "../../utils/utils";
 
 type Props = {
   currentItem: Item;
   onClose: () => void;
 };
-let Categories: String[] = ["Services", "Home", "Jobs", "Property", "Pets"];
-const DayColumn = {
-  name: "Category",
-  options: [
-    { text: "Services", value: 0 },
-    { text: "Home", value: 1 },
-    { text: "Jobs", value: 2 },
-    { text: "Property", value: 3 },
-    { text: "Pets", value: 4 },
-  ],
-} as PickerColumn;
-
-const SubDayColumn = [
-  {
-    name: "SubCategory",
-    options: [
-      { text: "Plumber", value: "Plumber" },
-      { text: "Electrician", value: "Electrician" },
-      { text: "FoodDrink", value: "FoodDrink" },
-      { text: "Transport", value: "Transport" },
-    ],
-  },
-  {
-    name: "SubCategory",
-    options: [
-      { text: "Appliances", value: "Appliances" },
-      { text: "Tools", value: "Tools" },
-      { text: "Furniture", value: "Furniture" },
-    ],
-  },
-  {
-    name: "SubCategory",
-    options: [
-      { text: "IT", value: "IT" },
-      { text: "Marketing", value: "Marketing" },
-      { text: "Management", value: "Management" },
-    ],
-  },
-  {
-    name: "SubCategory",
-    options: [
-      { text: "Land", value: "Land" },
-      { text: "Domestic", value: "Domestic" },
-      { text: "Commercial", value: "Commercial" },
-    ],
-  },
-  {
-    name: "SubCategory",
-    options: [
-      { text: "Animal", value: "Animal" },
-      { text: "Bird", value: "Bird" },
-    ],
-  },
-] as PickerColumn[];
 
 let TotalImageSlots = 3;
 
@@ -320,9 +267,14 @@ const ItemEditForm: React.FC<Props> = ({ currentItem, onClose }) => {
                             onClick={() => {
                               deletePhotoById(photo.file_id!)
                                 .then((res) => {
-                                  // dispatch(
-                                  //   deleteUserImage(photo, CurrentUser._id)
-                                  // );
+                                  dispatch(
+                                    deleteItemImage(photo, currentItem._id!)
+                                  );
+                                  setItemPhotos(itemPhotos.filter(img=>img.file_id!==photo.file_id));
+                                  // var index = itemPhotos.findIndex(img=>img.file_id===photo.file_id);
+                                  // if (index > -1) {
+                                  //   itemPhotos.splice(index, 1);
+                                  // }
                                 })
                                 .catch((err) => console.log(err));
                             }}

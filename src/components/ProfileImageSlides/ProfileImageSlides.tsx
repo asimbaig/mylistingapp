@@ -5,6 +5,7 @@ import {} from "ionicons/icons";
 import "./ProfileImageSlides.scss";
 import {PhotoModel} from "../../redux/photoType";
 import {imgBaseUrl} from "../../redux/api-ref"; 
+import { guid } from "../../utils/utils";
 
 type Props = {
   images: PhotoModel[];
@@ -79,6 +80,7 @@ const ProfileImageSlides: React.FC<Props> = ({
   return (
     <div className="profile-image-slides">
       <IonSlides
+        key={guid()}
         className="slides"
         ref={ionSlidesRef}
         onIonSlidesDidLoad={handleSlideLoaded}
@@ -87,7 +89,7 @@ const ProfileImageSlides: React.FC<Props> = ({
         onIonSlideReachEnd={handleReachEnd}
       >
         {images.map((image, index) => (
-          <IonSlide key={index}>
+          <IonSlide key={guid()+index}>
             <div
               className="slide-img background-img"
               style={{ backgroundImage: `url('${imgBaseUrl + image.filename}')` }}
@@ -98,7 +100,7 @@ const ProfileImageSlides: React.FC<Props> = ({
       <div className="custom-pagination">
         {images?.map((item, index) => (
           <div
-            key={index}
+            key={guid()+index}
             className={`pagination-bullet${
               activeIndex === index ? " pagination-bullet-active" : ""
             }`}

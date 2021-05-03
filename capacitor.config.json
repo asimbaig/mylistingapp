@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "com.mylisting.app",
+  "appId": "io.mylistings.ads.free",
+  "appName": "mylistings",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",

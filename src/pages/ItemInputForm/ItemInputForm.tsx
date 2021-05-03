@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import {
   IonHeader,
   IonToolbar,
@@ -14,24 +15,19 @@ import {
   IonList,
   IonListHeader,
   IonItem,
-  IonToggle,
   IonTextarea,
   IonNote,
   IonInput,
   IonDatetime,
-  IonSelect,
-  IonSelectOption,
   IonPicker,
-  IonText,
   IonRadioGroup,
   IonRadio,
-  IonItemDivider,
   IonToast,
 } from "@ionic/react";
 import { add, close } from "ionicons/icons";
 import "./ItemInputForm.scss";
 import { rangeArray } from "../../utils/utils";
-import { usePhotoGallery, Photo } from "../../hooks/usePhotoGallery";
+import { usePhotoGallery } from "../../hooks/usePhotoGallery";
 import { Item } from "../../redux/itemType";
 import { PhotoModel } from "../../redux/photoType";
 import { RootState } from "../../redux/rootReducer";
@@ -44,63 +40,12 @@ import { addDays } from "../../utils/utils";
 import GMap from "../../components/GMap/GMap";
 import { usePosition } from 'use-position';
 import { Point } from "../../redux/pointType";
+import { DayColumn, SubDayColumn} from "../../utils/utils";
 
 type Props = {
   onClose: () => void;
 };
-const DayColumn = {
-  name: "Category",
-  options: [
-    { text: "Services", value: 0 },
-    { text: "Home", value: 1 },
-    { text: "Jobs", value: 2 },
-    { text: "Property", value: 3 },
-    { text: "Pets", value: 4 },
-  ],
-} as PickerColumn;
 
-const SubDayColumn = [
-  {
-    name: "SubCategory",
-    options: [
-      { text: "Plumber", value: "Plumber" },
-      { text: "Electrician", value: "Electrician" },
-      { text: "FoodDrink", value: "FoodDrink" },
-      { text: "Transport", value: "Transport" },
-    ],
-  },
-  {
-    name: "SubCategory",
-    options: [
-      { text: "Appliances", value: "Appliances" },
-      { text: "Tools", value: "Tools" },
-      { text: "Furniture", value: "Furniture" },
-    ],
-  },
-  {
-    name: "SubCategory",
-    options: [
-      { text: "IT", value: "IT" },
-      { text: "Marketing", value: "Marketing" },
-      { text: "Management", value: "Management" },
-    ],
-  },
-  {
-    name: "SubCategory",
-    options: [
-      { text: "Land", value: "Land" },
-      { text: "Domestic", value: "Domestic" },
-      { text: "Commercial", value: "Commercial" },
-    ],
-  },
-  {
-    name: "SubCategory",
-    options: [
-      { text: "Animal", value: "Animal" },
-      { text: "Bird", value: "Bird" },
-    ],
-  },
-] as PickerColumn[];
 
 let TotalImageSlots = 3;
 

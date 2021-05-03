@@ -14,7 +14,7 @@ import {
   IonItemOptions,
   IonItemOption,
   IonFab,
-  IonModal,IonText
+  IonModal,IonText,IonAlert
 } from "@ionic/react";
 import { trash, create, add } from "ionicons/icons";
 import "./MyListings.scss";
@@ -22,6 +22,7 @@ import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { Item } from "../../redux/itemType";
 import { setIsLoading } from "../../redux/appSlice";
+import { deleteItem } from "../../redux/itemSlice";
 import ItemInputForm from "../ItemInputForm/ItemInputForm";
 import ItemEditForm from "../ItemEditForm/ItemEditForm";
 import { imgBaseUrl } from "../../redux/api-ref";
@@ -35,6 +36,8 @@ type Props = {};
 const MyListings: React.FC<Props> = () => {
   const [isInputFormOpen, setIsInputFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+  const [confirmDeleteAlert, setConfirmDeleteAlert] =useState(false);
+  const [selectToDel, setSelectToDel] = useState<Item>();
   const [editItem, setEditItem] = useState<Item | undefined>();
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(
@@ -128,7 +131,10 @@ const MyListings: React.FC<Props> = () => {
                 <IonItemOptions side="end">
                   <IonItemOption
                     color="danger"
-                    onClick={() => console.log("item 2")}
+                    onClick={() => {
+                      setSelectToDel(item);
+                      setConfirmDeleteAlert(true);
+                    }}
                   >
                     <IonIcon slot="icon-only" icon={trash} />
                   </IonItemOption>
@@ -181,6 +187,27 @@ const MyListings: React.FC<Props> = () => {
           }}
         />
       </IonModal>
+      <IonAlert
+          isOpen={confirmDeleteAlert}
+          header={'Please Confirm!'}
+          message={'Do you really want to delete this item?'}
+          buttons={[
+            {
+              text: 'Nope',
+              role: 'cancel',
+              cssClass: 'secondary',
+              handler: () => {}
+            },
+            {
+              text: 'Yeah',
+              handler: () => {
+                dispatch(deleteItem(selectToDel!))
+              }
+            }
+          ]}
+          onDidDismiss={() => setConfirmDeleteAlert(false)}
+          cssClass='my-custom-class'
+        />
     </IonPage>
   );
 };

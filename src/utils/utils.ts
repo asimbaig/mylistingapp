@@ -1,4 +1,5 @@
 import { Item } from '../redux/itemType';
+import { PickerColumn } from "@ionic/core";
 
 export const formatCountDownTime = (time: any) => {
   return `${time.hours}  :  ${time.minutes}  :  ${time.seconds}`;
@@ -84,3 +85,95 @@ export const createGroups = (arr: Item[], numGroups: number) => {
     .fill("")
     .map((_, i) => arr.slice(i * perGroup, (i + 1) * perGroup));
 };
+export const Categories: String[] = ["Services", "Home", "Jobs", "Property", "Pets","Electronics"];
+export const DayColumn = {
+  name: "Category",
+  options: [
+    { text: "Services", value: 0 },
+    { text: "Home", value: 1 },
+    { text: "Jobs", value: 2 },
+    { text: "Property", value: 3 },
+    { text: "Pets", value: 4 },
+    { text: "Electronics", value: 5 },
+  ],
+} as PickerColumn;
+
+export const SubDayColumn = [
+  {
+    name: "SubCategory",
+    options: [
+      { text: "Plumber", value: "Plumber" },
+      { text: "Electrician", value: "Electrician" },
+      { text: "FoodDrink", value: "FoodDrink" },
+      { text: "Transport", value: "Transport" },
+    ],
+  },
+  {
+    name: "SubCategory",
+    options: [
+      { text: "Appliances", value: "Appliances" },
+      { text: "Tools", value: "Tools" },
+      { text: "Furniture", value: "Furniture" },
+    ],
+  },
+  {
+    name: "SubCategory",
+    options: [
+      { text: "IT", value: "IT" },
+      { text: "Marketing", value: "Marketing" },
+      { text: "Management", value: "Management" },
+    ],
+  },
+  {
+    name: "SubCategory",
+    options: [
+      { text: "Land", value: "Land" },
+      { text: "Domestic", value: "Domestic" },
+      { text: "Commercial", value: "Commercial" },
+    ],
+  },
+  {
+    name: "SubCategory",
+    options: [
+      { text: "Animal", value: "Animal" },
+      { text: "Bird", value: "Bird" },
+    ],
+  },
+  {
+    name: "SubCategory",
+    options: [
+      { text: "Gadgets", value: "Gadgets" },
+    ],
+  },
+] as PickerColumn[];
+
+export const listingFilter = {
+  Services: {
+    Plumber: true,
+    Electrician: true,
+    FoodDrink: true,
+    Transport: true,
+  },
+  Home: {
+    Appliances: true,
+    Tools: true,
+    Furniture: true,
+  },
+  Jobs: {
+    IT: true,
+    Marketing: true,
+    Management: true,
+  },
+  Property: {
+    Land: true,
+    Domestic: true,
+    Commercial: true,
+  },
+  Electronics:{
+    Gadgets: true
+  }
+};
+export const guid = () => (S4() + "-" + S4() + "-4" + S4().substr(0,3)).toLowerCase();
+function S4() {
+  return (((1+Math.random())*0x10000)|0).toString(16).substring(1); 
+}
