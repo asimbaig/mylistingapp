@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButtons,IonIcon,
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButtons,IonIcon,IonToast,
   IonMenuButton, IonRow, IonCol, IonButton, IonList, IonItem, IonLabel, IonInput, IonText } from '@ionic/react';
-  import {  logInOutline, personAddOutline } from "ionicons/icons";
+  import {  logInOutline, personAddOutline, eyeOff, eye } from "ionicons/icons";
   import './Login.scss';
 import "./Landing.scss";
 
@@ -12,6 +12,7 @@ import "./Landing.scss";
 import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../../redux/authSlice";
+import { setShowToast, setToastMsg, setIsLoading } from "../../redux/appSlice";
 
 type Props = {
   history: any;
@@ -30,14 +31,26 @@ const Login: React.FC<Props> = ({history}) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [showHidePassword, setShowHidePassword] = useState(true);
   
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const isError = useSelector((state: RootState) => state.auth.error.isError);
+  const errorMsg = useSelector((state: RootState) => state.auth.error.errorMsg);
 
   useEffect(() => {
     if(isAuthenticated) {
+      dispatch(setIsLoading(false));
       history.push('/', {direction: 'none'});
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if(isError) {
+      dispatch(setIsLoading(false));
+      dispatch(setToastMsg(errorMsg));
+      dispatch(setShowToast(true));
+    }
+  }, [isError]);
 
   const loginUser = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +61,7 @@ const Login: React.FC<Props> = ({history}) => {
     if(!password) {
       setPasswordError(true);
     }
+    dispatch(setIsLoading(true));
     dispatch(login(email, password));
     if(email && password && isAuthenticated) {
       history.push('/');
@@ -56,6 +70,10 @@ const Login: React.FC<Props> = ({history}) => {
   const signup = ()=>{
       history.push("/signup");
   };
+  const toggleShowHidePassword = ()=> {
+    setShowHidePassword(!showHidePassword);
+  }
+
   return (
     <IonPage id="login-page">
       {/* <IonHeader>
@@ -89,8 +107,8 @@ const Login: React.FC<Props> = ({history}) => {
 
             <IonItem>
               <IonLabel position="stacked" color="primary">Password</IonLabel>
-              <IonInput name="password" type="password" value={password} onIonChange={e => setPassword(e.detail.value!)}>
-              </IonInput>
+              <IonInput name="password" type={showHidePassword ?"password":"text"} value={password} onIonChange={e => setPassword(e.detail.value!)}/>
+              <IonIcon slot="end" icon={showHidePassword ? eye : eyeOff} onClick={toggleShowHidePassword}/>
             </IonItem>
 
             {formSubmitted && passwordError && <IonText color="danger">
@@ -135,7 +153,7 @@ const Login: React.FC<Props> = ({history}) => {
         </form>
 
       </IonContent>
-
+              
     </IonPage>
   );
 };

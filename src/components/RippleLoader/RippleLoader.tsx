@@ -15,14 +15,14 @@ type Props = {
 }
 
 const RippleLoader: React.FC<Props> = ({ imageUrl }) => {
-  const [imgUrl, setImgUrl] = useState("./assets/img/user.jpg");
+  const [imgUrl, setImgUrl] = useState("./assets/icon/icon.png");
   const CurrentUser = useSelector((state: RootState) => state.auth.user);
 
   useEffect(() => {
     if(CurrentUser && CurrentUser.profileImages && CurrentUser.profileImages.length>0){
       setImgUrl(imgBaseUrl + CurrentUser.profileImages[0].filename);
     }else{
-      setImgUrl('./assets/images/usernophoto.jpg');
+      setImgUrl('./assets/icon/icon.png');
     }
   }, [])
   

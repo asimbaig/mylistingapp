@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { IonContent, IonPage, IonRow, IonCol, IonButton, IonList, IonItem, IonLabel, IonInput, IonText } from '@ionic/react';
+import React, { useState, useEffect } from 'react';
+import { IonContent, IonPage, IonRow, IonCol, IonButton, IonList, IonItem, IonLabel, IonInput, IonText, IonIcon } from '@ionic/react';
+import {  eyeOff, eye } from "ionicons/icons";
 import './Login.scss';
 import "./Landing.scss";
 import { signup } from "../../redux/authSlice";
 import { RootState } from "../../redux/rootReducer";
 import { useSelector, useDispatch } from "react-redux";
+import { setShowToast, setToastMsg } from "../../redux/appSlice";
 
 type Props = {
   history: any;
@@ -17,7 +19,15 @@ const Signup: React.FC<Props> = ({history}) => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-
+  const [showHidePassword, setShowHidePassword] = useState(true);
+  const isError = useSelector((state: RootState) => state.auth.error.isError);
+  const errorMsg = useSelector((state: RootState) => state.auth.error.errorMsg);
+  useEffect(() => {
+    if(isError) {
+      dispatch(setToastMsg(errorMsg));
+      dispatch(setShowToast(true));
+    }
+  }, [isError]);
   const SignupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
@@ -33,7 +43,9 @@ const Signup: React.FC<Props> = ({history}) => {
       history.push('/');
     }
   };
-
+  const toggleShowHidePassword = ()=> {
+    setShowHidePassword(!showHidePassword);
+  }
   return (
     <IonPage id="signup-page">
       <IonContent forceOverscroll={false} className="landing-page bg-gradient">
@@ -58,15 +70,23 @@ const Signup: React.FC<Props> = ({history}) => {
                 Email is required
               </p>
             </IonText>}
-
+            
             <IonItem>
+              <IonLabel position="stacked" color="primary">Password</IonLabel>
+              <IonInput name="password" type={showHidePassword ?"password":"text"} value={password} 
+                onIonChange={e => {setPassword(e.detail.value!);setPasswordError(false);}}/>
+              <IonIcon slot="end" icon={showHidePassword ? eye : eyeOff} onClick={toggleShowHidePassword}/>
+            </IonItem>   
+
+
+            {/* <IonItem>
               <IonLabel position="stacked" color="primary">Password</IonLabel>
               <IonInput name="password" type="password" value={password} onIonChange={e => {
                 setPassword(e.detail.value!);
                 setPasswordError(false);
               }}>
               </IonInput>
-            </IonItem>
+            </IonItem> */}
 
             {formSubmitted && passwordError && <IonText color="danger">
               <p className="ion-padding-start">

@@ -93,7 +93,7 @@ const Listings: React.FC<Props> = ({ history }) => {
     setTimeout(() => {
       dispatch(setIsLoading(false));
     }, 1500);
-  }, []);
+  }, [listings]);
 
   useEffect(() => {
     if (listings && userFavourites) {

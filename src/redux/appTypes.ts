@@ -1,4 +1,6 @@
 export interface AppModel {
     darkMode: boolean,
-    isLoading: boolean
+    isLoading: boolean,
+    showToast: boolean,
+    toastMsg: string
 }

@@ -26,8 +26,10 @@
     width: 92px;
     height: 92px;
     border-radius: 999em;
-    background-color: rgba(#fd5068, .2);
-    border: solid 1px rgba(#fd5068, .4);
+    // background-color: rgba(#fd5068, .2);
+    // border: solid 1px rgba(#fd5068, .4);
+    background-color: rgba(#ff9737, .2);
+    border: solid 1px rgba(#ff9737, .4);
     animation: rippling 2s infinite ease-out;
   }
 

@@ -38,7 +38,7 @@ import {
   IonTabBar,
   IonTabButton,
   IonIcon,
-  IonBadge,IonRow
+  IonBadge,IonRow, IonToast
 } from "@ionic/react";
 import {
   rose,
@@ -57,8 +57,9 @@ import Listings from "../src/pages/Listings/Listings";
 import ListingDetails from "../src/pages/Listings/ListingDetails";
 import Login from "../src/pages/Login/Login";
 import Signup from "../src/pages/Login/Signup";
+import { setShowToast } from "./redux/appSlice";
 import { loadItems } from "./redux/itemSlice";
-import { authCheckState } from "./redux/authSlice";
+import { authCheckState,setError } from "./redux/authSlice";
 import RippleLoader from "./components/RippleLoader/RippleLoader";
 import RedirectToLogin from "./pages/Settings/RedirectToLogin";
 import { IonAlert } from '@ionic/react';
@@ -76,6 +77,8 @@ const App: React.FC = () => {
   const { App } = Plugins;
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
+  const showToast = useSelector((state: RootState) => state.app.showToast);
+  const toastMsg = useSelector((state: RootState) => state.app.toastMsg);
   const [showBackAlert, setShowBackAlert] = useState(false);
 
   useEffect(() => {
@@ -178,6 +181,13 @@ const App: React.FC = () => {
           onDidDismiss={() => setShowBackAlert(false)}
           cssClass='my-custom-class'
         />
+        <IonToast
+          isOpen={showToast}
+          position="top"
+          onDidDismiss={() => {dispatch(setShowToast(false));dispatch(setError({isError:false, errorMsg:""})); }}
+          message={toastMsg}
+          duration={3000}
+        /> 
     </IonApp>
   );
 };

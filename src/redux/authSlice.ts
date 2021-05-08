@@ -4,9 +4,9 @@ import { AuthModel, ChatStream } from "./authtypes";
 import { UserModel } from "./userType";
 import { PhotoModel } from "./photoType";
 import { MsgModel } from "./MsgType";
+import { ErrorModel } from "./errorType";
 import axios from "./api-ref";
 import { loadMyItems, loadItems } from "./itemSlice";
-import { setIsLoading } from "./appSlice";
 
 const initialState: AuthModel = {
   isAuthenticated: false,
@@ -31,6 +31,7 @@ const initialState: AuthModel = {
   },
   favUserProfiles: [],
   msgFromUserProfiles: [],
+  error: {isError: false, errorMsg:""}
 };
 
 const authSlice = createSlice({
@@ -75,9 +76,13 @@ const authSlice = createSlice({
     setSelectedChatUser(state, action: PayloadAction<UserModel>) {
       state.selectedChatUser = action.payload;
     },
+    setError(state, action: PayloadAction<ErrorModel>) {
+      state.error = action.payload;
+    },
   },
 });
 export const { setSelectedChatUser } = authSlice.actions;
+export const { setError } = authSlice.actions;
 const checkAuthTimeout = (expirationTime: number): AppThunk => async (
   dispatch: AppDispatch
 ) => {
@@ -95,7 +100,6 @@ export const logout = (): AppThunk => async (dispatch: AppDispatch) => {
 export const login = (email: string, password: string): AppThunk => async (
   dispatch: AppDispatch
 ) => {
-  setIsLoading(true);
   const authData = {
     email: email,
     password: password,
@@ -111,15 +115,16 @@ export const login = (email: string, password: string): AppThunk => async (
       loadCurrentuserData(dispatch, response.data.userId, response.data.token);
       dispatch(loadMyItems(response.data.userId));
     })
-    .catch((err) => {
-      console.log(err);
-      setIsLoading(false);
+    .catch(function (error) {
+      if (error.response) {
+        dispatch(setError({isError:true, errorMsg:error.response.data.error}));
+      }
     });
 };
 export const signup = (email: string, password: string): AppThunk => async (
   dispatch: AppDispatch
 ) => {
-  setIsLoading(true);
+  
   const authData = {
     email: email,
     password: password,
@@ -135,9 +140,10 @@ export const signup = (email: string, password: string): AppThunk => async (
       loadCurrentuserData(dispatch, response.data.userId, response.data.token);
       //dispatch(loadMyItems(response.data.userId));
     })
-    .catch((err) => {
-      console.log(err);
-      setIsLoading(false);
+    .catch(function (error) {
+      if (error.response) {
+        dispatch(setError({isError:true, errorMsg:error.response.data.error}));
+      }
     });
 };
 export const changeEmail = (newEmail: string): AppThunk => async (
@@ -145,48 +151,48 @@ export const changeEmail = (newEmail: string): AppThunk => async (
 ) => {};
 export const toggleFavourite = (itemId: string,userId: string): AppThunk => 
 async (dispatch: AppDispatch) => {
-  setIsLoading(true);
+  
   axios
     .post("users/updateFavs/" + userId, { itemId: itemId })
     .then((res) => {
       dispatch(authSlice.actions.toggleFavourite(res.data.favourites));
-      setIsLoading(false);
+      
     })
     .catch((err) => {
-      setIsLoading(false);
+      
     });
 };
 export const toggleFavUsers = (favUserId: string,userId: string): AppThunk => 
 async (dispatch: AppDispatch) => {
-  setIsLoading(true);
+  
   axios
     .post("users/updateFavUsers/" + userId, { userId: favUserId })
     .then((res) => {
       dispatch(authSlice.actions.toggleFavUsers(res.data.favUsers));
-      setIsLoading(false);
+      
     })
     .catch((err) => {
-      setIsLoading(false);
+      
     });
 };
 export const updateMainImage = (mainImage: string,userId: string): AppThunk => 
 async (dispatch: AppDispatch) => {
-  setIsLoading(true);
+  
   //console.log("updateMainImage: ",mainImage, userId);
   axios
     .post("users/updateMainImage/" + userId, { mainImage: mainImage })
     .then((res) => {
       dispatch(authSlice.actions.setUser(res.data as UserModel));
-      setIsLoading(false);
+      
     })
     .catch((err) => {
-      setIsLoading(false);
+      
     });
 };
 export const changePassword = (email: string,newPassword: string): AppThunk => 
 async (dispatch: AppDispatch) => {};
 export const authCheckState = (): AppThunk => async (dispatch: AppDispatch) => {
-  //setIsLoading(true);
+  //
   const token = localStorage.getItem("token");
   let expirationTime: number = 0;
   if (localStorage.getItem("expiresAt")) {
@@ -220,38 +226,38 @@ export const updateUserImages = (
   photo: PhotoModel,
   userId: string
 ): AppThunk => async (dispatch: AppDispatch) => {
-  setIsLoading(true);
+  
   axios
     .post("users/updateUserImages/" + userId, photo)
     .then((res) => {
       dispatch(authSlice.actions.updateUserImages(res.data.profileImages));
       console.log(res.data);
-      setIsLoading(false);
+      
     })
     .catch((err) => {
-      setIsLoading(false);
+      
     });
 };
 export const deleteUserImage = (
   photo: PhotoModel,
   userId: string
 ): AppThunk => async (dispatch: AppDispatch) => {
-  setIsLoading(true);
+  
   axios
     .post("users/deleteUserImage/" + userId, photo)
     .then((res) => {
       dispatch(authSlice.actions.updateUserImages(res.data.profileImages));
-      setIsLoading(false);
+      
     })
     .catch((err) => {
-      setIsLoading(false);
+      
     });
 };
 export const FromUsersMsgs = (
   currentUser: UserModel,
   otherUserId: string
 ): AppThunk => async (dispatch: AppDispatch) => {
-  setIsLoading(true);
+  
   axios
     .post("users/FromUsersMsgs/" + currentUser._id, { fromUserId: otherUserId })
     .then((chat) => {
@@ -262,10 +268,10 @@ export const FromUsersMsgs = (
       chatStream.myMsgs = [...chatStream.myMsgs, ...otherUserMsgs];
       chatStream.myMsgs.sort(sortFunction);
       dispatch(authSlice.actions.setChatStream(chatStream));
-      setIsLoading(false);
+      
     })
     .catch((er) => {
-      setIsLoading(false);
+      
     });
 };
 const loadCurrentuserData = (
@@ -289,11 +295,11 @@ const loadCurrentuserData = (
             dispatch(
               authSlice.actions.loadFavUserProfiles(res.data as UserModel)
             );
-            setIsLoading(false);
+            
           })
           .catch((er) => {
             console.log(er);
-            setIsLoading(false);
+            
           });
       }
       for (var j = 0; j < res.data.msgFromUsers.length; j++) {
@@ -305,18 +311,18 @@ const loadCurrentuserData = (
             dispatch(
               authSlice.actions.loadMsgFromUserProfiles(res.data as UserModel)
             );
-            setIsLoading(false);
+            
           })
           .catch((er) => {
             console.log(er);
-            setIsLoading(false);
+            
           });
       }
       dispatch(loadMyItems(resUserId));
     })
     .catch((error) => {
       console.log(error);
-      setIsLoading(false);
+      
     });
 };
 function sortFunction(a: MsgModel, b: MsgModel) {
