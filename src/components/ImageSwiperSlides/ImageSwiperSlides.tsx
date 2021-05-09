@@ -62,7 +62,8 @@ const ImageSwiperSlides: React.FC<Props> = ({ images }) => {
                   setShowModal(true);
                 }}
               >
-                <div className="slide-img background-img" style={{ backgroundImage: `url('${ imgBaseUrl+img.filename }')` }} />
+                <img src={ imgBaseUrl+img.filename } alt=""></img>
+                {/* <div className="slide-img background-img" style={{ backgroundImage: `url('${ imgBaseUrl+img.filename }')` }} /> */}
               </SwiperSlide>
             );
           })}

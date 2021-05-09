@@ -86,22 +86,23 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
       setItemUserImage("9407f5725354bc7c651f916351f836fc.jpg");
     }
   }, [ItemUser]);
-  useEffect(() => {
-    if (selectedItem?.item_images.length === 0) {
-      setSlideImages([placeHolderItemPhoto, placeHolderItemPhoto].reverse());
-    } else if (selectedItem?.item_images.length === 1) {
-      setSlideImages(
-        [...selectedItem.item_images, placeHolderItemPhoto].reverse()
-      );
-    } else {
-      setSlideImages([...selectedItem?.item_images!].reverse());
-    }
-  }, [selectedItem]);
+  
+  // useEffect(() => {
+  //   if (selectedItem?.item_images.length === 0) {
+  //     setSlideImages([placeHolderItemPhoto, placeHolderItemPhoto].reverse());
+  //   } else if (selectedItem?.item_images.length === 1) {
+  //     setSlideImages(
+  //       [...selectedItem.item_images, placeHolderItemPhoto].reverse()
+  //     );
+  //   } else {
+  //     setSlideImages([...selectedItem?.item_images!].reverse());
+  //   }
+  // }, [selectedItem]);
 
   const isFavUser = (currentfavuserId: string) => {
     if (favUsers) {
       var index = favUsers.findIndex((fuid) => fuid === currentfavuserId);
-      if (index && index > -1) {
+      if (index > -1) {
         return true;
       } else {
         return false;
@@ -122,7 +123,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
   const isFavourite = (currentItemId: string) => {
     if (userFavourites) {
       var index = userFavourites.findIndex((fid) => fid === currentItemId);
-      if (index && index > -1) {
+      if (index > -1) {
         return true;
       } else {
         return false;
@@ -149,7 +150,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
           <div>
             <div className="profile-header">
               {selectedItem && selectedItem.item_images && (
-                <ImageSwiperSlides images={slideImages} />
+                <ImageSwiperSlides images={selectedItem?.item_images} />
               )}
               {selectedItem.status && selectedItem.status === "sold" && (
                 <div className="stamp stamp-sold">SOLD</div>

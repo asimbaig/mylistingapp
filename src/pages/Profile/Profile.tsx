@@ -19,6 +19,7 @@ import {
   locationOutline,
 } from "ionicons/icons";
 import ProfileImageSlides from "../../components/ProfileImageSlides/ProfileImageSlides";
+import ImageSwiperSlides from "../../components/ImageSwiperSlides/ImageSwiperSlides";
 import "./Profile.scss";
 import { UserModel } from "../../redux/userType";
 import { Item } from "../../redux/itemType";

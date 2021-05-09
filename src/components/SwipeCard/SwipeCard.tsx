@@ -9,6 +9,7 @@ import {
 } from "ionicons/icons";
 import "./SwipeCard.scss";
 import ProfileImageSlides from "../ProfileImageSlides/ProfileImageSlides";
+import ImageSwiperSlides from "../ImageSwiperSlides/ImageSwiperSlides";
 import { UserModel } from "../../redux/userType";
 
 type Props = {
@@ -42,11 +43,8 @@ const SwipeCard: React.FC<Props> = ({
     <div className="swipe-card">
       <ProfileImageSlides
         images={user?.profileImages!}
-        isClickable
-        onNoMoreSlide={handleNoMoreSlide}
-        onChange={handleSlideChange}
       />
-
+      {/* <ImageSwiperSlides images={user?.profileImages!} /> */}
       <div className="card-caption">
         <IonRow className="ion-justify-content-center ion-align-items-center">
           <IonCol>

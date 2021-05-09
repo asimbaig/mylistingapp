@@ -88,12 +88,12 @@ const Listings: React.FC<Props> = ({ history }) => {
     }
   }, []);
 
-  useEffect(() => {
-    dispatch(setIsLoading(true));
-    setTimeout(() => {
-      dispatch(setIsLoading(false));
-    }, 1500);
-  }, [listings]);
+  // useEffect(() => {
+  //   dispatch(setIsLoading(true));
+  //   setTimeout(() => {
+  //     dispatch(setIsLoading(false));
+  //   }, 1500);
+  // }, [listings]);
 
   useEffect(() => {
     if (listings && userFavourites) {
@@ -131,7 +131,7 @@ const Listings: React.FC<Props> = ({ history }) => {
   const isFavourite = (currentItemId: string) => {
     if (userFavourites) {
       var index = userFavourites.findIndex((fid) => fid === currentItemId);
-      if (index && index > -1) {
+      if (index > -1) {
         return true;
       } else {
         return false;
@@ -279,29 +279,29 @@ const Listings: React.FC<Props> = ({ history }) => {
                                     <IonGrid style={{ color: "#fff" }}>
                                       <IonRow>
                                         <IonCol>
-                                        <IonNote>
+                                        <IonText>
                                             Expire
-                                          </IonNote>
+                                          </IonText>
                                         </IonCol>
                                         <IonCol>
-                                        <IonNote>
+                                        <IonText>
                                             Price
-                                          </IonNote>
+                                          </IonText>
                                         </IonCol>
                                       </IonRow>
                                       <IonRow>
                                         <IonCol>
-                                          <IonNote>
+                                          <IonText>
                                             <Countdown
                                               date={item.enddate}
                                               renderer={renderer}
                                             />
-                                          </IonNote>
+                                          </IonText>
                                         </IonCol>
                                         <IonCol>
-                                          <IonNote>
+                                          <IonText>
                                             £{item.price}
-                                          </IonNote>
+                                          </IonText>
                                         </IonCol>
                                       </IonRow>
                                     </IonGrid>
