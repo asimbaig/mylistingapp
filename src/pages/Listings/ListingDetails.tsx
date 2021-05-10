@@ -22,7 +22,7 @@ import {
   IonModal,
 } from "@ionic/react";
 import {
-  arrowBack,
+  arrowDown,
   thumbsUp,
   thumbsUpOutline,
   mail,
@@ -46,6 +46,7 @@ import {
 } from "../../animations/animations";
 import GMap from "../../components/GMap/GMap";
 
+
 let placeHolderItemPhoto: PhotoModel = {
   file_id: "60887ac4014be60015d3c9c1",
   filename: "86b27f95d6f85147e8ac12616f841238.jpg",
@@ -53,9 +54,9 @@ let placeHolderItemPhoto: PhotoModel = {
 };
 
 type Props = {
-  history: any;
+  onClose: () => void;
 };
-const ListingDetails: React.FC<Props> = ({ history }) => {
+const ListingDetails: React.FC<Props> = ({ onClose }) => {
   const dispatch = useDispatch();
   const [slideImages, setSlideImages] = useState<PhotoModel[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -87,17 +88,17 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
     }
   }, [ItemUser]);
   
-  // useEffect(() => {
-  //   if (selectedItem?.item_images.length === 0) {
-  //     setSlideImages([placeHolderItemPhoto, placeHolderItemPhoto].reverse());
-  //   } else if (selectedItem?.item_images.length === 1) {
-  //     setSlideImages(
-  //       [...selectedItem.item_images, placeHolderItemPhoto].reverse()
-  //     );
-  //   } else {
-  //     setSlideImages([...selectedItem?.item_images!].reverse());
-  //   }
-  // }, [selectedItem]);
+  useEffect(() => {
+    if (selectedItem?.item_images.length === 0) {
+      setSlideImages([placeHolderItemPhoto, placeHolderItemPhoto].reverse());
+    } else if (selectedItem?.item_images.length === 1) {
+      setSlideImages(
+        [...selectedItem.item_images, placeHolderItemPhoto].reverse()
+      );
+    } else {
+      setSlideImages([...selectedItem?.item_images!].reverse());
+    }
+  }, [selectedItem]);
 
   const isFavUser = (currentfavuserId: string) => {
     if (favUsers) {
@@ -109,16 +110,16 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
       }
     }
   };
-  const onClose = () => {
-    history.push("/listings");
-  };
+  // const onClose = () => {
+  //   history.push("/listings");
+  // };
   const onClickItem = (item: Item) => {
-    setIsLoading(true);
-    dispatch(setSelectItem(item));
-    setTimeout(() => {
-      setIsLoading(false);
-      history.push("/listingdetails");
-    }, 1000);
+    // setIsLoading(true);
+    // dispatch(setSelectItem(item));
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    //   history.push("/listingdetails");
+    // }, 1000);
   };
   const isFavourite = (currentItemId: string) => {
     if (userFavourites) {
@@ -132,7 +133,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
   };
 
   return (
-    <IonPage>
+    <>
       <IonHeader>
         <IonToolbar
           className="toolbar-reduced toolbar-no-border"
@@ -150,7 +151,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
           <div>
             <div className="profile-header">
               {selectedItem && selectedItem.item_images && (
-                <ImageSwiperSlides images={selectedItem?.item_images} />
+                <ImageSwiperSlides images={slideImages} />
               )}
               {selectedItem.status && selectedItem.status === "sold" && (
                 <div className="stamp stamp-sold">SOLD</div>
@@ -164,7 +165,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                   className="button-custom button-icon button-sm button-brand"
                   onClick={onClose}
                 >
-                  <IonIcon icon={arrowBack} slot="icon-only" />
+                  <IonIcon icon={arrowDown} slot="icon-only" />
                 </IonButton>
               </IonFab>
             </div>
@@ -326,7 +327,8 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                         ).map((otherItem: Item, index: number) => (
                           <IonItem
                             key={index}
-                            onClick={() => onClickItem(otherItem)}
+                            // onClick={() => onClickItem(otherItem)}
+                            onClick={() => dispatch(setSelectItem(otherItem))}
                             style={{ cursor: "pointer" }}
                           >
                             {/* <IonAvatar>
@@ -395,7 +397,7 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
                 className="button-custom button-icon button-sm button-brand"
                 onClick={onClose}
               >
-                <IonIcon icon={arrowBack} slot="icon-only" />
+                <IonIcon icon={arrowDown} slot="icon-only" />
               </IonButton>
             </IonFab>
           </div>
@@ -410,14 +412,14 @@ const ListingDetails: React.FC<Props> = ({ history }) => {
         <SendMsg
           onClose={() => setIsSendMsgOpen(false)}
           itemImage={
-            selectedItem!.item_images.length > 0
+            (selectedItem && selectedItem!.item_images.length > 0)
               ? selectedItem!.item_images[0].filename!
               : "./assets/images/itemnophoto.jpg"
           }
           itemUser={ItemUser!}
         />
       </IonModal>
-    </IonPage>
+    </>
   );
 };
 

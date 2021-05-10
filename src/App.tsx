@@ -41,7 +41,7 @@ import {
   IonBadge,IonRow, IonToast
 } from "@ionic/react";
 import {
-  rose,
+  disc,
   chatbubbles,
   person,
   grid,
@@ -140,7 +140,7 @@ const App: React.FC = () => {
               href="/mylistings"
               className="color-gold"
             >
-              <IonIcon icon={rose} />
+              <IonIcon icon={disc} />
               <IonBadge color="danger">9</IonBadge>
             </IonTabButton>}
             <IonTabButton tab="chatstreams" href="/chatstreams">

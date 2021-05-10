@@ -16,16 +16,16 @@ import {
   } from "ionicons/icons";
   
   type Props = {
-    onClose: ()=>void;
+    // onClose: ()=>void;
   };
   
-const ListingFilters: React.FC<Props> = ({ onClose }) => {
+const ListingFilters: React.FC<Props> = () => {
  
     return (
         <IonContent>
-          <div style={{ textAlign: "center" }}>
+          {/* <div style={{ textAlign: "center" }}>
             <h1>Filter</h1>
-          </div>
+          </div> */}
 
           <IonList>
             <IonItemDivider>Services</IonItemDivider>
@@ -137,7 +137,7 @@ const ListingFilters: React.FC<Props> = ({ onClose }) => {
               />
             </IonItem>
           </IonList>
-          <IonFab vertical="bottom" horizontal="center" slot="fixed">
+          {/* <IonFab vertical="bottom" horizontal="center" slot="fixed">
             <IonButton
               color="white"
               className="button-custom button-icon button-sm button-brand"
@@ -145,7 +145,7 @@ const ListingFilters: React.FC<Props> = ({ onClose }) => {
             >
               <IonIcon icon={close} slot="icon-only" />
             </IonButton>
-          </IonFab>
+          </IonFab> */}
         </IonContent>
     )
 }

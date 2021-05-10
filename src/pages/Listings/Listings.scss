@@ -315,3 +315,12 @@ ion-col {
 ion-text{
   font-size: x-small;
 }
+.bottom-drawer {
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: -700px;
+  height: 730px;
+  border-radius: 15px;
+  margin: 0;
+}

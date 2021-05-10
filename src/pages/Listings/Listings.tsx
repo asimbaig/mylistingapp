@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   IonPage,
   IonHeader,
@@ -21,14 +21,16 @@ import {
   IonModal,
   IonText,
   IonRefresher,
-  IonRefresherContent,
+  IonRefresherContent,IonPopover, createGesture,IonCardHeader
 } from "@ionic/react";
 import { RefresherEventDetail } from "@ionic/core";
 import {
+  chevronUp,
+  chevronDown,
   options,
   search,
   checkmarkDone,
-  chevronDownCircleOutline,
+  chevronDownCircleOutline,mail
 } from "ionicons/icons";
 import "./Listings.scss";
 import { RootState } from "../../redux/rootReducer";
@@ -50,18 +52,23 @@ import Countdown from "react-countdown";
 import TopPicksItems from "../../components/TopPicksItems/TopPicksItems";
 import MainListingImgSwiper from "../../components/MainListingImgSwiper/MainListingImgSwiper";
 import ListingFilters from "../../components/ListingFilters/ListingFilters";
+import ListingDetails from "./ListingDetails";
 
 type Props = {
   history: any;
 };
 
 const Listings: React.FC<Props> = ({ history }) => {
+  const drawerRef = useRef();
   const windowWidth = window.innerWidth;
   const [segmentView, setSegmentView] = useState<string>("LIST");
   const [cardWidth, setCardWidth] = useState(200);
   const [favItems, setFavItems] = useState<Item[]>();
   const [showSearchbar, setShowSearchbar] = useState<boolean>(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [isListingDetailOpen, setIsListingDetailOpen] = useState<boolean>(false);
+  const [drawerPosition, setDrawerPosition] = useState<boolean>(true);
+
   const dispatch = useDispatch();
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
   const listings = useSelector((state: RootState) => state.listings.items);
@@ -86,6 +93,48 @@ const Listings: React.FC<Props> = ({ history }) => {
     } else {
       setCardWidth(200);
     }
+  }, []);
+
+  useEffect(() => {
+    const card = document.getElementById("bottomUpCard");
+    const gesture = createGesture({
+      el: card!,
+      gestureName: "my-swipe",
+      direction: "y",
+      /**
+       * when moving, we start to show more of the drawer
+       */
+      onMove: event => {
+        if (event.deltaY < -730) return;
+
+        // closing with a downward swipe
+        if (event.deltaY > 30) {
+          card!.style.transform = "";
+          card!.dataset!.open = "false";
+          return;
+        }
+
+        card!.style.transform = `translateY(${event.deltaY}px)`;
+      },
+      /**
+       * when the moving is done, based on a specific delta in the movement; in this
+       * case that value is -150, we determing the user wants to open the drawer.
+       *
+       * if not we just reset the drawer state to closed
+       */
+      onEnd: event => {
+        card!.style.transition = ".3s ease-out";
+
+        if (event.deltaY < -30 && card!.dataset.open !== "true") {
+          card!.style.transform = `translateY(${-680}px) `;
+          card!.dataset.open = "true";
+          console.log("in on end");
+        }
+      }
+    });
+
+    // enable the gesture for the item
+    gesture.enable(true);
   }, []);
 
   // useEffect(() => {
@@ -119,14 +168,29 @@ const Listings: React.FC<Props> = ({ history }) => {
       );
     }
   };
-
+  const toggleDrawer = () => {
+    //let c = drawerRef.current;
+    const c = document.getElementById("bottomUpCard");
+    if (c?.dataset.open === "true") {
+      c.style.transition = ".3s ease-out";
+      c.style.transform = "";
+      c.dataset.open = "false";
+      setDrawerPosition(true);
+    } else {
+      c!.style.transition = ".3s ease-in";
+      c!.style.transform = `translateY(${-680}px) `;
+      c!.dataset.open = "true";
+      setDrawerPosition(false);
+    }
+  };
   const onClickItem = (item: Item) => {
-    setIsLoading(true);
+    // setIsLoading(true);
     dispatch(setSelectItem(item));
-    setTimeout(() => {
-      setIsLoading(false);
-      history.push("/listingdetails");
-    }, 1000);
+    setIsListingDetailOpen(true);
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    //   history.push("/listingdetails");
+    // }, 1000);
   };
   const isFavourite = (currentItemId: string) => {
     if (userFavourites) {
@@ -422,15 +486,49 @@ const Listings: React.FC<Props> = ({ history }) => {
             )}
           </div>
         )}
+        
       </IonContent>
-
-      <IonModal
+      <IonCard className="bottom-drawer" id="bottomUpCard">
+          <div style={{ textAlign: "right" }}>
+            <IonButton
+              // expand="full"
+              size="small"
+              fill="clear"
+              slot="end"
+              style={{ height: 20 }}
+              onClick={toggleDrawer}
+            >
+             Filters <IonIcon slot="end" icon={drawerPosition ? chevronUp: chevronDown}></IonIcon>
+            </IonButton>
+          </div>
+          {/* <IonCardHeader>Filters</IonCardHeader> */}
+          <ListingFilters />
+        </IonCard>                            
+      {/* <IonModal
         swipeToClose
         isOpen={showFilterModal}
         enterAnimation={modalEnterZoomOut}
         leaveAnimation={modalLeaveZoomIn}
       >
         <ListingFilters onClose={() => setShowFilterModal(false)} />
+      </IonModal> */}
+       {/* <IonPopover
+        cssClass='my-custom-class'
+        isOpen={showFilterModal}
+        // onDidDismiss={() => setShowFilterModal(false)}
+      >
+        <ListingFilters onClose={() => setShowFilterModal(false)} />
+      </IonPopover>
+  */}
+      <IonModal 
+        isOpen={isListingDetailOpen}
+        swipeToClose
+        enterAnimation={modalEnterZoomOut}
+        leaveAnimation={modalLeaveZoomIn}
+      >
+        <ListingDetails
+          onClose={() => setIsListingDetailOpen(false)}
+        />
       </IonModal>
     </IonPage>
   );

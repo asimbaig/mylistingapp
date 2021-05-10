@@ -19,10 +19,10 @@ const SendMsgHeader: React.FC<Props> = ({ itemUser }) => {
   return (
     <div className="label-matched">
       <div className="matched-title">
-        <div className="text-its">Message : {itemUser.displayname}</div>
+        <div className="text-its">Message : {itemUser?.displayname}</div>
         <div id="outer-div">
               <div  id="inner-div">
-                <img src={imgBaseUrl + itemUser.profileImages[0].filename} alt=""/>
+                <img src={imgBaseUrl + itemUser?.profileImages[0].filename} alt=""/>
               </div>  
           </div>
         {/* <div className="text-match">
