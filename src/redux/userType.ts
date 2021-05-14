@@ -18,4 +18,5 @@ export interface UserModel {
   favUsers: string[];
   msgFromUsers: string[];
   messages: MsgModel[];
+  showAppHint: boolean;
 }

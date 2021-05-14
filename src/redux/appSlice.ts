@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { AppThunk, AppDispatch } from './store';
 import { AppModel } from "./appTypes";
 
-const initialState: AppModel = { darkMode: false, isLoading: false, showToast: false, toastMsg: "" };
+const initialState: AppModel = { darkMode: false, isLoading: false, showToast: false, toastMsg: ""};
 
 const appSlice = createSlice({
     name: 'app',
@@ -27,6 +27,6 @@ export const { setDarkMode } = appSlice.actions;
 export const { setIsLoading } = appSlice.actions;
 export const { setShowToast } = appSlice.actions;
 export const { setToastMsg } = appSlice.actions;
-
+//export const { setShowAppHint } = appSlice.actions;
 
 export default appSlice.reducer;

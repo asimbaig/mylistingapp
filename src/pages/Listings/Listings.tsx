@@ -280,11 +280,11 @@ const Listings: React.FC<Props> = ({ history }) => {
                       <IonIcon slot="icon-only" icon={search}></IonIcon>
                     </IonButton>
                   )}
-                  {!showSearchbar && (
+                  {/* {!showSearchbar && (
                     <IonButton onClick={() => setShowFilterModal(true)}>
                       <IonIcon icon={options} slot="icon-only" />
                     </IonButton>
-                  )}
+                  )} */}
                 </IonButtons>
 
                 <IonGrid>
@@ -522,7 +522,7 @@ const Listings: React.FC<Props> = ({ history }) => {
   */}
       <IonModal 
         isOpen={isListingDetailOpen}
-        swipeToClose
+        backdropDismiss={false}
         enterAnimation={modalEnterZoomOut}
         leaveAnimation={modalLeaveZoomIn}
       >

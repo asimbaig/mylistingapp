@@ -136,11 +136,19 @@ ion-avatar, ion-thumbnail {
   background-size: cover;
   background-repeat: no-repeat;
   height: 100px;
+  transition: all .5s ease;
 
   &.square {
     height: 0px;
     padding-bottom: 100%;
   }
+}
+.background-img:hover {
+  -webkit-transform: scale(2.0);
+  -moz-transform: scale(2.0);
+  -o-transform: scale(2.0);
+  -ms-transform: scale(2.0); /* IE 9 */ 
+  transform: scale(2.0);
 }
 
 .text-ellipsis {

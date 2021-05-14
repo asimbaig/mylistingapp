@@ -1,11 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
-import {
-  IonModal
-} from '@ionic/react';
-import {
-
-} from 'ionicons/icons';
-import './ImageSwiperSlides.scss';
+import React, { useState, useEffect } from "react";
+import { IonModal } from "@ionic/react";
+import {} from "ionicons/icons";
+import "./ImageSwiperSlides.scss";
 import "swiper/swiper.scss";
 import "swiper/components/effect-flip/effect-flip.scss";
 import "swiper/components/scrollbar/scrollbar.scss";
@@ -23,8 +19,8 @@ import { imgBaseUrl } from "../../redux/api-ref";
 import { guid } from "../../utils/utils";
 
 type Props = {
-  images: PhotoModel[]
-}
+  images: PhotoModel[];
+};
 
 const ImageSwiperSlides: React.FC<Props> = ({ images }) => {
   SwiperCore.use([EffectFlip, Scrollbar]);
@@ -43,26 +39,27 @@ const ImageSwiperSlides: React.FC<Props> = ({ images }) => {
 
   return (
     <div className="profile-image-slides">
-      <Swiper 
+      <Swiper
         key={guid()}
-        effect="flip" 
-        loop={true} 
-        grabCursor={true} 
-        preloadImages={true} 
+        effect="flip"
+        loop={true}
+        grabCursor={true}
+        preloadImages={true}
         scrollbar
         className="slides"
-        >
-        {loadSwiper && images &&
+      >
+        {loadSwiper &&
+          images &&
           images.map((img, index) => {
             return (
               <SwiperSlide
-                key={guid()+index}
+                key={guid() + index}
                 onClick={() => {
-                  setSelectedPhoto(imgBaseUrl+img.filename);
+                  setSelectedPhoto(imgBaseUrl + img.filename);
                   setShowModal(true);
                 }}
               >
-                <img src={ imgBaseUrl+img.filename } alt=""></img>
+                <img src={imgBaseUrl + img.filename} alt=""></img>
                 {/* <div className="slide-img background-img" style={{ backgroundImage: `url('${ imgBaseUrl+img.filename }')` }} /> */}
               </SwiperSlide>
             );
@@ -70,14 +67,17 @@ const ImageSwiperSlides: React.FC<Props> = ({ images }) => {
       </Swiper>
 
       <IonModal
-          swipeToClose
-          isOpen={showModal}
-          enterAnimation={modalEnterZoomOut}
-          leaveAnimation={modalLeaveZoomIn}
-          cssClass="fullscreen"
-        >
-          <FullScreenModal image={selectedPhoto} onClose={()=>setShowModal(false)} />
-        </IonModal>
+        swipeToClose
+        isOpen={showModal}
+        enterAnimation={modalEnterZoomOut}
+        leaveAnimation={modalLeaveZoomIn}
+        cssClass="fullscreen"
+      >
+        <FullScreenModal
+          image={selectedPhoto}
+          onClose={() => setShowModal(false)}
+        />
+      </IonModal>
     </div>
   );
 };

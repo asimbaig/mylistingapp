@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  IonPage,
   IonHeader,
   IonToolbar,
   IonContent,
@@ -46,7 +45,6 @@ import {
 } from "../../animations/animations";
 import GMap from "../../components/GMap/GMap";
 
-
 let placeHolderItemPhoto: PhotoModel = {
   file_id: "60887ac4014be60015d3c9c1",
   filename: "86b27f95d6f85147e8ac12616f841238.jpg",
@@ -87,17 +85,19 @@ const ListingDetails: React.FC<Props> = ({ onClose }) => {
       setItemUserImage("9407f5725354bc7c651f916351f836fc.jpg");
     }
   }, [ItemUser]);
-  
+
   useEffect(() => {
-    if (selectedItem?.item_images.length === 0) {
-      setSlideImages([placeHolderItemPhoto, placeHolderItemPhoto].reverse());
-    } else if (selectedItem?.item_images.length === 1) {
-      setSlideImages(
-        [...selectedItem.item_images, placeHolderItemPhoto].reverse()
-      );
-    } else {
-      setSlideImages([...selectedItem?.item_images!].reverse());
-    }
+    setTimeout(() => {
+      if (selectedItem && selectedItem?.item_images.length === 0) {
+        setSlideImages([placeHolderItemPhoto, placeHolderItemPhoto].reverse());
+      } else if (selectedItem && selectedItem?.item_images.length === 1) {
+        setSlideImages(
+          [...selectedItem.item_images, placeHolderItemPhoto].reverse()
+        );
+      } else if(selectedItem){
+        setSlideImages([...selectedItem?.item_images!].reverse());
+      }
+    }, 1000);
   }, [selectedItem]);
 
   const isFavUser = (currentfavuserId: string) => {
@@ -110,9 +110,6 @@ const ListingDetails: React.FC<Props> = ({ onClose }) => {
       }
     }
   };
-  // const onClose = () => {
-  //   history.push("/listings");
-  // };
   const onClickItem = (item: Item) => {
     // setIsLoading(true);
     // dispatch(setSelectItem(item));
@@ -257,67 +254,77 @@ const ListingDetails: React.FC<Props> = ({ onClose }) => {
               <div className="profile-user-info">
                 <div className="info-item">{selectedItem?.description}</div>
               </div>
-              <hr/>
-              {/* {console.log(selectedItem?.location)} */}
-              {selectedItem && selectedItem.location &&
-                <GMap distanceCover={20} point={{lat:selectedItem?.location.latitude!, lng:selectedItem?.location.longitude!}}/>
-              }
+              <hr />
+              {selectedItem && selectedItem.location && (
+                <GMap
+                  distanceCover={20}
+                  point={{
+                    lat: selectedItem?.location.latitude!,
+                    lng: selectedItem?.location.longitude!,
+                  }}
+                />
+              )}
               <hr />
               {ItemUser && (
                 <IonCard>
                   <IonCardHeader>
                     <IonGrid>
                       <IonRow>
-                        <IonCol style={{textAlign:"center"}}>
-                        <IonAvatar style={{margin:"auto"}}>
-                      {itemUserImage && (
-                        <img src={imgBaseUrl + itemUserImage} alt="" />
-                      )}
-                    </IonAvatar>
-                    <IonNote color="primary">{ItemUser?.displayname}</IonNote>
+                        <IonCol style={{ textAlign: "center" }}>
+                          <IonAvatar style={{ margin: "auto" }}>
+                            {itemUserImage && (
+                              <img src={imgBaseUrl + itemUserImage} alt="" />
+                            )}
+                          </IonAvatar>
+                          <IonNote color="primary">
+                            {ItemUser?.displayname}
+                          </IonNote>
                         </IonCol>
-                        
                       </IonRow>
                       <IonRow>
-                      <IonCol>
-                        {isAuthenticated &&
-                      (isFavUser(ItemUser._id) ? (
-                        <IonButton
-                          expand="full"
-                          fill="clear"
-                          color="danger"
-                          size="small"
-                          onClick={() => {
-                            dispatch(
-                              toggleFavUsers(ItemUser._id, CurrentUser._id)
-                            );
-                          }}
-                        >
-                          <IonIcon slot="start" icon={thumbsUp}></IonIcon>
-                        </IonButton>
-                      ) : (
-                        <IonButton
-                          expand="full"
-                          fill="clear"
-                          color="danger"
-                          size="small"
-                          onClick={(event) => {
-                            dispatch(
-                              toggleFavUsers(ItemUser._id, CurrentUser._id)
-                            );
-                          }}
-                        >
-                          <IonIcon
-                            slot="start"
-                            icon={thumbsUpOutline}
-                          ></IonIcon>
-                        </IonButton>
-                      ))}
-                        </IonCol>   
+                        <IonCol>
+                          {isAuthenticated &&
+                            (isFavUser(ItemUser._id) ? (
+                              <IonButton
+                                expand="full"
+                                fill="clear"
+                                color="danger"
+                                size="small"
+                                onClick={() => {
+                                  dispatch(
+                                    toggleFavUsers(
+                                      ItemUser._id,
+                                      CurrentUser._id
+                                    )
+                                  );
+                                }}
+                              >
+                                <IonIcon slot="start" icon={thumbsUp}></IonIcon>
+                              </IonButton>
+                            ) : (
+                              <IonButton
+                                expand="full"
+                                fill="clear"
+                                color="danger"
+                                size="small"
+                                onClick={(event) => {
+                                  dispatch(
+                                    toggleFavUsers(
+                                      ItemUser._id,
+                                      CurrentUser._id
+                                    )
+                                  );
+                                }}
+                              >
+                                <IonIcon
+                                  slot="start"
+                                  icon={thumbsUpOutline}
+                                ></IonIcon>
+                              </IonButton>
+                            ))}
+                        </IonCol>
                       </IonRow>
                     </IonGrid>
-                    
-                    
                   </IonCardHeader>
                   <IonCardContent>
                     {OtherUserItems && OtherUserItems.length > 0 && (
@@ -327,30 +334,9 @@ const ListingDetails: React.FC<Props> = ({ onClose }) => {
                         ).map((otherItem: Item, index: number) => (
                           <IonItem
                             key={index}
-                            // onClick={() => onClickItem(otherItem)}
                             onClick={() => dispatch(setSelectItem(otherItem))}
                             style={{ cursor: "pointer" }}
                           >
-                            {/* <IonAvatar>
-                              {otherItem.item_images &&
-                              otherItem.item_images.length > 0 ? (
-                                <img
-                                  src={
-                                    imgBaseUrl +
-                                    otherItem.item_images[0].filename
-                                  }
-                                  alt=""
-                                />
-                              ) : (
-                                <img
-                                  src={
-                                    imgBaseUrl +
-                                    "86b27f95d6f85147e8ac12616f841238.jpg"
-                                  }
-                                  alt=""
-                                />
-                              )}
-                            </IonAvatar> */}
                             <div
                               className="sideitem"
                               style={{
@@ -412,7 +398,7 @@ const ListingDetails: React.FC<Props> = ({ onClose }) => {
         <SendMsg
           onClose={() => setIsSendMsgOpen(false)}
           itemImage={
-            (selectedItem && selectedItem!.item_images.length > 0)
+            selectedItem && selectedItem!.item_images.length > 0
               ? selectedItem!.item_images[0].filename!
               : "./assets/images/itemnophoto.jpg"
           }

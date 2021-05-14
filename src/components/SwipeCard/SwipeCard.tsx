@@ -9,7 +9,6 @@ import {
 } from "ionicons/icons";
 import "./SwipeCard.scss";
 import ProfileImageSlides from "../ProfileImageSlides/ProfileImageSlides";
-import ImageSwiperSlides from "../ImageSwiperSlides/ImageSwiperSlides";
 import { UserModel } from "../../redux/userType";
 
 type Props = {
@@ -41,10 +40,7 @@ const SwipeCard: React.FC<Props> = ({
 
   return (
     <div className="swipe-card">
-      <ProfileImageSlides
-        images={user?.profileImages!}
-      />
-      {/* <ImageSwiperSlides images={user?.profileImages!} /> */}
+      <ProfileImageSlides images={user?.profileImages!} />
       <div className="card-caption">
         <IonRow className="ion-justify-content-center ion-align-items-center">
           <IonCol>
@@ -53,7 +49,6 @@ const SwipeCard: React.FC<Props> = ({
               <span className="icon-verified">
                 <IonIcon icon={checkmarkOutline} />
               </span>
-              {/* <div className="card-user-age"></div> */}
             </div>
 
             {currentIndex === 0 && (

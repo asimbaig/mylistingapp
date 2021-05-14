@@ -11,12 +11,9 @@ import {
   FilesystemDirectory,
 } from "@capacitor/core";
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
-import { addPhoto, deletePhotoById } from "../services/photoService";
+import { addPhoto } from "../services/photoService";
 import { PhotoModel } from "../redux/photoType";
 
-// import { useDispatch } from "react-redux";
-// import { addPhoto } from "../features/Photos/photoSlice";
-// import { Image } from '../features/Photos/types';
 
 const PHOTO_STORAGE = "photos";
 

@@ -3,15 +3,16 @@ import {
   IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonContent, IonCard, IonCardContent, IonIcon, IonText, IonGrid, IonRow, IonCol, IonList, IonItem, IonLabel, IonToggle, IonListHeader, IonNote, IonRange
 } from '@ionic/react';
 import {
-  flash, star, moonOutline
+  flash, star, moonOutline, information
 } from 'ionicons/icons';
 import ThemeService from '../../services/theme.service';
 import './Settings.scss';
-import { RootState } from "../../redux/rootReducer";
-import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/authSlice";
+import { toggleShowAppHint } from "../../redux/authSlice";
 import RedirectToLogin from "../Settings/RedirectToLogin";
 import { useHistory } from 'react-router-dom';
+import { RootState } from "../../redux/rootReducer";
+import { useSelector, useDispatch } from "react-redux";
 
 type Props = {
   onClose: () => void,
@@ -27,6 +28,7 @@ const Settings: React.FC<Props> = ({ onClose }) => {
   })
   const [isDarkMode, setIsDarkMode] = useState<boolean>(ThemeService.getCurrentSetting());
   const CurrentUser = useSelector((state: RootState) => state.auth.user);
+  const showAppHint = useSelector((state: RootState) => state.auth.user.showAppHint);
 
   // const handleLogout = () => {
   //   //dispatch(logout());
@@ -100,6 +102,13 @@ const Settings: React.FC<Props> = ({ onClose }) => {
             <IonIcon icon={moonOutline} slot="start" />
             <IonLabel>Dark Mode</IonLabel>
             <IonToggle color="primary" checked={ isDarkMode } onIonChange={ e => handleToggleDarkTheme(e.detail.checked as boolean) } />
+          </IonItem>
+        </IonList>
+        <IonList className="list-custom">
+          <IonItem lines="none">
+            <IonIcon icon={information} slot="start" />
+            <IonLabel>Show app hint</IonLabel>
+            <IonToggle color="primary" checked={ showAppHint } onIonChange={ e => dispatch(toggleShowAppHint(CurrentUser._id)) } />
           </IonItem>
         </IonList>
         {/* <IonList className="list-custom">
@@ -203,14 +212,13 @@ const Settings: React.FC<Props> = ({ onClose }) => {
             <IonLabel>Licenses</IonLabel>
           </IonItem>
         </IonList>
-
-        
+       
 
         <div className="ion-text-center ion-padding">
           <div>
             <img src="assets/img/appicon.png" width="36" alt="" />
           </div>
-          <div>Version 1.0.0</div>
+          <div>Version 3.0.0</div>
         </div>
 
         <div className="safe-area-bottom">

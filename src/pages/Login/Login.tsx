@@ -32,11 +32,11 @@ const Login: React.FC<Props> = ({history}) => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [showHidePassword, setShowHidePassword] = useState(true);
-  
+
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const isError = useSelector((state: RootState) => state.auth.error.isError);
   const errorMsg = useSelector((state: RootState) => state.auth.error.errorMsg);
-
+  
   useEffect(() => {
     if(isAuthenticated) {
       dispatch(setIsLoading(false));

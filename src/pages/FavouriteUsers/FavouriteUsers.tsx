@@ -13,6 +13,7 @@ import {
   createGesture,
   IonFab,
   IonModal,
+  IonPopover,
 } from "@ionic/react";
 import {
   ellipse,
@@ -21,6 +22,7 @@ import {
   reload,
   informationCircle,
   checkmarkOutline,
+  closeCircle,
   // closeCircle,
 } from "ionicons/icons";
 import "./Listings.scss";
@@ -36,7 +38,7 @@ import {
   modalEnterZoomOut,
   modalLeaveZoomIn,
 } from "../../animations/animations";
-
+import GeneralPopOver from "../../components/GeneralPopOver/GeneralPopOver";
 type Props = {
   history: any;
 };
@@ -51,10 +53,16 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
-
+  const showAppHint = useSelector((state: RootState) => state.auth.user.showAppHint);
+  
   const [cardHeight, setCardHeight] = useState(window.innerHeight);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState<UserModel>();
+  const [showPopOver, setShowPopOver] = useState(true);
+  // const [popoverState, setShowPopover] = useState({
+  //   showPopover: true,
+  //   event: undefined,
+  // });
 
   useEffect(() => {
     dispatch(setIsLoading(true));
@@ -112,6 +120,27 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
   return (
     <IonPage>
       <IonContent className="matches-page">
+      
+      
+        {/* <IonPopover
+          cssClass="my-custom-class"
+          event={popoverState.event}
+          isOpen={popoverState.showPopover}
+        >
+          <div style={{textAlign:"center"}}>
+            <p>Swipe profile image Left or Right, To see next profile</p>
+
+            <IonIcon
+              slot="icon-only"
+              icon={closeCircle}
+              onClick={(e: any) => {
+                e.persist();
+                setShowPopover({ showPopover: false, event: e });
+              }}
+              style={{fontSize:"30px", color:"red", cursor: "pointer"}}
+            />
+          </div>
+        </IonPopover> */}
         {isAuthenticated && (
           <div className="safe-area-bottom">
             <IonGrid>
@@ -280,6 +309,18 @@ const FavouriteUsers: React.FC<Props> = ({ history }) => {
           onClose={() => setIsProfileOpen(!isProfileOpen)}
         />
       </IonModal>
+      {showAppHint && isAuthenticated && <IonModal
+          swipeToClose
+          isOpen={showPopOver}
+          enterAnimation={modalEnterZoomOut}
+          leaveAnimation={modalLeaveZoomIn}
+          cssClass="fullscreen popover"
+        >
+          <GeneralPopOver 
+          msg="Swipe profile image Left or Right, To see next profile"
+          imgurl="./assets/img/swipe.gif"
+          onClose={()=>setShowPopOver(false)} />
+        </IonModal>}        
     </IonPage>
   );
 };

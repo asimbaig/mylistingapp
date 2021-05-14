@@ -28,6 +28,7 @@ const initialState: AuthModel = {
     favUsers: [],
     msgFromUsers: [],
     messages: [],
+    showAppHint: true
   },
   favUserProfiles: [],
   msgFromUserProfiles: [],
@@ -79,6 +80,9 @@ const authSlice = createSlice({
     setError(state, action: PayloadAction<ErrorModel>) {
       state.error = action.payload;
     },
+    setShowAppHint(state, action: PayloadAction<boolean>) {
+      state.user.showAppHint = action.payload;
+    }
   },
 });
 export const { setSelectedChatUser } = authSlice.actions;
@@ -156,6 +160,20 @@ async (dispatch: AppDispatch) => {
     .post("users/updateFavs/" + userId, { itemId: itemId })
     .then((res) => {
       dispatch(authSlice.actions.toggleFavourite(res.data.favourites));
+      
+    })
+    .catch((err) => {
+      
+    });
+};
+export const toggleShowAppHint = (userId: string): AppThunk => 
+async (dispatch: AppDispatch) => {
+  
+  axios
+    .post("users/toggleShowAppHint/" + userId)
+    .then((res) => {
+      console.log("showAppHint: "+res.data.showAppHint);
+      dispatch(authSlice.actions.setShowAppHint(res.data.showAppHint));
       
     })
     .catch((err) => {

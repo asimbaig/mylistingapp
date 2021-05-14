@@ -30,6 +30,7 @@ import {
   modalEnterZoomOut,
   modalLeaveZoomIn,
 } from "../../animations/animations";
+import GeneralPopOver from "../../components/GeneralPopOver/GeneralPopOver";
 
 type Props = {};
 
@@ -39,13 +40,14 @@ const MyListings: React.FC<Props> = () => {
   const [confirmDeleteAlert, setConfirmDeleteAlert] =useState(false);
   const [selectToDel, setSelectToDel] = useState<Item>();
   const [editItem, setEditItem] = useState<Item | undefined>();
+  const [showPopOver, setShowPopOver] = useState(true);
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
   const mylistings = useSelector((state: RootState) => state.listings.myItems);
-
+  const showAppHint = useSelector((state: RootState) => state.auth.user.showAppHint);
   useEffect(() => {
     dispatch(setIsLoading(true));
     setTimeout(() => {
@@ -187,10 +189,23 @@ const MyListings: React.FC<Props> = () => {
           }}
         />
       </IonModal>
+      {showAppHint && isAuthenticated &&
+      <IonModal
+          swipeToClose
+          isOpen={showPopOver}
+          enterAnimation={modalEnterZoomOut}
+          leaveAnimation={modalLeaveZoomIn}
+          cssClass="fullscreen popover"
+        >
+          <GeneralPopOver 
+          msg="Swipe Left or Right, For delete or edit options"
+          imgurl="./assets/img/swipe.gif"
+          onClose={()=>setShowPopOver(false)} />
+        </IonModal>}
       <IonAlert
           isOpen={confirmDeleteAlert}
           header={'Please Confirm!'}
-          message={'Do you really want to delete this item?'}
+          message={'Do you really want to delete this item? (This functionality temporarily disabled)'}
           buttons={[
             {
               text: 'Nope',
@@ -201,7 +216,7 @@ const MyListings: React.FC<Props> = () => {
             {
               text: 'Yeah',
               handler: () => {
-                dispatch(deleteItem(selectToDel!))
+                // dispatch(deleteItem(selectToDel!))
               }
             }
           ]}

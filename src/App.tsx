@@ -32,6 +32,7 @@ import "./sass/variables.override.scss";
 import "./sass/helper.scss";
 import "./sass/app.scss";
 import "./sass/dark.scss";
+import "./App.scss";
 
 import {
   IonTabs,

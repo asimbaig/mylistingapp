@@ -3,7 +3,7 @@ import {
   IonSlides, IonSlide, IonIcon
 } from '@ionic/react';
 import {
-  flameSharp, flashSharp, starSharp, locationSharp, keySharp, refreshCircleSharp, heartSharp,
+  flameSharp, flashSharp, starSharp, locationSharp, keySharp
 } from 'ionicons/icons';
 import './PlusIntro.scss';
 
